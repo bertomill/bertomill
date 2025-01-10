@@ -1,68 +1,59 @@
-import Head from 'next/head'
+import { GetStaticPaths, GetStaticProps } from 'next'
 import Layout from '../../components/Layout'
-import { PenTool, Calendar, Clock, ArrowLeft } from 'lucide-react'
-import Link from 'next/link'
+import Head from 'next/head'
 
-// This will be replaced with actual data fetching
-export async function getStaticPaths() {
+interface BlogPost {
+  slug: string
+  title: string
+  content: string
+  date: string
+  readingTime: string
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  // For now, return empty paths until we have actual blog posts
   return {
-    paths: [
-      { params: { slug: 'getting-started-with-ai-development' } }
-    ],
-    fallback: false
+    paths: [],
+    fallback: 'blocking'
   }
 }
 
-export async function getStaticProps({ params }: { params: { slug: string } }) {
-  // This will be replaced with actual data fetching
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  // Type the params properly
+  const { slug } = params as { slug: string }
+  
+  // For now, return dummy data
   return {
     props: {
       post: {
-        title: 'Getting Started with AI Development',
-        content: 'This is the full content of the blog post...',
-        date: '2024-01-20',
+        slug,
+        title: 'Sample Blog Post',
+        content: 'Content coming soon...',
+        date: new Date().toISOString(),
         readingTime: '5 min read'
-      }
+      } as BlogPost
     }
   }
 }
 
-export default function BlogPost({ post }: any) {
+interface Props {
+  post: BlogPost
+}
+
+export default function BlogPost({ post }: Props) {
   return (
     <Layout>
       <Head>
-        <title>{post.title} - Tell Day</title>
-        <meta name="description" content={post.excerpt} />
+        <title>{post.title} - Tell Day Blog</title>
       </Head>
-
-      <article className="max-w-3xl mx-auto">
-        <Link href="/blog" className="btn btn-ghost gap-2 mb-8">
-          <ArrowLeft className="w-4 h-4" />
-          Back to Tell Day
-        </Link>
-
-        <div className="prose dark:prose-invert max-w-none">
-          <h1>{post.title}</h1>
-          
-          <div className="flex items-center gap-4 text-sm opacity-75 not-prose">
-            <span className="flex items-center gap-1">
-              <Calendar className="w-4 h-4" />
-              {new Date(post.date).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-              })}
-            </span>
-            <span className="flex items-center gap-1">
-              <Clock className="w-4 h-4" />
-              {post.readingTime}
-            </span>
-          </div>
-
-          <div className="mt-8">
-            {post.content}
-          </div>
+      <article className="prose prose-stone dark:prose-invert max-w-3xl mx-auto">
+        <h1>{post.title}</h1>
+        <div className="text-stone-400">
+          <time>{new Date(post.date).toLocaleDateString()}</time>
+          <span className="mx-2">·</span>
+          <span>{post.readingTime}</span>
         </div>
+        <div className="mt-8">{post.content}</div>
       </article>
     </Layout>
   )

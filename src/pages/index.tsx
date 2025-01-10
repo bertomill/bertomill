@@ -1,41 +1,33 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import Layout from '../components/Layout'
-import { 
-  Code2, 
-  Dumbbell, 
-  BookOpen, 
-  Clapperboard,
-  Sparkles,
-  PenTool,
-} from 'lucide-react'
+import { Sparkles, Dumbbell, BookOpen, Clapperboard, PenTool } from 'lucide-react'
 
 export default function Home() {
   return (
     <Layout>
       <Head>
-        <title>Berto Mill - AI Developer</title>
-        <meta name="description" content="AI Application Developer showcasing projects, fitness journey, books, and entertainment" />
+        <title>Berto Mill - Personal Website</title>
+        <meta name="description" content="Welcome to my personal website where I share my interests and projects" />
       </Head>
 
-      <div className="space-y-16">
-        <div className="text-center space-y-6">
-          <h1 className="text-5xl font-bold">
-            Hey, I'm Berto Mill
-          </h1>
-          <p className="text-xl opacity-90 max-w-2xl mx-auto">
-            I'm an AI Application Developer passionate about building intelligent applications that solve real problems. 
-            When I'm not coding, I love staying fit, reading, and discovering great shows.
+      <div className="max-w-4xl mx-auto space-y-12 px-4">
+        <section className="space-y-4">
+          <h1 className="text-4xl font-bold">Welcome!</h1>
+          <p className="text-xl text-stone-400">
+            Here&apos;s what I&apos;m passionate about...
           </p>
-        </div>
+        </section>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Link href="/projects" className="card bg-base-100 shadow-xl hover:shadow-2xl transition-all">
-            <div className="card-body">
-              <Sparkles className="w-8 h-8 mb-4" />
-              <h2 className="card-title">AI Projects</h2>
-              <p className="opacity-75">Explore my collection of AI applications and projects, including deployed solutions on Vercel.</p>
-            </div>
+          <Link href="/projects" className="radix-card p-6 space-y-4 hover:bg-stone-800/50">
+            <h2 className="text-2xl font-medium flex items-center gap-2">
+              <Sparkles className="w-6 h-6 text-emerald-500" />
+              AI Projects
+            </h2>
+            <p className="text-stone-400">
+              Explore my AI applications that I&apos;ve built to solve real-world problems.
+            </p>
           </Link>
 
           <Link href="/fitness" className="card bg-base-100 shadow-xl hover:shadow-2xl transition-all">

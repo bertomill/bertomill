@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import Layout from '../components/Layout'
 import { ExternalLink, Github, Sparkles, Database, Bot } from 'lucide-react'
+import Image from 'next/image'
 
 interface Project {
   title: string
@@ -67,10 +68,11 @@ export default function Projects() {
                 {project.image && (
                   <div className="md:w-1/3 border-b md:border-b-0 md:border-r border-stone-800">
                     <div className="relative aspect-video md:aspect-square">
-                      <img 
+                      <Image 
                         src={project.image} 
                         alt={project.title} 
-                        className="absolute inset-0 w-full h-full object-cover"
+                        fill
+                        className="object-cover"
                       />
                     </div>
                   </div>

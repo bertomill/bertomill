@@ -1,79 +1,61 @@
 import Head from 'next/head'
-import Link from 'next/link'
 import Layout from '../../components/Layout'
-import { PenTool, Calendar, Clock, ChevronRight } from 'lucide-react'
+import Link from 'next/link'
+import { PenTool } from 'lucide-react'
 
 interface BlogPost {
-  id: string
+  slug: string
   title: string
   excerpt: string
   date: string
   readingTime: string
-  slug: string
 }
 
-// This will be replaced with actual data from your markdown files or CMS
-const blogPosts: BlogPost[] = [
+const posts: BlogPost[] = [
   {
-    id: '1',
-    title: 'Getting Started with AI Development',
-    excerpt: 'My journey into AI development and what I've learned so far...',
-    date: '2024-01-20',
-    readingTime: '5 min read',
-    slug: 'getting-started-with-ai-development'
-  },
-  // Add more blog posts here
+    slug: 'welcome-to-tell-day',
+    title: 'Welcome to Tell Day Blog',
+    excerpt: 'A place where I share my thoughts and experiences...',
+    date: new Date().toISOString(),
+    readingTime: '2 min read'
+  }
 ]
 
 export default function Blog() {
   return (
     <Layout>
       <Head>
-        <title>Tell Day - Berto Mill</title>
-        <meta name="description" content="My daily thoughts and experiences in AI development and life" />
+        <title>Tell Day Blog - Berto Mill</title>
+        <meta name="description" content="My daily thoughts and experiences" />
       </Head>
 
-      <div className="space-y-8">
+      <div className="max-w-4xl mx-auto space-y-8 px-4">
         <div className="space-y-4">
-          <h1 className="text-4xl font-bold flex items-center gap-2">
-            <PenTool className="w-8 h-8" />
-            Tell Day
+          <h1 className="text-3xl font-medium flex items-center gap-2">
+            <PenTool className="w-6 h-6 text-emerald-500" />
+            Tell Day Blog
           </h1>
-          <p className="text-lg opacity-90">
-            Welcome to Tell Day - where I share my daily journey, thoughts, and discoveries.
+          <p className="text-lg text-stone-400">
+            Sharing my daily thoughts and experiences
           </p>
         </div>
 
-        <div className="grid gap-6">
-          {blogPosts.map((post) => (
-            <Link 
-              key={post.id} 
+        <div className="space-y-8">
+          {posts.map((post) => (
+            <Link
+              key={post.slug}
               href={`/blog/${post.slug}`}
-              className="card bg-base-100 shadow-lg hover:shadow-xl transition-all"
+              className="block"
             >
-              <div className="card-body">
-                <h2 className="card-title text-2xl">{post.title}</h2>
-                <p className="opacity-75">{post.excerpt}</p>
-                <div className="flex items-center gap-4 mt-4 text-sm opacity-75">
-                  <span className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4" />
-                    {new Date(post.date).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                    })}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Clock className="w-4 h-4" />
-                    {post.readingTime}
-                  </span>
+              <article className="radix-card p-6 space-y-4 hover:bg-stone-800/50">
+                <h2 className="text-2xl font-medium text-stone-100">{post.title}</h2>
+                <p className="text-stone-400">{post.excerpt}</p>
+                <div className="text-sm text-stone-500">
+                  <time>{new Date(post.date).toLocaleDateString()}</time>
+                  <span className="mx-2">·</span>
+                  <span>{post.readingTime}</span>
                 </div>
-                <div className="card-actions justify-end mt-4">
-                  <span className="text-primary flex items-center gap-1">
-                    Read more <ChevronRight className="w-4 h-4" />
-                  </span>
-                </div>
-              </div>
+              </article>
             </Link>
           ))}
         </div>
