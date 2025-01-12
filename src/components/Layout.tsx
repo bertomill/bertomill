@@ -2,14 +2,12 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { 
   Sparkles, 
-  Dumbbell, 
-  BookOpen, 
-  Clapperboard,
+  PenTool,
   Sun,
   Moon,
   Menu,
   Home,
-  PenTool,
+  User,
 } from 'lucide-react'
 
 interface LayoutProps {
@@ -58,27 +56,15 @@ export default function Layout({ children }: LayoutProps) {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/fitness" className="px-4 py-2 text-stone-300 hover:text-emerald-400 transition-colors flex items-center gap-2">
-                    <Dumbbell className="w-5 h-5" />
-                    Fitness
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/books" className="px-4 py-2 text-stone-300 hover:text-emerald-400 transition-colors flex items-center gap-2">
-                    <BookOpen className="w-5 h-5" />
-                    Books
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/tv-shows" className="px-4 py-2 text-stone-300 hover:text-emerald-400 transition-colors flex items-center gap-2">
-                    <Clapperboard className="w-5 h-5" />
-                    TV Shows
-                  </Link>
-                </li>
-                <li>
                   <Link href="/blog" className="px-4 py-2 text-stone-300 hover:text-emerald-400 transition-colors flex items-center gap-2">
                     <PenTool className="w-5 h-5" />
                     Tell Day Blog
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/about" className="px-4 py-2 text-stone-300 hover:text-emerald-400 transition-colors flex items-center gap-2">
+                    <User className="w-5 h-5" />
+                    About
                   </Link>
                 </li>
               </ul>
@@ -125,27 +111,15 @@ export default function Layout({ children }: LayoutProps) {
               </Link>
             </li>
             <li>
-              <Link href="/fitness" className="text-stone-300 hover:text-emerald-400 transition-colors flex items-center gap-2">
-                <Dumbbell className="w-5 h-5" />
-                Fitness
-              </Link>
-            </li>
-            <li>
-              <Link href="/books" className="text-stone-300 hover:text-emerald-400 transition-colors flex items-center gap-2">
-                <BookOpen className="w-5 h-5" />
-                Books
-              </Link>
-            </li>
-            <li>
-              <Link href="/tv-shows" className="text-stone-300 hover:text-emerald-400 transition-colors flex items-center gap-2">
-                <Clapperboard className="w-5 h-5" />
-                TV Shows
-              </Link>
-            </li>
-            <li>
               <Link href="/blog" className="text-stone-300 hover:text-emerald-400 transition-colors flex items-center gap-2">
                 <PenTool className="w-5 h-5" />
                 Tell Day Blog
+              </Link>
+            </li>
+            <li>
+              <Link href="/about" className="text-stone-300 hover:text-emerald-400 transition-colors flex items-center gap-2">
+                <User className="w-5 h-5" />
+                About
               </Link>
             </li>
           </ul>

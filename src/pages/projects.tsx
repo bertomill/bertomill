@@ -37,7 +37,32 @@ const projects: Project[] = [
     ],
     liveUrl: "https://canadian-financial-news-tracker.vercel.app/",
     githubUrl: "https://github.com/bertomill/Canadian-Financial-News-Tracker",
-    image: "/CNFT.jpeg"
+    image: "/Cdn-Bank-Tracker.png"
+  },
+  {
+    title: "Fintech Radar",
+    description: "An AI-powered fintech news analysis platform that quickly distills and analyzes innovation trends in the financial industry. The application helps users stay ahead of fintech developments by providing concise, AI-generated insights.",
+    technologies: [
+      "TypeScript",
+      "Next.js 14",
+      "OpenAI API",
+      "PostgreSQL",
+      "Vercel",
+      "TailwindCSS",
+      "Puppeteer",
+      "daisyUI"
+    ],
+    features: [
+      "Real-time fintech news aggregation and analysis",
+      "AI-powered trend identification and categorization",
+      "Innovation scoring system for fintech developments",
+      "Automated summarization of complex financial news",
+      "Interactive dashboard with filtering capabilities",
+      "Daily digest of key fintech innovations"
+    ],
+    liveUrl: "https://fintech-radar.vercel.app",
+    githubUrl: "https://github.com/bertomill/fintech-radar",
+    image: "/Fintech Radar.png"
   }
 ]
 
@@ -66,35 +91,37 @@ export default function Projects() {
               <div className="flex flex-col md:flex-row">
                 {/* Thumbnail */}
                 {project.image && (
-                  <div className="md:w-1/3 border-b md:border-b-0 md:border-r border-stone-800">
-                    <div className="relative aspect-video md:aspect-square">
+                  <div className="md:w-1/2 border-b md:border-b-0 md:border-r border-stone-800 md:min-h-[600px]">
+                    <div className="relative h-full">
                       <Image 
                         src={project.image} 
                         alt={project.title} 
                         fill
                         className="object-cover"
+                        priority
                       />
                     </div>
                   </div>
                 )}
                 
                 {/* Content */}
-                <div className="flex-1 p-6 space-y-4">
+                <div className="flex-1 p-4 space-y-3">
                   <div>
-                    <h2 className="text-2xl font-medium text-stone-100">{project.title}</h2>
-                    <p className="mt-2 text-stone-400 leading-relaxed">{project.description}</p>
+                    <h2 className="text-xl font-medium text-stone-100">{project.title}</h2>
+                    <p className="mt-1 text-sm text-stone-400 leading-relaxed">{project.description}</p>
                   </div>
                   
                   {/* Technologies */}
-                  <div className="space-y-2">
-                    <h3 className="text-sm font-medium flex items-center gap-2 text-stone-300">
-                      <Database className="w-4 h-4" /> Technologies
+                  <div className="space-y-1.5">
+                    <h3 className="text-xs font-medium flex items-center gap-2 text-stone-300">
+                      <Database className="w-3 h-3" />
+                      Technologies
                     </h3>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-1.5">
                       {project.technologies.map((tech, techIndex) => (
                         <span 
                           key={techIndex} 
-                          className="px-2 py-1 text-xs rounded-full bg-emerald-900/30 text-emerald-300 border border-emerald-800/30"
+                          className="px-1.5 py-0.5 text-xs rounded-full bg-emerald-900/30 text-emerald-300 border border-emerald-800/30"
                         >
                           {tech}
                         </span>
@@ -103,29 +130,30 @@ export default function Projects() {
                   </div>
 
                   {/* Features */}
-                  <div className="space-y-2">
-                    <h3 className="text-sm font-medium flex items-center gap-2 text-stone-300">
-                      <Bot className="w-4 h-4" /> Key Features
+                  <div className="space-y-1.5">
+                    <h3 className="text-xs font-medium flex items-center gap-2 text-stone-300">
+                      <Bot className="w-3 h-3" />
+                      Key Features
                     </h3>
-                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-stone-400 text-sm">
+                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-1.5 text-stone-400 text-xs">
                       {project.features.map((feature, featureIndex) => (
-                        <li key={featureIndex} className="flex items-start gap-2">
-                          <span className="mt-1.5 w-1 h-1 rounded-full bg-stone-600 flex-shrink-0" />
+                        <li key={featureIndex} className="flex items-start gap-1.5">
+                          <span className="mt-1 w-1 h-1 rounded-full bg-stone-600 flex-shrink-0" />
                           <span>{feature}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
 
-                  <div className="flex justify-end gap-3 pt-4">
+                  <div className="flex justify-end gap-2 pt-2">
                     {project.githubUrl && (
                       <a 
                         href={project.githubUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="radix-button"
+                        className="radix-button text-xs py-1.5"
                       >
-                        <Github className="w-4 h-4 mr-2" />
+                        <Github className="w-3 h-3 mr-1.5" />
                         View Code
                       </a>
                     )}
@@ -134,9 +162,9 @@ export default function Projects() {
                         href={project.liveUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="radix-button radix-button-primary"
+                        className="radix-button radix-button-primary text-xs py-1.5"
                       >
-                        <ExternalLink className="w-4 h-4 mr-2" />
+                        <ExternalLink className="w-3 h-3 mr-1.5" />
                         Live Demo
                       </a>
                     )}
