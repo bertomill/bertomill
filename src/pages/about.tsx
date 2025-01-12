@@ -46,11 +46,11 @@ export default function About() {
         <meta name="description" content="Learn more about my professional background and personal interests" />
       </Head>
 
-      <div className="max-w-4xl mx-auto space-y-12 px-4">
-        <div className="space-y-8">
-          {/* About Header with Conference Image */}
+      <div className="max-w-4xl mx-auto px-4 space-y-16">
+        {/* About Me Section */}
+        <section className="space-y-8">
           <div className="flex flex-col md:flex-row gap-8 items-start">
-            <div className="flex-1 space-y-4">
+            <div className="flex-1 space-y-6">
               <h1 className="text-3xl font-medium flex items-center gap-2">
                 <User className="w-6 h-6 text-emerald-500" />
                 About Me
@@ -74,43 +74,45 @@ export default function About() {
               />
             </div>
           </div>
+        </section>
 
-          <section className="space-y-6">
-            <h2 className="text-2xl font-medium flex items-center gap-2">
-              <BookOpen className="w-6 h-6 text-emerald-500" />
-              Reading List
-            </h2>
-            <p className="text-stone-400">
-              Here are some of my favorite books that have shaped my thinking and perspective:
-            </p>
-            <div className="grid gap-6">
-              {favoriteBooks.map((book, index) => (
-                <div key={book.title} className="radix-card p-4 space-y-2">
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-emerald-500 font-medium">{index + 1}.</span>
-                    <h3 className="text-lg font-medium text-stone-100">
-                      {book.title}
-                      <span className="text-stone-400 text-sm ml-2">by {book.author}</span>
-                    </h3>
-                  </div>
-                  <p className="text-stone-400 text-sm pl-6">
-                    {book.description}
-                  </p>
+        {/* Reading List Section */}
+        <section className="space-y-6">
+          <h2 className="text-2xl font-medium flex items-center gap-2">
+            <BookOpen className="w-6 h-6 text-emerald-500" />
+            Reading List
+          </h2>
+          <p className="text-stone-400">
+            Here are some of my favorite books that have shaped my thinking and perspective:
+          </p>
+          <div className="grid gap-6">
+            {favoriteBooks.map((book, index) => (
+              <div key={book.title} className="radix-card p-4 space-y-2">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-emerald-500 font-medium">{index + 1}.</span>
+                  <h3 className="text-lg font-medium text-stone-100">
+                    {book.title}
+                    <span className="text-stone-400 text-sm ml-2">by {book.author}</span>
+                  </h3>
                 </div>
-              ))}
-            </div>
-          </section>
+                <p className="text-stone-400 text-sm pl-6">
+                  {book.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
 
-          <section className="space-y-4">
-            <h2 className="text-2xl font-medium flex items-center gap-2">
-              <Clapperboard className="w-6 h-6 text-emerald-500" />
-              TV Shows
-            </h2>
-            <p className="text-stone-400">
-              Explore my favorite series and current watching recommendations.
-            </p>
-          </section>
-        </div>
+        {/* TV Shows Section */}
+        <section className="space-y-6 pb-16">
+          <h2 className="text-2xl font-medium flex items-center gap-2">
+            <Clapperboard className="w-6 h-6 text-emerald-500" />
+            TV Shows
+          </h2>
+          <p className="text-stone-400">
+            Explore my favorite series and current watching recommendations.
+          </p>
+        </section>
       </div>
     </Layout>
   )

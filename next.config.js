@@ -2,7 +2,11 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['localhost'],
+    domains: [
+      'localhost',
+      'avatars.githubusercontent.com',
+      'cdn-images-1.medium.com'
+    ],
     unoptimized: false
   },
   output: 'standalone'

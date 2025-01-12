@@ -1,130 +1,77 @@
 import Link from 'next/link'
+import { useTheme } from 'next-themes'
+import { Sun, Moon, User } from 'lucide-react'
+import { useSession, signIn, signOut } from 'next-auth/react'
 import { useEffect, useState } from 'react'
-import { 
-  Sparkles, 
-  PenTool,
-  Sun,
-  Moon,
-  Menu,
-  Home,
-  User,
-} from 'lucide-react'
+import Image from 'next/image'
 
-interface LayoutProps {
-  children: React.ReactNode
+interface ExtendedSession {
+  user?: {
+    name?: string | null
+    email?: string | null
+    image?: string | null
+    isAdmin?: boolean
+  }
+  expires: string
 }
 
-export default function Layout({ children }: LayoutProps) {
-  const [isDark, setIsDark] = useState(false)
+export default function Layout({ children }: { children: React.ReactNode }) {
+  const { data: session } = useSession()
+  const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      setIsDark(true)
-      document.documentElement.classList.add('dark')
-    }
+    setMounted(true)
   }, [])
 
-  const toggleDarkMode = () => {
-    setIsDark(!isDark)
-    document.documentElement.classList.toggle('dark')
-  }
-
   return (
-    <div className="min-h-screen bg-stone-950 text-stone-200">
-      <div className="drawer">
-        <input id="my-drawer-3" type="checkbox" className="drawer-toggle" /> 
-        <div className="drawer-content flex flex-col">
-          {/* Navbar */}
-          <div className="w-full navbar bg-stone-900/95 backdrop-blur fixed top-0 z-50 border-b border-stone-800">
-            <div className="flex-none lg:hidden">
-              <label htmlFor="my-drawer-3" className="btn btn-square btn-ghost text-stone-300 hover:text-stone-100">
-                <Menu className="w-6 h-6" />
-              </label>
-            </div> 
-            <div className="flex-1 px-2 mx-2">
-              <Link href="/" className="text-xl font-medium flex items-center gap-2 text-stone-100 hover:text-emerald-400 transition-colors">
-                <Home className="w-6 h-6" />
+    <div className="min-h-screen bg-stone-950 text-stone-100">
+      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-stone-800 bg-stone-950/80 backdrop-blur-sm">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center gap-8">
+              <Link href="/" className="text-lg font-medium">
                 Berto Mill
               </Link>
+              <div className="hidden md:flex items-center gap-6">
+                <Link
+                  href="/projects"
+                  className="text-sm text-stone-400 hover:text-stone-100 transition-colors"
+                >
+                  Projects
+                </Link>
+                <Link
+                  href="/blog"
+                  className="text-sm text-stone-400 hover:text-stone-100 transition-colors"
+                >
+                  Blog
+                </Link>
+                <Link
+                  href="/about"
+                  className="text-sm text-stone-400 hover:text-stone-100 transition-colors"
+                >
+                  About
+                </Link>
+              </div>
             </div>
-            <div className="flex-none hidden lg:block">
-              <ul className="menu menu-horizontal gap-2">
-                <li>
-                  <Link href="/projects" className="px-4 py-2 text-stone-300 hover:text-emerald-400 transition-colors flex items-center gap-2">
-                    <Sparkles className="w-5 h-5" />
-                    Projects
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/blog" className="px-4 py-2 text-stone-300 hover:text-emerald-400 transition-colors flex items-center gap-2">
-                    <PenTool className="w-5 h-5" />
-                    Tell Day Blog
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/about" className="px-4 py-2 text-stone-300 hover:text-emerald-400 transition-colors flex items-center gap-2">
-                    <User className="w-5 h-5" />
-                    About
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <button 
-              className="btn btn-ghost btn-circle text-stone-300 hover:text-emerald-400"
-              onClick={toggleDarkMode}
-            >
-              {isDark ? (
-                <Sun className="w-5 h-5" />
-              ) : (
-                <Moon className="w-5 h-5" />
+            <div className="flex items-center gap-4">
+              {mounted && (
+                <button
+                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                  className="p-2 hover:bg-stone-800/50 rounded-lg transition-colors"
+                >
+                  {theme === 'dark' ? (
+                    <Sun className="w-5 h-5" />
+                  ) : (
+                    <Moon className="w-5 h-5" />
+                  )}
+                </button>
               )}
-            </button>
-          </div>
-          
-          {/* Main content */}
-          <main className="container mx-auto px-4 pt-24 pb-12">
-            {children}
-          </main>
-
-          {/* Footer */}
-          <footer className="border-t border-stone-800 bg-stone-900/50">
-            <div className="container mx-auto py-8 px-4 text-center text-stone-400">
-              <p>Built with ❤️ using Next.js, Tailwind CSS, and daisyUI</p>
             </div>
-          </footer>
-        </div> 
-
-        {/* Sidebar content for mobile */}
-        <div className="drawer-side">
-          <label htmlFor="my-drawer-3" className="drawer-overlay"></label> 
-          <ul className="menu p-4 w-80 h-full bg-stone-900 border-r border-stone-800">
-            <li className="mb-4">
-              <Link href="/" className="text-xl font-medium flex items-center gap-2 text-stone-100 hover:text-emerald-400">
-                <Home className="w-6 h-6" />
-                Berto Mill
-              </Link>
-            </li>
-            <li>
-              <Link href="/projects" className="text-stone-300 hover:text-emerald-400 transition-colors flex items-center gap-2">
-                <Sparkles className="w-5 h-5" />
-                Projects
-              </Link>
-            </li>
-            <li>
-              <Link href="/blog" className="text-stone-300 hover:text-emerald-400 transition-colors flex items-center gap-2">
-                <PenTool className="w-5 h-5" />
-                Tell Day Blog
-              </Link>
-            </li>
-            <li>
-              <Link href="/about" className="text-stone-300 hover:text-emerald-400 transition-colors flex items-center gap-2">
-                <User className="w-5 h-5" />
-                About
-              </Link>
-            </li>
-          </ul>
+          </div>
         </div>
-      </div>
+      </nav>
+      <main className="pt-24">{children}</main>
     </div>
   )
 } 
