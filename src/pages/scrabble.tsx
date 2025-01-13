@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Layout from '../components/Layout'
 import { useState } from 'react'
-import { GameController } from 'lucide-react'
+import { Gamepad } from 'lucide-react'
 
 export default function Scrabble() {
   const [name, setName] = useState('')
@@ -46,7 +46,7 @@ export default function Scrabble() {
         <div className="space-y-8">
           <div className="text-center">
             <h1 className="text-3xl font-medium flex items-center justify-center gap-2">
-              <GameController className="w-8 h-8 text-emerald-500" />
+              <Gamepad className="w-8 h-8 text-emerald-500" />
               Play Scrabble with Me
             </h1>
             <p className="mt-4 text-lg text-stone-400">

@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Sun, Moon } from 'lucide-react'
+import { Sun, Moon, Gamepad } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
 
@@ -33,7 +33,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <Link href="/about" className="text-stone-400 hover:text-white transition-colors">
                 About
               </Link>
-              <Link href="/scrabble" className="text-stone-400 hover:text-white transition-colors">
+              <Link href="/scrabble" className="flex items-center gap-1 text-stone-400 hover:text-white transition-colors">
+                <Gamepad className="w-4 h-4" />
                 Play Scrabble
               </Link>
             </div>
