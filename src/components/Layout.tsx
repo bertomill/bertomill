@@ -24,8 +24,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               Berto Mill
             </Link>
             <div className="hidden md:flex items-center gap-6 text-sm">
-              <Link href="/fintech-radar" className="text-stone-400 hover:text-white transition-colors">
-                Fintech Radar
+              <Link href="/projects" className="text-stone-400 hover:text-white transition-colors">
+                Projects
               </Link>
               <Link href="/blog" className="text-stone-400 hover:text-white transition-colors">
                 Blog
