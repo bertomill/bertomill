@@ -33,6 +33,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <Link href="/about" className="text-stone-400 hover:text-white transition-colors">
                 About
               </Link>
+              <Link href="/scrabble" className="text-stone-400 hover:text-white transition-colors">
+                Play Scrabble
+              </Link>
             </div>
           </div>
 
