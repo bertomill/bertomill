@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Layout from '../components/Layout'
-import { Search, Grid, TrendingUp, Zap } from 'lucide-react'
+import { Grid, TrendingUp, Zap } from 'lucide-react'
 
 export default function FintechRadar() {
   return (
