@@ -122,7 +122,7 @@ export default function Blog({ posts }: BlogProps) {
                 key={post.link}
                 href={`/blog/${encodeURIComponent(post.link.split('?')[0].split('/').pop() || '')}`}
                 className="block group cursor-pointer"
-                onClick={(e) => {
+                onClick={() => {
                   console.log('Clicked article:', post.title);
                   console.log('Link:', post.link);
                   console.log('Generated slug:', post.link.split('?')[0].split('/').pop());

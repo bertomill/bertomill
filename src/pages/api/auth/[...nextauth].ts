@@ -1,11 +1,22 @@
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { PrismaClient } from "@prisma/client"
-import NextAuth from "next-auth"
+import NextAuth, { NextAuthOptions, User as NextAuthUser } from "next-auth"
 import GithubProvider from "next-auth/providers/github"
 
 const prisma = new PrismaClient()
 
-export const authOptions = {
+interface SessionUser {
+  name?: string | null
+  email?: string | null
+  image?: string | null
+  isAdmin?: boolean
+}
+
+interface ExtendedUser extends NextAuthUser {
+  isAdmin?: boolean
+}
+
+export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     GithubProvider({
@@ -14,9 +25,14 @@ export const authOptions = {
     }),
   ],
   callbacks: {
-    async session({ session, user }: any) {
-      session.user.isAdmin = user.isAdmin
-      return session
+    async session({ session, user }) {
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          isAdmin: (user as ExtendedUser).isAdmin,
+        } as SessionUser,
+      }
     },
   },
 }

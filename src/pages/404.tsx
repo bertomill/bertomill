@@ -14,7 +14,7 @@ export default function NotFound() {
       <div className="max-w-4xl mx-auto px-4 py-16 text-center">
         <h1 className="text-6xl font-bold text-emerald-500">404</h1>
         <p className="mt-4 text-xl text-stone-400">
-          The page you're looking for could not be found.
+          The page you&apos;re looking for could not be found.
         </p>
         <Link
           href="/"

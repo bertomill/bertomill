@@ -157,10 +157,10 @@ export default function Home({ featuredProjects, featuredArticles }: HomeProps) 
                 Featured Projects
               </h2>
               <Link 
-                href="/projects" 
+                href="/fintech-radar" 
                 className="flex items-center gap-2 text-emerald-500 hover:text-emerald-400 transition-colors"
               >
-                See all projects
+                Try Fintech Radar
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>

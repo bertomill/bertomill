@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next"
-import { getServerSession } from "next-auth/next"
+import { getServerSession } from "next-auth"
 import { authOptions } from "./auth/[...nextauth]"
 import { PrismaClient } from "@prisma/client"
 
@@ -8,12 +8,13 @@ const prisma = new PrismaClient()
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const session = await getServerSession(req, res, authOptions)
 
+  // Check if user is authenticated
   if (!session) {
-    return res.status(401).json({ error: "You must be logged in." })
+    return res.status(401).json({ error: "You must be signed in to manage books." })
   }
 
   // Only allow admin users to add books
-  if (!session.user.isAdmin) {
+  if (!session.user?.isAdmin) {
     return res.status(403).json({ error: "Only admin users can manage books." })
   }
 
@@ -32,17 +33,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       return res.status(200).json(book)
     } catch (error) {
-      console.error("Failed to create book:", error)
-      return res.status(500).json({ error: "Failed to create book" })
+      console.error("Error creating book:", error)
+      return res.status(500).json({ error: "Error creating book" })
     }
   }
 
   if (req.method === "GET") {
     try {
       const books = await prisma.book.findMany({
-        orderBy: {
-          createdAt: "desc",
-        },
         include: {
           addedBy: {
             select: {
@@ -54,8 +52,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       return res.status(200).json(books)
     } catch (error) {
-      console.error("Failed to fetch books:", error)
-      return res.status(500).json({ error: "Failed to fetch books" })
+      console.error("Error fetching books:", error)
+      return res.status(500).json({ error: "Error fetching books" })
     }
   }
 
