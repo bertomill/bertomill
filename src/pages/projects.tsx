@@ -16,6 +16,22 @@ interface Project {
 export default function Projects() {
   const projects: Project[] = [
     {
+      title: "Blog Buddies",
+      description: "An app to help you read and write blogs with AI. The platform leverages artificial intelligence to enhance the blogging experience, making content creation and consumption more efficient and engaging.",
+      image: "/blog-buddies.png",
+      technologies: ["React", "OpenAI", "Python", "Java", "Supabase", "SQL", "GitHub", "Next.js", "TailwindCSS"],
+      features: [
+        "AI-powered blog writing assistance",
+        "Smart content recommendations",
+        "Automated content analysis",
+        "Interactive writing interface",
+        "Database integration with Supabase",
+        "Modern, responsive design"
+      ],
+      demoUrl: "https://blogbuddies.vercel.app/",
+      githubUrl: "https://github.com/bertomill/blog-buddy"
+    },
+    {
       title: "Canadian Financial News Tracker",
       description: "An AI-powered application that tracks and analyzes news updates from major Canadian financial institutions. The system uses advanced AI to score and summarize financial news, providing real-time insights for users.",
       image: "/Cdn-Bank-Tracker.png",
@@ -56,7 +72,7 @@ export default function Projects() {
         <meta name="description" content="Explore my AI applications and development projects" />
       </Head>
 
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      <div className="max-w-6xl mx-auto px-4 py-8">
         <div className="space-y-12">
           <div>
             <h1 className="text-3xl font-medium flex items-center gap-2">
@@ -68,75 +84,82 @@ export default function Projects() {
             </p>
           </div>
 
-          <div className="space-y-16">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {projects.map((project) => (
-              <div key={project.title} className="space-y-6">
-                <div className="relative aspect-video rounded-xl overflow-hidden border-2 border-emerald-500/20">
-                  <Image
-                    src={project.image}
-                    alt={project.title}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-
-                <div className="space-y-4">
-                  <div className="flex items-start justify-between gap-4">
-                    <h2 className="text-2xl font-medium">{project.title}</h2>
-                    <div className="flex gap-3">
-                      {project.demoUrl && (
-                        <a
-                          href={project.demoUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2 px-4 py-2 text-sm bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-colors"
-                        >
-                          <ExternalLink className="w-4 h-4" />
-                          Live Demo
-                        </a>
-                      )}
-                      {project.githubUrl && (
-                        <a
-                          href={project.githubUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2 px-4 py-2 text-sm border border-stone-800 text-stone-400 rounded-lg hover:text-stone-100 hover:border-stone-700 transition-colors"
-                        >
-                          <Github className="w-4 h-4" />
-                          View Code
-                        </a>
-                      )}
-                    </div>
+              <div key={project.title} className="group">
+                <article className="h-full radix-card overflow-hidden hover:border-emerald-500/50 transition-colors">
+                  <div className="relative aspect-[16/9] border-b border-stone-800">
+                    <Image
+                      src={project.image}
+                      alt={project.title}
+                      fill
+                      className="object-cover"
+                    />
                   </div>
+                  <div className="p-4 space-y-4">
+                    <div className="flex items-start justify-between gap-4">
+                      <h2 className="text-xl font-medium group-hover:text-emerald-500 transition-colors">
+                        {project.title}
+                      </h2>
+                      <div className="flex gap-2">
+                        {project.demoUrl && (
+                          <a
+                            href={project.demoUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-2 hover:bg-stone-800 rounded-lg transition-colors"
+                          >
+                            <ExternalLink className="w-4 h-4 text-emerald-500" />
+                          </a>
+                        )}
+                        {project.githubUrl && (
+                          <a
+                            href={project.githubUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-2 hover:bg-stone-800 rounded-lg transition-colors"
+                          >
+                            <Github className="w-4 h-4 text-stone-400 hover:text-stone-100" />
+                          </a>
+                        )}
+                      </div>
+                    </div>
 
-                  <p className="text-stone-400">{project.description}</p>
+                    <p className="text-sm text-stone-400 line-clamp-2">
+                      {project.description}
+                    </p>
 
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-medium">Technologies</h3>
                     <div className="flex flex-wrap gap-2">
-                      {project.technologies.map((tech) => (
+                      {project.technologies.slice(0, 4).map((tech) => (
                         <span
                           key={tech}
-                          className="px-3 py-1 text-sm rounded-full bg-emerald-500/10 text-emerald-500"
+                          className="px-2 py-0.5 text-xs rounded-full bg-emerald-500/10 text-emerald-500"
                         >
                           {tech}
                         </span>
                       ))}
+                      {project.technologies.length > 4 && (
+                        <span className="px-2 py-0.5 text-xs rounded-full bg-emerald-500/10 text-emerald-500">
+                          +{project.technologies.length - 4} more
+                        </span>
+                      )}
                     </div>
-                  </div>
 
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-medium">Key Features</h3>
-                    <ul className="grid md:grid-cols-2 gap-2 text-stone-400">
-                      {project.features.map((feature) => (
+                    <ul className="text-sm text-stone-400 space-y-1">
+                      {project.features.slice(0, 3).map((feature) => (
                         <li key={feature} className="flex items-center gap-2">
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                          <span className="w-1 h-1 rounded-full bg-emerald-500" />
                           {feature}
                         </li>
                       ))}
+                      {project.features.length > 3 && (
+                        <li className="text-stone-500 text-xs">
+                          +{project.features.length - 3} more features
+                        </li>
+                      )}
                     </ul>
                   </div>
-                </div>
+                </article>
               </div>
             ))}
           </div>
