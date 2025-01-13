@@ -1,5 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import nodemailer from 'nodemailer'
+import { Resend } from 'resend'
+
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -9,28 +11,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     const { name, email, move } = req.body
 
-    // Create transporter
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: parseInt(process.env.SMTP_PORT || '587'),
-      secure: false,
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASSWORD,
-      },
-    })
-
-    // Send email
-    await transporter.sendMail({
-      from: process.env.SMTP_USER,
-      to: 'bertmill19@gmail.com', // Your email
+    await resend.emails.send({
+      from: 'Scrabble Game <scrabble@bertomill.com>',
+      to: 'bertmill19@gmail.com',
       subject: '🎲 New Scrabble Move!',
       html: `
         <h2>Someone wants to play Scrabble!</h2>
         <p><strong>Player:</strong> ${name}</p>
         <p><strong>Email:</strong> ${email}</p>
         <p><strong>First Move:</strong> ${move}</p>
-      `,
+      `
     })
 
     res.status(200).json({ message: 'Move submitted successfully' })
