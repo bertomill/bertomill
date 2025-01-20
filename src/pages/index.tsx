@@ -127,64 +127,61 @@ export default function Home({ featuredProjects, featuredArticles }: HomeProps) 
       </Head>
 
       <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="space-y-16">
+        <div className="space-y-24">
           {/* Hero Section */}
-          <div className="flex flex-col md:flex-row gap-8 items-center">
-            <div className="flex-1 space-y-4">
-              <h1 className="text-4xl font-bold">
-                Hi, I&apos;m Berto Mill
+          <div className="flex flex-col md:flex-row items-center justify-between gap-16 pt-12">
+            <div className="flex-1 space-y-6">
+              <h1 className="text-4xl md:text-6xl font-medium tracking-tight">
+                Hi, I'm Berto Mill
               </h1>
-              <p className="text-lg text-stone-400">
-                I&apos;m a consultant and developer specializing in AI applications. Welcome to my corner of the web where I share my projects, thoughts, and interests.
+              <p className="text-lg text-stone-400 max-w-xl leading-relaxed">
+                I'm a consultant and developer specializing in AI applications. Welcome to my corner of the web where I share my projects, thoughts, and interests.
               </p>
             </div>
-            <div className="relative w-48 h-48 rounded-full overflow-hidden border-4 border-emerald-500/20">
+            <div className="relative shrink-0">
               <Image
                 src="/Berto Headshot.jpeg"
                 alt="Berto Mill"
-                fill
-                className="object-cover"
+                width={200}
+                height={200}
+                className="rounded-2xl object-cover"
                 priority
               />
             </div>
           </div>
 
           {/* Featured Projects Section */}
-          <section className="space-y-6">
+          <section className="space-y-8">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-medium flex items-center gap-2">
-                <Sparkles className="w-6 h-6 text-emerald-500" />
-                Featured Projects
-              </h2>
+              <h2 className="text-2xl font-medium tracking-tight">Featured Projects</h2>
               <Link 
                 href="/projects" 
-                className="flex items-center gap-2 text-emerald-500 hover:text-emerald-400 transition-colors"
+                className="text-sm text-stone-400 hover:text-white transition-colors"
               >
-                See all projects
-                <ArrowRight className="w-4 h-4" />
+                View all projects →
               </Link>
             </div>
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid gap-8 md:grid-cols-2">
               {featuredProjects.map((project) => (
                 <div key={project.title} className="group">
-                  <div className="h-full radix-card p-4 space-y-4 hover:border-emerald-500/50 transition-colors">
-                    <div className="relative aspect-video rounded-lg overflow-hidden border border-stone-800">
+                  <div className="space-y-4">
+                    <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-stone-900">
                       <Image
                         src={project.image}
                         alt={project.title}
                         fill
-                        className="object-cover"
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
                       />
                     </div>
                     <div>
-                      <h3 className="text-xl font-medium">{project.title}</h3>
+                      <h3 className="text-lg font-medium">{project.title}</h3>
                       <p className="mt-2 text-sm text-stone-400">{project.description}</p>
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {project.technologies.map((tech) => (
                         <span
                           key={tech}
-                          className="px-2 py-1 text-xs rounded-full bg-emerald-500/10 text-emerald-500"
+                          className="px-3 py-1 text-xs text-stone-400 rounded-full bg-stone-900"
                         >
                           {tech}
                         </span>
@@ -197,53 +194,46 @@ export default function Home({ featuredProjects, featuredArticles }: HomeProps) 
           </section>
 
           {/* Featured Articles Section */}
-          <section className="space-y-6">
+          <section className="space-y-8">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <PenTool className="w-6 h-6 text-emerald-500" />
-                <h2 className="text-2xl font-medium">Latest Articles</h2>
-              </div>
-              <Link href="/blog" className="text-sm text-emerald-500 hover:text-emerald-400 transition-colors flex items-center gap-1">
-                Read more
-                <ArrowRight className="w-4 h-4" />
+              <h2 className="text-2xl font-medium tracking-tight">Latest Articles</h2>
+              <Link 
+                href="/blog" 
+                className="text-sm text-stone-400 hover:text-white transition-colors"
+              >
+                Read more →
               </Link>
             </div>
-
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid gap-8 md:grid-cols-2">
               {featuredArticles.map((article) => (
                 <Link
                   key={article.link}
                   href={`/blog/${encodeURIComponent(article.link.split('?')[0].split('/').pop() || '')}`}
                   className="block group"
                 >
-                  <article className="h-full radix-card overflow-hidden hover:border-emerald-500/50 transition-colors">
+                  <article className="space-y-4">
                     {article.image && (
-                      <div className="relative aspect-[16/9] border-b border-stone-800">
+                      <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-stone-900">
                         <Image
                           src={article.image}
                           alt={article.title}
                           fill
-                          className="object-cover"
+                          className="object-cover transition-transform duration-700 group-hover:scale-105"
                         />
                       </div>
                     )}
-                    <div className="p-4 space-y-3">
-                      <div className="flex items-start justify-between gap-4">
-                        <h3 className="text-lg font-medium group-hover:text-emerald-500 transition-colors line-clamp-2">
-                          {article.title}
-                        </h3>
-                        <ArrowUpRight className="w-5 h-5 text-stone-500 group-hover:text-emerald-500 transition-colors flex-shrink-0" />
-                      </div>
-
+                    <div className="space-y-3">
+                      <h3 className="text-lg font-medium group-hover:text-stone-400 transition-colors">
+                        {article.title}
+                      </h3>
                       <p className="text-sm text-stone-400 line-clamp-2">
                         {article.contentSnippet}
                       </p>
-
                       <div className="flex flex-wrap gap-2">
                         {article.categories.slice(0, 2).map((category) => (
                           <span
                             key={category}
-                            className="px-2 py-0.5 text-xs rounded-full bg-emerald-500/10 text-emerald-500"
+                            className="px-3 py-1 text-xs text-stone-400 rounded-full bg-stone-900"
                           >
                             {category}
                           </span>
@@ -257,27 +247,18 @@ export default function Home({ featuredProjects, featuredArticles }: HomeProps) 
           </section>
 
           {/* Navigation Cards */}
-          <div className="grid gap-6 md:grid-cols-2">
-            {/* Blog Card */}
+          <div className="grid gap-8 md:grid-cols-2">
             <Link href="/blog" className="group">
-              <div className="h-full radix-card p-6 space-y-4 hover:border-emerald-500/50 transition-colors">
-                <div className="flex items-center gap-2">
-                  <PenTool className="w-5 h-5 text-emerald-500" />
-                  <h2 className="text-xl font-medium">Blog</h2>
-                </div>
+              <div className="p-8 rounded-2xl bg-stone-900 hover:bg-stone-800 transition-colors">
+                <h2 className="text-xl font-medium mb-2">Blog</h2>
                 <p className="text-stone-400">
                   Read about my thoughts and experiences.
                 </p>
               </div>
             </Link>
-
-            {/* About Card */}
             <Link href="/about" className="group">
-              <div className="h-full radix-card p-6 space-y-4 hover:border-emerald-500/50 transition-colors">
-                <div className="flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-emerald-500" />
-                  <h2 className="text-xl font-medium">About</h2>
-                </div>
+              <div className="p-8 rounded-2xl bg-stone-900 hover:bg-stone-800 transition-colors">
+                <h2 className="text-xl font-medium mb-2">About</h2>
                 <p className="text-stone-400">
                   Learn more about my interests in fitness, books, and TV shows.
                 </p>
@@ -288,4 +269,4 @@ export default function Home({ featuredProjects, featuredArticles }: HomeProps) 
       </div>
     </Layout>
   )
-} 
+}
