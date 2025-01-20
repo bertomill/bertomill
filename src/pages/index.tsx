@@ -2,7 +2,6 @@ import Head from 'next/head'
 import Layout from '../components/Layout'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Sparkles, ArrowRight, PenTool, ArrowUpRight } from 'lucide-react'
 import { GetStaticProps } from 'next'
 import Parser from 'rss-parser'
 
@@ -132,10 +131,10 @@ export default function Home({ featuredProjects, featuredArticles }: HomeProps) 
           <div className="flex flex-col md:flex-row items-center justify-between gap-16 pt-12">
             <div className="flex-1 space-y-6">
               <h1 className="text-4xl md:text-6xl font-medium tracking-tight">
-                Hi, I'm Berto Mill
+                Hi, I&apos;m Berto Mill
               </h1>
               <p className="text-lg text-stone-400 max-w-xl leading-relaxed">
-                I'm a consultant and developer specializing in AI applications. Welcome to my corner of the web where I share my projects, thoughts, and interests.
+                I&apos;m a consultant and developer specializing in AI applications. Welcome to my corner of the web where I share my projects, thoughts, and interests.
               </p>
             </div>
             <div className="relative shrink-0">

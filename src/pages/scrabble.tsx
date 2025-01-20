@@ -50,7 +50,7 @@ export default function Scrabble() {
               Play Scrabble with Me
             </h1>
             <p className="mt-4 text-lg text-stone-400">
-              Make your first move and I'll respond within 24 hours!
+              Make your first move and I&#39;ll respond within 24 hours!
             </p>
           </div>
 
@@ -86,7 +86,7 @@ export default function Scrabble() {
 
               <div>
                 <label htmlFor="move" className="block text-sm font-medium mb-2">
-                  First Move (e.g., "HELLO at H8 across")
+                  First Move (e.g., &quot;HELLO at H8 across&quot;)
                 </label>
                 <input
                   type="text"
@@ -111,7 +111,7 @@ export default function Scrabble() {
                 Move submitted successfully!
               </div>
               <p className="text-stone-400">
-                I'll review your move and respond via email within 24 hours.
+                I&#39;ll review your move and respond via email within 24 hours.
               </p>
             </div>
           )}
