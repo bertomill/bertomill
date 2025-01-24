@@ -3,7 +3,6 @@ import { Sun, Moon, Menu, X } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import Script from 'next/script'
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const { theme, setTheme } = useTheme()
