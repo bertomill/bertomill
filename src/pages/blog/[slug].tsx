@@ -23,7 +23,7 @@ interface PostPageProps {
 export const getStaticPaths: GetStaticPaths = async () => {
   try {
     const parser = new Parser()
-    const feed = await parser.parseURL('https://medium.com/@robertmill/feed')
+    const feed = await parser.parseURL('https://bertomill.medium.com/feed')
     
     const paths = feed.items.map(item => {
       // Extract slug from Medium URL (remove query parameters and get the last segment)
@@ -54,7 +54,7 @@ export const getStaticProps: GetStaticProps<PostPageProps> = async ({ params }) 
         item: ['content:encoded']
       }
     })
-    const feed = await parser.parseURL('https://medium.com/@robertmill/feed')
+    const feed = await parser.parseURL('https://bertomill.medium.com/feed')
     
     const post = feed.items.find(item => {
       // Match slug by removing query parameters and getting the last segment

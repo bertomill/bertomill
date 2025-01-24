@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { GetStaticProps } from 'next'
 import Parser from 'rss-parser'
+import Script from 'next/script'
 
 interface Project {
   title: string
@@ -50,7 +51,7 @@ export const getStaticProps: GetStaticProps<HomeProps> = async () => {
         item: ['content:encoded']
       }
     })
-    const feed = await parser.parseURL('https://medium.com/@robertmill/feed')
+    const feed = await parser.parseURL('https://bertomill.medium.com/feed')
     
     const featuredArticles = feed.items.slice(0, 2).map(item => {
       // Try to extract image from content:encoded field
@@ -136,6 +137,9 @@ export default function Home({ featuredProjects, featuredArticles }: HomeProps) 
               <p className="text-lg text-stone-400 max-w-xl leading-relaxed">
                 I&apos;m a consultant and developer specializing in AI applications. Welcome to my corner of the web where I share my projects, thoughts, and interests.
               </p>
+              <div className="badge-base LI-profile-badge" data-locale="en_US" data-size="medium" data-theme="dark" data-type="VERTICAL" data-vanity="bertomill" data-version="v1">
+                <a className="badge-base__link LI-simple-link" href="https://ca.linkedin.com/in/bertomill?trk=profile-badge">Robert Mill</a>
+              </div>
             </div>
             <div className="relative shrink-0">
               <Image
@@ -266,6 +270,12 @@ export default function Home({ featuredProjects, featuredArticles }: HomeProps) 
           </div>
         </div>
       </div>
+      <Script
+        src="https://platform.linkedin.com/badges/js/profile.js"
+        strategy="lazyOnload"
+        async
+        defer
+      />
     </Layout>
   )
 }

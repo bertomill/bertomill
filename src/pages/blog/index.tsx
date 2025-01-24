@@ -27,7 +27,7 @@ export const getStaticProps: GetStaticProps = async () => {
         item: ['content:encoded']
       }
     })
-    const feed = await parser.parseURL('https://medium.com/@robertmill/feed')
+    const feed = await parser.parseURL('https://bertomill.medium.com/feed')
     
     const posts = feed.items.map(item => {
       // Log the full content for debugging
