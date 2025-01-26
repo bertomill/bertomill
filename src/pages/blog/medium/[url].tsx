@@ -2,7 +2,7 @@ import { GetServerSideProps } from 'next'
 import Head from 'next/head'
 import Layout from '../../../components/Layout'
 import { Calendar } from 'lucide-react'
-import MDXContent from '../../../components/MDXContent'
+import Image from 'next/image'
 
 interface MediumPostProps {
   title: string
@@ -10,6 +10,11 @@ interface MediumPostProps {
   date: string
   author: string
   image: string | null
+}
+
+// Add configuration for external images
+const imageLoader = ({ src }: { src: string }) => {
+  return src
 }
 
 export const getServerSideProps: GetServerSideProps<MediumPostProps> = async ({ params }) => {
@@ -30,7 +35,7 @@ export const getServerSideProps: GetServerSideProps<MediumPostProps> = async ({ 
     const imageMatch = contentMatch?.[1].match(/<img[^>]+src="([^">]+)"/i)
     
     // Clean up the content by removing unnecessary tags and adding styling
-    let content = contentMatch ? contentMatch[1]
+    const content = contentMatch ? contentMatch[1]
       .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
       .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '')
       .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
@@ -90,11 +95,16 @@ export default function MediumPost({ title, content, date, author, image }: Medi
           <div>By {author}</div>
         </div>
         {image && (
-          <img 
-            src={image} 
-            alt=""
-            className="w-full rounded-lg mb-8 object-cover"
-          />
+          <div className="relative w-full h-64 mb-8">
+            <Image 
+              src={image}
+              alt=""
+              fill
+              className="rounded-lg object-cover"
+              loader={imageLoader}
+              unoptimized
+            />
+          </div>
         )}
         <div 
           className="prose prose-stone dark:prose-invert max-w-none"

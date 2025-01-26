@@ -1,6 +1,7 @@
 import { Calendar, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
 import Head from 'next/head'
+import Image from 'next/image'
 import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
@@ -27,6 +28,11 @@ interface MediumPost {
 interface BlogProps {
   localPosts: LocalPost[]
   mediumPosts: MediumPost[]
+}
+
+// Add configuration for external images
+const imageLoader = ({ src }: { src: string }) => {
+  return src
 }
 
 export async function getStaticProps() {
@@ -130,11 +136,14 @@ export default function Blog({ localPosts, mediumPosts }: BlogProps) {
                   <time>{new Date(post.date).toLocaleDateString()}</time>
                 </div>
                 {post.image && (
-                  <div className="mb-4 overflow-hidden rounded-lg">
-                    <img 
-                      src={post.image} 
+                  <div className="mb-4 overflow-hidden rounded-lg relative h-48">
+                    <Image 
+                      src={post.image}
                       alt={post.title}
-                      className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
+                      fill
+                      className="object-cover hover:scale-105 transition-transform duration-300"
+                      loader={imageLoader}
+                      unoptimized
                     />
                   </div>
                 )}
