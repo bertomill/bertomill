@@ -145,9 +145,9 @@ export default function Home({ featuredProjects, featuredArticles }: HomeProps) 
               <Image
                 src="/Berto Headshot.jpeg"
                 alt="Berto Mill"
-                width={200}
-                height={200}
-                className="rounded-2xl object-cover"
+                width={160}
+                height={160}
+                className="rounded-full object-cover"
                 priority
               />
             </div>
