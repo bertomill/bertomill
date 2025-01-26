@@ -5,6 +5,9 @@ import Link from 'next/link'
 import { GetStaticProps } from 'next'
 import Parser from 'rss-parser'
 import Script from 'next/script'
+import { motion } from 'framer-motion'
+import { useState } from 'react'
+import { MessageCircle, X } from 'lucide-react'
 
 interface Project {
   title: string
@@ -119,6 +122,15 @@ export const getStaticProps: GetStaticProps<HomeProps> = async () => {
 }
 
 export default function Home({ featuredProjects, featuredArticles }: HomeProps) {
+  const [isChatOpen, setIsChatOpen] = useState(false)
+  const [message, setMessage] = useState('')
+
+  const handleChatSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    // TODO: Implement AI chat functionality
+    setMessage('')
+  }
+
   return (
     <Layout>
       <Head>
@@ -131,26 +143,66 @@ export default function Home({ featuredProjects, featuredArticles }: HomeProps) 
           {/* Hero Section */}
           <div className="flex flex-col md:flex-row items-center justify-between gap-16 pt-12">
             <div className="flex-1 space-y-6">
-              <h1 className="text-4xl md:text-6xl font-medium tracking-tight">
+              <motion.h1 
+                className="text-4xl md:text-6xl font-medium tracking-tight"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+              >
                 Hi, I&apos;m Berto Mill
-              </h1>
-              <p className="text-lg text-stone-400 max-w-xl leading-relaxed">
+              </motion.h1>
+              <motion.p 
+                className="text-lg text-stone-400 max-w-xl leading-relaxed"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+              >
                 I&apos;m a consultant and developer specializing in AI applications. Welcome to my corner of the web where I share my projects, thoughts, and interests.
-              </p>
-              <div className="badge-base LI-profile-badge" data-locale="en_US" data-size="medium" data-theme="dark" data-type="VERTICAL" data-vanity="bertomill" data-version="v1">
-                <a className="badge-base__link LI-simple-link" href="https://ca.linkedin.com/in/bertomill?trk=profile-badge">Robert Mill</a>
-              </div>
+              </motion.p>
+              <motion.div
+                className="badge-base LI-profile-badge"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+                data-locale="en_US"
+                data-size="medium"
+                data-theme="dark"
+                data-type="VERTICAL"
+                data-vanity="bertomill"
+                data-version="v1"
+              >
+                <a className="badge-base__link LI-simple-link" href="https://ca.linkedin.com/in/bertomill?trk=profile-badge"></a>
+              </motion.div>
             </div>
-            <div className="relative shrink-0">
+            <motion.div 
+              className="relative shrink-0"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+            >
+              <div className="relative">
+                <motion.div
+                  className="absolute -inset-0.5 bg-emerald-500 rounded-full blur opacity-30"
+                  animate={{
+                    scale: [1, 1.2, 1],
+                    opacity: [0.3, 0.2, 0.3],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    repeatType: "reverse",
+                  }}
+                />
               <Image
-                src="/Berto Headshot.jpeg"
-                alt="Berto Mill"
+                  src="/Berto Headshot.jpeg"
+                  alt="Berto Mill"
                 width={160}
                 height={160}
-                className="rounded-full object-cover"
+                  className="rounded-full object-cover relative"
                 priority
               />
-            </div>
+              </div>
+            </motion.div>
           </div>
 
           {/* Featured Projects Section */}
@@ -160,7 +212,7 @@ export default function Home({ featuredProjects, featuredArticles }: HomeProps) 
               <Link 
                 href="/projects" 
                 className="text-sm text-stone-400 hover:text-white transition-colors"
-              >
+            >
                 View all projects →
               </Link>
             </div>
@@ -203,13 +255,13 @@ export default function Home({ featuredProjects, featuredArticles }: HomeProps) 
               <Link 
                 href="/blog" 
                 className="text-sm text-stone-400 hover:text-white transition-colors"
-              >
+            >
                 Read more →
               </Link>
             </div>
             <div className="grid gap-8 md:grid-cols-2">
               {featuredArticles.map((article) => (
-                <Link
+              <Link
                   key={article.link}
                   href={`/blog/${encodeURIComponent(article.link.split('?')[0].split('/').pop() || '')}`}
                   className="block group"
@@ -237,7 +289,7 @@ export default function Home({ featuredProjects, featuredArticles }: HomeProps) 
                           <span
                             key={category}
                             className="px-3 py-1 text-xs text-stone-400 rounded-full bg-stone-900"
-                          >
+              >
                             {category}
                           </span>
                         ))}
@@ -266,10 +318,76 @@ export default function Home({ featuredProjects, featuredArticles }: HomeProps) 
                   Learn more about my interests in fitness, books, and TV shows.
                 </p>
               </div>
-            </Link>
+              </Link>
+          </div>
           </div>
         </div>
-      </div>
+
+      {/* AI Chat Interface */}
+      <motion.div
+        className="fixed bottom-6 right-6 z-50"
+        initial={false}
+        animate={isChatOpen ? "open" : "closed"}
+      >
+            <motion.div
+          variants={{
+            open: { 
+              width: "400px",
+              height: "500px",
+              transition: { type: "spring", stiffness: 300, damping: 30 }
+            },
+            closed: { 
+              width: "auto",
+              height: "auto",
+              transition: { type: "spring", stiffness: 300, damping: 30 }
+            }
+          }}
+          className="bg-stone-900 rounded-2xl shadow-lg border border-stone-800"
+        >
+          {isChatOpen ? (
+            <div className="h-full flex flex-col">
+              <div className="p-4 border-b border-stone-800 flex justify-between items-center">
+                <h3 className="text-lg font-medium">Ask me anything</h3>
+                <button
+                  onClick={() => setIsChatOpen(false)}
+                  className="p-1 hover:bg-stone-800 rounded-lg transition-colors"
+            >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              <div className="flex-1 p-4 overflow-y-auto">
+                {/* Chat messages will go here */}
+              </div>
+              <form onSubmit={handleChatSubmit} className="p-4 border-t border-stone-800">
+                <div className="relative">
+                <input
+                  type="text"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Ask me anything..."
+                    className="w-full px-4 py-2 bg-stone-800 border border-stone-700 rounded-lg focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-colors"
+                />
+                <button
+                  type="submit"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-colors"
+                >
+                  Send
+                </button>
+                </div>
+              </form>
+            </div>
+          ) : (
+          <button
+              onClick={() => setIsChatOpen(true)}
+              className="p-4 hover:bg-stone-800 rounded-2xl transition-colors flex items-center gap-2"
+          >
+              <MessageCircle className="w-6 h-6 text-emerald-500" />
+              <span>Chat with me</span>
+          </button>
+          )}
+        </motion.div>
+      </motion.div>
+
       <Script
         src="https://platform.linkedin.com/badges/js/profile.js"
         strategy="lazyOnload"
