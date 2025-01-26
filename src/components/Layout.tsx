@@ -1,8 +1,9 @@
-import { ReactNode } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Sun, Moon, Gamepad } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import ChatInterface from './ChatInterface'
+import NavbarAuth from './NavbarAuth'
 
 interface LayoutProps {
   children: ReactNode
@@ -10,6 +11,12 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+
+  // Only show theme toggle after mounting to avoid hydration mismatch
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   return (
     <div className="min-h-screen bg-stone-50 dark:bg-stone-950 text-stone-950 dark:text-stone-50">
@@ -33,16 +40,20 @@ export default function Layout({ children }: LayoutProps) {
               <Link href="/about" className="text-stone-400 hover:text-white transition-colors">
                 About
               </Link>
-              <button
-                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                className="p-2 hover:bg-stone-800 rounded-lg transition-colors"
-              >
-                {theme === 'dark' ? (
-                  <Sun className="w-5 h-5" />
-                ) : (
-                  <Moon className="w-5 h-5" />
-                )}
-              </button>
+              <NavbarAuth />
+              {mounted && (
+                <button
+                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                  className="p-2 hover:bg-stone-800 rounded-lg transition-colors"
+                  aria-label="Toggle theme"
+                >
+                  {theme === 'dark' ? (
+                    <Sun className="w-5 h-5" />
+                  ) : (
+                    <Moon className="w-5 h-5" />
+                  )}
+                </button>
+              )}
             </div>
           </div>
         </div>
