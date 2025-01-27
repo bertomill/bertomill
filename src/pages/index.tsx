@@ -1,16 +1,18 @@
 import Head from 'next/head'
-import Layout from '../components/Layout'
+import Layout from '@/components/Layout'
 import Image from 'next/image'
 import Link from 'next/link'
 import { GetStaticProps } from 'next'
 import Parser from 'rss-parser'
 import Script from 'next/script'
 import { motion } from 'framer-motion'
+import GradientBackground from '@/components/GradientBackground'
 
 interface Project {
   title: string
   description: string
   image: string
+  link: string
   technologies: string[]
 }
 
@@ -35,12 +37,14 @@ export const getStaticProps: GetStaticProps<HomeProps> = async () => {
       title: "Canadian Financial News Tracker",
       description: "AI-powered application that tracks and analyzes news updates from major Canadian financial institutions.",
       image: "/Cdn-Bank-Tracker.png",
+      link: "/projects/canadian-financial-news-tracker",
       technologies: ["TypeScript", "Python", "Next.js", "OpenAI", "PostgreSQL", "Vercel"]
     },
     {
       title: "Fintech Radar",
       description: "AI-powered fintech news analysis platform that quickly distills and analyzes innovation trends in the financial industry.",
       image: "/Fintech Radar.png",
+      link: "/projects/fintech-radar",
       technologies: ["TypeScript", "Next.js", "OpenAI", "PostgreSQL", "Vercel"]
     }
   ]
@@ -127,190 +131,114 @@ export default function Home({ featuredProjects, featuredArticles }: HomeProps) 
         <meta name="description" content="Welcome to my personal website" />
       </Head>
 
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="space-y-24">
-          {/* Hero Section */}
-          <div className="flex flex-col md:flex-row items-center justify-between gap-16 pt-12">
-            <div className="flex-1 space-y-6">
-              <motion.h1 
-                className="text-4xl md:text-6xl font-medium tracking-tight"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
-              >
-                Hi, I&apos;m Berto Mill
-              </motion.h1>
-              <motion.p 
-                className="text-lg text-stone-400 max-w-xl leading-relaxed"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-              >
-                I&apos;m a consultant and developer specializing in AI applications. Welcome to my corner of the web where I share my projects, thoughts, and interests.
-              </motion.p>
-              <motion.div
-                className="badge-base LI-profile-badge"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-                data-locale="en_US"
-                data-size="medium"
-                data-theme="dark"
-                data-type="VERTICAL"
-                data-vanity="bertomill"
-                data-version="v1"
-              >
-                <a className="badge-base__link LI-simple-link" href="https://ca.linkedin.com/in/bertomill?trk=profile-badge"></a>
-              </motion.div>
-            </div>
-            <motion.div 
-              className="relative shrink-0"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
+      <GradientBackground />
+      
+      <div className="min-h-screen flex flex-col justify-center relative overflow-hidden">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="relative z-10 px-6 lg:px-8 max-w-6xl mx-auto"
+        >
+          <div className="mx-auto max-w-2xl">
+            <motion.h1 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="text-6xl font-bold tracking-tight text-white sm:text-8xl mb-8"
             >
-              <div className="relative">
-                <motion.div
-                  className="absolute -inset-0.5 bg-emerald-500 rounded-full blur opacity-30"
-                  animate={{
-                    scale: [1, 1.2, 1],
-                    opacity: [0.3, 0.2, 0.3],
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    repeatType: "reverse",
-                  }}
-                />
-                <Image
-                  src="/Berto Headshot.jpeg"
-                  alt="Berto Mill"
-                  width={160}
-                  height={160}
-                  className="rounded-full object-cover relative"
-                  priority
-                />
-              </div>
+              Hi, I&apos;m Berto Mill
+            </motion.h1>
+            
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="text-lg text-gray-300 leading-8 mb-12"
+            >
+              I&apos;m a consultant and developer specializing in AI applications. Welcome to my corner of the web where I share my projects, thoughts, and interests.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="flex gap-4"
+            >
+              <Link 
+                href="/projects"
+                className="rounded-lg px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-medium transition-colors"
+              >
+                View Projects
+              </Link>
+              <Link
+                href="/blog"
+                className="rounded-lg px-6 py-3 border border-gray-600 hover:border-emerald-500 text-gray-300 hover:text-emerald-500 font-medium transition-colors"
+              >
+                Read Blog
+              </Link>
             </motion.div>
           </div>
+        </motion.div>
 
-          {/* Featured Projects Section */}
-          <section className="space-y-8">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-medium tracking-tight">Featured Projects</h2>
-              <Link 
-                href="/projects" 
-                className="text-sm text-stone-400 hover:text-white transition-colors"
-              >
-                View all projects →
-              </Link>
-            </div>
-            <div className="grid gap-8 md:grid-cols-2">
-              {featuredProjects.map((project) => (
-                <div key={project.title} className="group">
-                  <div className="space-y-4">
-                    <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-stone-900">
-                      <Image
-                        src={project.image}
-                        alt={project.title}
-                        fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-105"
-                      />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-medium">{project.title}</h3>
-                      <p className="mt-2 text-sm text-stone-400">{project.description}</p>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {project.technologies.map((tech) => (
-                        <span
-                          key={tech}
-                          className="px-3 py-1 text-xs text-stone-400 rounded-full bg-stone-900"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* Featured Articles Section */}
-          <section className="space-y-8">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-medium tracking-tight">Latest Articles</h2>
-              <Link 
-                href="/blog" 
-                className="text-sm text-stone-400 hover:text-white transition-colors"
-              >
-                Read more →
-              </Link>
-            </div>
-            <div className="grid gap-8 md:grid-cols-2">
-              {featuredArticles.map((article) => (
-                <Link
-                  key={article.link}
-                  href={`/blog/${encodeURIComponent(article.link.split('?')[0].split('/').pop() || '')}`}
-                  className="block group"
-                >
-                  <article className="space-y-4">
-                    {article.image && (
-                      <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-stone-900">
-                        <Image
-                          src={article.image}
-                          alt={article.title}
-                          fill
-                          className="object-cover transition-transform duration-700 group-hover:scale-105"
-                        />
-                      </div>
-                    )}
-                    <div className="space-y-3">
-                      <h3 className="text-lg font-medium group-hover:text-stone-400 transition-colors">
-                        {article.title}
-                      </h3>
-                      <p className="text-sm text-stone-400 line-clamp-2">
-                        {article.contentSnippet}
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {article.categories.slice(0, 2).map((category) => (
-                          <span
-                            key={category}
-                            className="px-3 py-1 text-xs text-stone-400 rounded-full bg-stone-900"
-                          >
-                            {category}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </article>
-                </Link>
-              ))}
-            </div>
-          </section>
-
-          {/* Navigation Cards */}
-          <div className="grid gap-8 md:grid-cols-2">
-            <Link href="/blog" className="group">
-              <div className="p-8 rounded-2xl bg-stone-900 hover:bg-stone-800 transition-colors">
-                <h2 className="text-xl font-medium mb-2">Blog</h2>
-                <p className="text-stone-400">
-                  Read about my thoughts and experiences.
-                </p>
-              </div>
-            </Link>
-            <Link href="/about" className="group">
-              <div className="p-8 rounded-2xl bg-stone-900 hover:bg-stone-800 transition-colors">
-                <h2 className="text-xl font-medium mb-2">About</h2>
-                <p className="text-stone-400">
-                  Learn more about my interests in fitness, books, and TV shows.
-                </p>
-              </div>
-            </Link>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 0.8 }}
+          className="absolute top-1/2 right-0 transform -translate-y-1/2 hidden lg:block"
+        >
+          <div className="relative w-96 h-96">
+            <Image
+              src="/profile.jpg"
+              alt="Berto Mill"
+              fill
+              className="rounded-full object-cover"
+              style={{
+                filter: 'drop-shadow(0 0 30px rgba(16, 185, 129, 0.2))'
+              }}
+            />
           </div>
-        </div>
+        </motion.div>
       </div>
+
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 1 }}
+        className="py-24 px-6 lg:px-8"
+      >
+        <h2 className="text-4xl font-bold mb-12 text-white">Featured Projects</h2>
+        <div className="grid gap-8 md:grid-cols-2">
+          {featuredProjects.map((project) => (
+            <div key={project.title} className="group">
+              <div className="space-y-4">
+                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-stone-900">
+                  <Image
+                    src={project.image}
+                    alt={project.title}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                </div>
+                <div>
+                  <h3 className="text-lg font-medium">{project.title}</h3>
+                  <p className="mt-2 text-sm text-stone-400">{project.description}</p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {project.technologies.map((tech) => (
+                    <span
+                      key={tech}
+                      className="px-3 py-1 text-xs text-stone-400 rounded-full bg-stone-900"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </motion.div>
 
       <Script
         src="https://platform.linkedin.com/badges/js/profile.js"
