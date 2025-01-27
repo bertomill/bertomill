@@ -19,7 +19,7 @@ export default function GradientBackground() {
     window.addEventListener('resize', setCanvasSize)
 
     // Create grid points
-    let points: { x: number; y: number; vx: number; vy: number }[] = []
+    const points: { x: number; y: number; vx: number; vy: number }[] = []
     const spacing = 50
     const rows = Math.ceil(canvas.height / spacing)
     const cols = Math.ceil(canvas.width / spacing)

@@ -17,7 +17,7 @@ export default function Admin() {
       }
     }
     checkUser()
-  }, []) // Remove router from dependencies
+  }, []) // Intentionally omitting router to prevent redirect loops
 
   if (loading) {
     return (

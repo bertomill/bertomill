@@ -1,51 +1,53 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '../auth/[...nextauth]'
-import fs from 'fs'
-import path from 'path'
+import { supabase } from '@/lib/supabase'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const session = await getServerSession(req, res, authOptions)
-
-  if (!session) {
-    return res.status(401).json({ message: 'Unauthorized' })
-  }
-
   const { slug } = req.query
-  const postsDirectory = path.join(process.cwd(), 'src/content/blog')
-  const filePath = path.join(postsDirectory, `${slug}.mdx`)
 
-  switch (req.method) {
-    case 'GET':
-      try {
-        const fileContents = fs.readFileSync(filePath, 'utf8')
-        res.status(200).json({ content: fileContents })
-      } catch (error) {
-        res.status(404).json({ message: 'Post not found' })
-      }
-      break
+  if (req.method === 'GET') {
+    try {
+      const { data: post, error: fetchError } = await supabase
+        .from('posts')
+        .select('*')
+        .eq('slug', slug)
+        .single()
 
-    case 'PUT':
-      try {
-        const { content } = req.body
-        fs.writeFileSync(filePath, content)
-        res.status(200).json({ message: 'Post updated successfully' })
-      } catch (error) {
-        res.status(500).json({ message: 'Error updating post' })
-      }
-      break
+      if (fetchError) throw fetchError
 
-    case 'DELETE':
-      try {
-        fs.unlinkSync(filePath)
-        res.status(200).json({ message: 'Post deleted successfully' })
-      } catch (error) {
-        res.status(500).json({ message: 'Error deleting post' })
-      }
-      break
+      res.status(200).json(post)
+    } catch (err) {
+      res.status(500).json({ message: 'Error fetching post', details: err.message })
+    }
+  } else if (req.method === 'PUT') {
+    try {
+      const { data: updatedPost, error: updateError } = await supabase
+        .from('posts')
+        .update(req.body)
+        .eq('slug', slug)
+        .single()
 
-    default:
-      res.setHeader('Allow', ['GET', 'PUT', 'DELETE'])
-      res.status(405).end(`Method ${req.method} Not Allowed`)
+      if (updateError) throw updateError
+
+      res.status(200).json(updatedPost)
+    } catch (err) {
+      res.status(500).json({ message: 'Error updating post', details: err.message })
+    }
+  } else if (req.method === 'DELETE') {
+    try {
+      const { data: deletedPost, error: deleteError } = await supabase
+        .from('posts')
+        .delete()
+        .eq('slug', slug)
+        .single()
+
+      if (deleteError) throw deleteError
+
+      res.status(200).json(deletedPost)
+    } catch (err) {
+      res.status(500).json({ message: 'Error deleting post', details: err.message })
+    }
+  } else {
+    res.setHeader('Allow', ['GET', 'PUT', 'DELETE'])
+    res.status(405).json({ message: `Method ${req.method} Not Allowed` })
   }
 } 
