@@ -3,7 +3,6 @@ import Layout from '@/components/Layout'
 import Image from 'next/image'
 import Link from 'next/link'
 import { GetStaticProps } from 'next'
-import Parser from 'rss-parser'
 import Script from 'next/script'
 import { motion } from 'framer-motion'
 import GradientBackground from '@/components/GradientBackground'
@@ -16,18 +15,8 @@ interface Project {
   technologies: string[]
 }
 
-interface Article {
-  title: string
-  link: string
-  pubDate: string
-  contentSnippet: string
-  image: string | null
-  categories: string[]
-}
-
 interface HomeProps {
   featuredProjects: Project[]
-  featuredArticles: Article[]
 }
 
 export const getStaticProps: GetStaticProps<HomeProps> = async () => {
@@ -49,196 +38,128 @@ export const getStaticProps: GetStaticProps<HomeProps> = async () => {
     }
   ]
 
-  // Fetch Medium articles
-  try {
-    const parser = new Parser({
-      customFields: {
-        item: ['content:encoded']
-      }
-    })
-    const feed = await parser.parseURL('https://bertomill.medium.com/feed')
-    
-    const featuredArticles = feed.items.slice(0, 2).map(item => {
-      // Try to extract image from content:encoded field
-      let image = null;
-      const content = item['content:encoded'] as string
-      
-      if (content) {
-        // First try to find the first figure image (usually the main article image)
-        const figureMatch = content.match(/<figure>.*?<img.*?src="([^"]+)".*?<\/figure>/)
-        if (figureMatch) {
-          image = figureMatch[1]
-          console.log('Found figure image:', image)
-        }
-        
-        // If no figure image, try to find any image
-        if (!image) {
-          const imgMatch = content.match(/<img.*?src="([^"]+)".*?>/)
-          if (imgMatch) {
-            image = imgMatch[1]
-            console.log('Found regular image:', image)
-          }
-        }
-        
-        // Clean up image URL
-        if (image) {
-          // Remove size parameters but keep essential query params
-          image = image.replace(/\/max\/\d+\//, '/max/1600/')
-          console.log('Final image URL:', image)
-        }
-      }
-
-      const cleanSnippet = (item.contentSnippet || '')
-        .replace(/<[^>]+>/g, '')
-        .replace(/\s+/g, ' ')
-        .trim()
-        .slice(0, 150) + '...'
-
-      return {
-        title: item.title || '',
-        link: item.link || '',
-        pubDate: item.pubDate || new Date().toISOString(),
-        contentSnippet: cleanSnippet,
-        image,
-        categories: item.categories || []
-      }
-    })
-
-    return {
-      props: {
-        featuredProjects,
-        featuredArticles
-      },
-      revalidate: 3600
-    }
-  } catch (error) {
-    console.error('Error fetching articles:', error)
-    return {
-      props: {
-        featuredProjects,
-        featuredArticles: []
-      },
-      revalidate: 60
-    }
+  return {
+    props: {
+      featuredProjects
+    },
+    revalidate: 3600
   }
 }
 
-export default function Home({ featuredProjects, featuredArticles }: HomeProps) {
+export default function Home({ featuredProjects }: HomeProps) {
   return (
     <Layout>
       <Head>
         <title>Berto Mill</title>
-        <meta name="description" content="Welcome to my personal website" />
+        <meta name="description" content="AI Developer & Consultant" />
       </Head>
 
       <GradientBackground />
       
-      <div className="min-h-screen flex flex-col justify-center relative overflow-hidden">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="relative z-10 px-6 lg:px-8 max-w-6xl mx-auto"
-        >
-          <div className="mx-auto max-w-2xl">
-            <motion.h1 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-6xl font-bold tracking-tight text-white sm:text-8xl mb-8"
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/20 via-black to-black" />
+        </div>
+        
+        <div className="relative z-10 w-full">
+          <div className="max-w-[90%] mx-auto">
+            <motion.div 
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1.2 }}
+              className="space-y-8"
             >
-              Hi, I&apos;m Berto Mill
-            </motion.h1>
-            
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-lg text-gray-300 leading-8 mb-12"
-            >
-              I&apos;m a consultant and developer specializing in AI applications. Welcome to my corner of the web where I share my projects, thoughts, and interests.
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              className="flex gap-4"
-            >
-              <Link 
-                href="/projects"
-                className="rounded-lg px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-medium transition-colors"
+              <motion.h1 
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 1.2, delay: 0.3 }}
+                className="text-8xl md:text-[12rem] font-light tracking-tight leading-none"
               >
-                View Projects
-              </Link>
-              <Link
-                href="/blog"
-                className="rounded-lg px-6 py-3 border border-gray-600 hover:border-emerald-500 text-gray-300 hover:text-emerald-500 font-medium transition-colors"
+                2025
+              </motion.h1>
+              
+              <motion.p
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 1.2, delay: 0.6 }}
+                className="text-xl md:text-3xl font-light tracking-wide text-emerald-500 max-w-2xl"
               >
-                Read Blog
-              </Link>
+                SHAPING TOMORROW&apos;S TECHNOLOGY TODAY THROUGH CUTTING-EDGE AI INNOVATION
+              </motion.p>
             </motion.div>
           </div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.8 }}
-          className="absolute top-1/2 right-0 transform -translate-y-1/2 hidden lg:block"
-        >
-          <div className="relative w-96 h-96">
-            <Image
-              src="/profile.jpg"
-              alt="Berto Mill"
-              fill
-              className="rounded-full object-cover"
-              style={{
-                filter: 'drop-shadow(0 0 30px rgba(16, 185, 129, 0.2))'
-              }}
-            />
-          </div>
-        </motion.div>
-      </div>
-
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 1 }}
-        className="py-24 px-6 lg:px-8"
-      >
-        <h2 className="text-4xl font-bold mb-12 text-white">Featured Projects</h2>
-        <div className="grid gap-8 md:grid-cols-2">
-          {featuredProjects.map((project) => (
-            <div key={project.title} className="group">
-              <div className="space-y-4">
-                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-stone-900">
-                  <Image
-                    src={project.image}
-                    alt={project.title}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                </div>
-                <div>
-                  <h3 className="text-lg font-medium">{project.title}</h3>
-                  <p className="mt-2 text-sm text-stone-400">{project.description}</p>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {project.technologies.map((tech) => (
-                    <span
-                      key={tech}
-                      className="px-3 py-1 text-xs text-stone-400 rounded-full bg-stone-900"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          ))}
         </div>
-      </motion.div>
+
+        {/* Diagonal Divider */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-stone-950 transform -skew-y-3 origin-left" />
+      </section>
+
+      {/* Projects Section */}
+      <section className="relative bg-stone-950 py-32">
+        <div className="max-w-[90%] mx-auto">
+          <motion.h2 
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1 }}
+            className="text-4xl md:text-7xl font-light tracking-tight mb-24"
+          >
+            FEATURED
+            <br />
+            PROJECTS
+          </motion.h2>
+          
+          <div className="grid md:grid-cols-2 gap-16">
+            {featuredProjects.map((project, index) => (
+              <motion.div
+                key={project.title}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, delay: index * 0.2 }}
+                className="group"
+              >
+                <Link href={project.link}>
+                  <div className="space-y-6">
+                    <div className="relative aspect-[4/3] overflow-hidden">
+                      <Image
+                        src={project.image}
+                        alt={project.title}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/30 to-black/50 group-hover:opacity-50 transition-opacity duration-300" />
+                      
+                      <div className="absolute bottom-0 left-0 right-0 p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
+                        <div className="space-y-4">
+                          <p className="text-gray-300 tracking-wide">
+                            {project.description}
+                          </p>
+                          <div className="flex flex-wrap gap-3">
+                            {project.technologies.map((tech) => (
+                              <span
+                                key={tech}
+                                className="px-4 py-1 text-sm border border-white/20 text-gray-300 backdrop-blur-sm"
+                              >
+                                {tech}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <h3 className="text-2xl font-light tracking-wider group-hover:text-emerald-500 transition-colors duration-300">
+                      {project.title.toUpperCase()}
+                    </h3>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* Diagonal Divider */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-black transform skew-y-3 origin-left" />
+      </section>
 
       <Script
         src="https://platform.linkedin.com/badges/js/profile.js"

@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Sun, Moon, Gamepad } from 'lucide-react'
+import { Sun, Moon } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import ChatInterface from './ChatInterface'
 import NavbarAuth from './NavbarAuth'
@@ -13,52 +13,52 @@ export default function Layout({ children }: LayoutProps) {
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
 
-  // Only show theme toggle after mounting to avoid hydration mismatch
   useEffect(() => {
     setMounted(true)
   }, [])
 
   return (
-    <div className="min-h-screen bg-stone-50 dark:bg-stone-950 text-stone-950 dark:text-stone-50">
-      <nav className="sticky top-0 z-40 w-full backdrop-blur flex-none transition-colors duration-500 lg:z-50 lg:border-b lg:border-stone-900/10 dark:border-stone-50/[0.06] bg-white/75 dark:bg-stone-950/75 supports-backdrop-blur:bg-white/60">
-        <div className="max-w-7xl mx-auto">
-          <div className="p-4 flex items-center justify-between">
-            <Link href="/" className="text-lg font-medium">
-              Berto Mill
+    <div className="min-h-screen bg-black text-white">
+      {/* Vertical Navigation */}
+      <nav className="fixed left-0 top-0 h-full w-48 bg-black z-50 border-r border-white/10">
+        <div className="h-full flex flex-col py-12">
+          <Link href="/" className="text-center text-xl font-light tracking-[0.2em] px-6 mb-16">
+            BERTO
+            <br />
+            MILL
+          </Link>
+          
+          <div className="flex flex-col gap-8 px-6 text-sm tracking-widest">
+            <Link href="/blog" className="hover:text-emerald-500 transition-colors duration-300">
+              NOW
             </Link>
-            <div className="flex items-center gap-6">
-              <Link href="/blog" className="text-stone-400 hover:text-white transition-colors">
-                Blog
-              </Link>
-              <Link href="/projects" className="text-stone-400 hover:text-white transition-colors">
-                Projects
-              </Link>
-              <Link href="/scrabble" className="flex items-center gap-1 text-stone-400 hover:text-white transition-colors">
-                <Gamepad className="w-4 h-4" />
-                Play Scrabble
-              </Link>
-              <Link href="/about" className="text-stone-400 hover:text-white transition-colors">
-                About
-              </Link>
-              <NavbarAuth />
-              {mounted && (
-                <button
-                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                  className="p-2 hover:bg-stone-800 rounded-lg transition-colors"
-                  aria-label="Toggle theme"
-                >
-                  {theme === 'dark' ? (
-                    <Sun className="w-5 h-5" />
-                  ) : (
-                    <Moon className="w-5 h-5" />
-                  )}
-                </button>
-              )}
-            </div>
+            <Link href="/projects" className="hover:text-emerald-500 transition-colors duration-300">
+              PROJECTS
+            </Link>
+            <Link href="/about" className="hover:text-emerald-500 transition-colors duration-300">
+              ABOUT
+            </Link>
+            <NavbarAuth />
+          </div>
+
+          <div className="mt-auto px-6 pb-8">
+            {mounted && (
+              <button
+                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                className="hover:text-emerald-500 transition-colors duration-300"
+                aria-label="Toggle theme"
+              >
+                {theme === 'dark' ? (
+                  <Sun className="w-5 h-5" />
+                ) : (
+                  <Moon className="w-5 h-5" />
+                )}
+              </button>
+            )}
           </div>
         </div>
       </nav>
-      <main>{children}</main>
+      <main className="pl-48">{children}</main>
       <ChatInterface />
     </div>
   )
