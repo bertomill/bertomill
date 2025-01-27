@@ -1,30 +1,35 @@
 import { useEffect, useState } from 'react'
-import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 import { User } from '@supabase/supabase-js'
+import dynamic from 'next/dynamic'
 
-export default function NavbarAuth() {
+// Client-side only component
+const NavbarAuth = () => {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
-  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    setMounted(true)
-    // Check active session and subscribe to auth changes
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    const initSupabase = async () => {
+      const { supabase } = await import('@/lib/supabase')
+      
+      const { data: { session } } = await supabase.auth.getSession()
       setUser(session?.user ?? null)
       setLoading(false)
-    })
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null)
-    })
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+        setUser(session?.user ?? null)
+      })
 
-    return () => subscription.unsubscribe()
+      return () => subscription.unsubscribe()
+    }
+
+    initSupabase()
   }, [])
 
-  // Don't render anything on the server side
-  if (!mounted) return null
+  const handleSignOut = async () => {
+    const { supabase } = await import('@/lib/supabase')
+    await supabase.auth.signOut()
+  }
 
   if (loading) {
     return null // Don't show anything while loading
@@ -40,7 +45,7 @@ export default function NavbarAuth() {
           Admin
         </Link>
         <button
-          onClick={() => supabase.auth.signOut()}
+          onClick={handleSignOut}
           className="text-stone-400 hover:text-white transition-colors"
         >
           Sign Out
@@ -57,4 +62,9 @@ export default function NavbarAuth() {
       Sign In
     </Link>
   )
-} 
+}
+
+// Export as a client-side only component
+export default dynamic(() => Promise.resolve(NavbarAuth), {
+  ssr: false
+}) 
