@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { supabase } from '@/lib/supabase'
 import Layout from '@/components/Layout'
 
 export default function Admin() {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
     const checkUser = async () => {
+      const { supabase } = await import('@/lib/supabase')
       const { data: { session } } = await supabase.auth.getSession()
       if (!session) {
         router.replace('/login')
@@ -20,6 +22,9 @@ export default function Admin() {
   // Intentionally omitting router from deps to prevent redirect loops
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // Don't render anything on the server side
+  if (!mounted) return null
 
   if (loading) {
     return (
