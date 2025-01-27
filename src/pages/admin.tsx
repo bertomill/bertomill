@@ -17,7 +17,9 @@ export default function Admin() {
       }
     }
     checkUser()
-  }, []) // Intentionally omitting router to prevent redirect loops
+  // Intentionally omitting router from deps to prevent redirect loops
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   if (loading) {
     return (

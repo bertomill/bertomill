@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { supabase } from '@/lib/supabase'
+import { PostgrestError } from '@supabase/supabase-js'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { slug } = req.query
@@ -15,10 +16,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (fetchError) throw fetchError
 
       res.status(200).json(post)
-    } catch (err: any) {
+    } catch (err) {
+      const error = err as Error | PostgrestError
       res.status(500).json({ 
         message: 'Error fetching post', 
-        details: err?.message || 'Unknown error' 
+        details: 'message' in error ? error.message : 'Unknown error'
       })
     }
   } else if (req.method === 'PUT') {
@@ -32,10 +34,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (updateError) throw updateError
 
       res.status(200).json(updatedPost)
-    } catch (err: any) {
+    } catch (err) {
+      const error = err as Error | PostgrestError
       res.status(500).json({ 
         message: 'Error updating post', 
-        details: err?.message || 'Unknown error' 
+        details: 'message' in error ? error.message : 'Unknown error'
       })
     }
   } else if (req.method === 'DELETE') {
@@ -49,10 +52,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (deleteError) throw deleteError
 
       res.status(200).json(deletedPost)
-    } catch (err: any) {
+    } catch (err) {
+      const error = err as Error | PostgrestError
       res.status(500).json({ 
         message: 'Error deleting post', 
-        details: err?.message || 'Unknown error' 
+        details: 'message' in error ? error.message : 'Unknown error'
       })
     }
   } else {
