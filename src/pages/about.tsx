@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import Layout from '../components/Layout'
+import Layout from '@/components/Layout'
 import Image from 'next/image'
 import { BookOpen, Clapperboard, User } from 'lucide-react'
 

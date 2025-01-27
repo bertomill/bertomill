@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import Layout from '../components/Layout'
+import Layout from '@/components/Layout'
 import { useState } from 'react'
 import { Gamepad } from 'lucide-react'
 
