@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Layout from '@/components/Layout'
 import Image from 'next/image'
-import { BookOpen, Clapperboard, User, GraduationCap, Newspaper, Heart, Trophy, ScrollText, Briefcase, ChevronDown } from 'lucide-react'
+import { BookOpen, User, GraduationCap, Newspaper, Heart, Trophy, ScrollText, Briefcase, ChevronDown } from 'lucide-react'
 import * as Collapsible from '@radix-ui/react-collapsible'
 import { useState } from 'react'
 
