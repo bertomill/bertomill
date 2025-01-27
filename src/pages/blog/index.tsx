@@ -55,33 +55,47 @@ export async function getStaticProps() {
   })
 
   // Get Medium posts
-  const parser = new Parser()
-  const mediumFeed = await parser.parseURL('https://medium.com/feed/@bertomill')
-  
-  const mediumPosts = mediumFeed.items.map(item => {
-    // Extract the first image from the content if available
-    const imageMatch = item['content:encoded']?.match(/<img[^>]+src="([^">]+)"/)?.[1]
+  let mediumPosts = [];
+  try {
+    const parser = new Parser({
+      timeout: 5000, // 5 second timeout
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; BertoMillWebsite/1.0; +https://bertomill.com)'
+      }
+    });
     
-    return {
-      title: item.title || '',
-      link: item.link || '',
-      date: new Date(item.pubDate || '').toISOString(),
-      content: item.contentSnippet || '',
-      image: imageMatch || item.enclosure?.url || null
-    }
-  })
+    const mediumFeed = await parser.parseURL('https://medium.com/feed/@bertomill');
+    
+    mediumPosts = mediumFeed.items.map(item => {
+      // Extract the first image from the content if available
+      const imageMatch = item['content:encoded']?.match(/<img[^>]+src="([^">]+)"/)?.[1];
+      
+      return {
+        title: item.title || '',
+        link: item.link || '',
+        date: new Date(item.pubDate || '').toISOString(),
+        content: item.contentSnippet || '',
+        image: imageMatch || item.enclosure?.url || null
+      };
+    }).sort((a, b) =>
+      new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
+  } catch (error) {
+    console.warn('Failed to fetch Medium posts:', error);
+    // Continue with empty medium posts
+  }
 
-  // Combine and sort all posts by date
+  // Return props with local posts and any medium posts we managed to fetch
   return {
     props: {
       localPosts: localPosts.sort((a, b) => 
         new Date(b.frontMatter.date).getTime() - new Date(a.frontMatter.date).getTime()
       ),
-      mediumPosts: mediumPosts.sort((a, b) =>
-        new Date(b.date).getTime() - new Date(a.date).getTime()
-      )
-    }
-  }
+      mediumPosts
+    },
+    // Revalidate every hour
+    revalidate: 3600
+  };
 }
 
 export default function Blog({ localPosts, mediumPosts }: BlogProps) {
