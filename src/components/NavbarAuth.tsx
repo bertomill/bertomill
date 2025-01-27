@@ -6,8 +6,10 @@ import { User } from '@supabase/supabase-js'
 export default function NavbarAuth() {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
     // Check active session and subscribe to auth changes
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null)
@@ -21,9 +23,8 @@ export default function NavbarAuth() {
     return () => subscription.unsubscribe()
   }, [])
 
-  const handleSignOut = async () => {
-    await supabase.auth.signOut()
-  }
+  // Don't render anything on the server side
+  if (!mounted) return null
 
   if (loading) {
     return null // Don't show anything while loading
@@ -39,7 +40,7 @@ export default function NavbarAuth() {
           Admin
         </Link>
         <button
-          onClick={handleSignOut}
+          onClick={() => supabase.auth.signOut()}
           className="text-stone-400 hover:text-white transition-colors"
         >
           Sign Out
