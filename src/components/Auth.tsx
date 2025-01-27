@@ -1,14 +1,19 @@
-import { useState } from 'react'
-import { supabase } from '@/lib/supabase'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Layout from '@/components/Layout'
+import dynamic from 'next/dynamic'
 
-export default function Auth() {
+const Auth = () => {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -16,6 +21,7 @@ export default function Auth() {
     setError(null)
 
     try {
+      const { supabase } = await import('@/lib/supabase')
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -32,6 +38,9 @@ export default function Auth() {
       setLoading(false)
     }
   }
+
+  // Don't render anything on the server side
+  if (!mounted) return null
 
   return (
     <Layout>
@@ -86,4 +95,9 @@ export default function Auth() {
       </div>
     </Layout>
   )
-} 
+}
+
+// Export as a client-side only component
+export default dynamic(() => Promise.resolve(Auth), {
+  ssr: false
+}) 
