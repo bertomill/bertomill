@@ -288,324 +288,326 @@ export default function About() {
         <meta name="description" content="Learn more about my professional background and personal interests" />
       </Head>
 
-      <div className="max-w-4xl mx-auto px-4 space-y-16">
-        {/* About Me Section */}
-        <section className="space-y-8">
-          <div className="flex flex-col md:flex-row gap-8 items-start">
-            <div className="flex-1 space-y-6">
-              <h1 className="text-3xl font-medium flex items-center gap-2">
-                <User className="w-6 h-6 text-editor-accent" />
-                About Me
-              </h1>
-              <div className="space-y-4 text-editor-comment">
-                <p className="text-lg leading-relaxed">
-                  I am a consultant and developer in the technology space. I have three years of experience in helping companies of all sizes implement technology. I also develop AI applications.
-                </p>
-                <p className="text-lg leading-relaxed">
-                  Outside of work, I am a fitness enthusiast and enjoy running, lifting weights, and playing sports such as football and squash.
-                </p>
+      <main className="min-h-screen py-20">
+        <div className="max-w-4xl mx-auto px-4 space-y-20">
+          {/* About Me Section */}
+          <section className="space-y-8">
+            <div className="flex flex-col md:flex-row gap-8 items-start">
+              <div className="flex-1 space-y-6">
+                <h1 className="text-3xl font-medium flex items-center gap-2">
+                  <User className="w-6 h-6 text-editor-accent" />
+                  About Me
+                </h1>
+                <div className="space-y-4 text-editor-comment">
+                  <p className="text-lg leading-relaxed">
+                    I am a consultant and developer in the technology space. I have three years of experience in helping companies of all sizes implement technology. I also develop AI applications.
+                  </p>
+                  <p className="text-lg leading-relaxed">
+                    Outside of work, I am a fitness enthusiast and enjoy running, lifting weights, and playing sports such as football and squash.
+                  </p>
+                </div>
+              </div>
+              <div className="relative w-full md:w-72 aspect-video rounded-xl overflow-hidden border-2 border-editor-comment/20 shadow-lg">
+                <Image
+                  src="/Berto Mill Conference.png"
+                  alt="Berto Mill at Conference"
+                  fill
+                  className="object-cover"
+                  priority
+                />
               </div>
             </div>
-            <div className="relative w-full md:w-72 aspect-video rounded-xl overflow-hidden border-2 border-editor-comment/20 shadow-lg">
-              <Image
-                src="/Berto Mill Conference.png"
-                alt="Berto Mill at Conference"
-                fill
-                className="object-cover"
-                priority
-              />
-            </div>
-          </div>
-        </section>
+          </section>
 
-        {/* Work Experience Section */}
-        <section className="space-y-6">
-          <h2 className="text-2xl font-medium flex items-center gap-2">
-            <Briefcase className="w-6 h-6 text-editor-accent" />
-            Work Experience
-          </h2>
-          <div className="space-y-6">
-            {experience.map((exp) => (
-              <Collapsible.Root
-                key={exp.company}
-                open={openExperiences.includes(exp.company)}
-                onOpenChange={() => toggleExperience(exp.company)}
-                className="radix-card overflow-hidden bg-editor-bg border border-editor-comment/20"
-              >
-                <Collapsible.Trigger className="w-full">
-                  <div className="p-6 flex items-start gap-4 hover:bg-editor-bg/50 transition-colors">
-                    {exp.imageSrc && (
-                      <div className="relative w-12 h-12 flex-shrink-0">
+          {/* Work Experience Section */}
+          <section className="space-y-6">
+            <h2 className="text-2xl font-medium flex items-center gap-2">
+              <Briefcase className="w-6 h-6 text-editor-accent" />
+              Work Experience
+            </h2>
+            <div className="space-y-6">
+              {experience.map((exp) => (
+                <Collapsible.Root
+                  key={exp.company}
+                  open={openExperiences.includes(exp.company)}
+                  onOpenChange={() => toggleExperience(exp.company)}
+                  className="radix-card overflow-hidden bg-editor-bg border border-editor-comment/20"
+                >
+                  <Collapsible.Trigger className="w-full">
+                    <div className="p-6 flex items-start gap-4 hover:bg-editor-bg/50 transition-colors">
+                      {exp.imageSrc && (
+                        <div className="relative w-12 h-12 flex-shrink-0">
+                          <Image
+                            src={exp.imageSrc}
+                            alt={exp.company}
+                            fill
+                            className="object-contain"
+                          />
+                        </div>
+                      )}
+                      <div className="flex-1">
+                        <div className="flex justify-between items-center gap-4">
+                          <div>
+                            <h3 className="text-xl font-medium text-editor-text">{exp.company}</h3>
+                            <p className="text-editor-comment">{exp.companyLocation}</p>
+                          </div>
+                          <ChevronDown 
+                            className={`w-5 h-5 text-editor-comment transition-transform duration-200 ${
+                              openExperiences.includes(exp.company) ? 'rotate-180' : ''
+                            }`}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </Collapsible.Trigger>
+
+                  <Collapsible.Content>
+                    <div className="px-6 pb-6">
+                      <div className="space-y-8 pl-4 border-l-2 border-editor-comment/20">
+                        {exp.positions.map((position, index) => (
+                          <div key={`${position.title}-${index}`} className="relative">
+                            <div className="absolute -left-[25px] top-2 w-4 h-4 rounded-full bg-editor-bg border-2 border-editor-accent"></div>
+                            <div className="space-y-2">
+                              <div className="flex justify-between items-start gap-4">
+                                <div>
+                                  <h4 className="text-lg font-medium text-editor-keyword">{position.title}</h4>
+                                  {position.type && (
+                                    <p className="text-editor-comment text-sm">{position.type}</p>
+                                  )}
+                                </div>
+                                <span className="text-editor-comment text-sm whitespace-nowrap">{position.period}</span>
+                              </div>
+                              {position.location && (
+                                <p className="text-editor-comment text-sm">{position.location}</p>
+                              )}
+                              <p className="text-editor-text">{position.description}</p>
+                              <div className="flex flex-wrap gap-2">
+                                {position.skills.map((skill) => (
+                                  <span
+                                    key={skill}
+                                    className="px-2 py-1 text-xs rounded-full bg-editor-accent/10 text-editor-accent"
+                                  >
+                                    {skill}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </Collapsible.Content>
+                </Collapsible.Root>
+              ))}
+            </div>
+          </section>
+
+          {/* Education Section */}
+          <section className="space-y-6">
+            <h2 className="text-2xl font-medium flex items-center gap-2">
+              <GraduationCap className="w-6 h-6 text-editor-accent" />
+              Education
+            </h2>
+            <div className="space-y-8">
+              {education.map((edu) => (
+                <div key={edu.school} className="radix-card p-6 space-y-4">
+                  <div className="flex flex-col md:flex-row gap-4 items-start">
+                    <div className="relative w-16 h-16 flex-shrink-0">
+                      <Image
+                        src={edu.imageSrc}
+                        alt={edu.school}
+                        fill
+                        className="object-contain"
+                      />
+                    </div>
+                    <div className="flex-1 space-y-2">
+                      <h3 className="text-xl font-medium text-editor-text">{edu.school}</h3>
+                      <p className="text-editor-text">{edu.degree}</p>
+                      <p className="text-editor-comment text-sm">{edu.period}</p>
+                      
+                      {edu.activities.length > 0 && (
+                        <div className="pt-2">
+                          <p className="text-editor-text font-medium">Activities and Societies:</p>
+                          <p className="text-editor-comment">{edu.activities.join(", ")}</p>
+                        </div>
+                      )}
+                      
+                      {edu.achievements.length > 0 && (
+                        <ul className="list-disc list-inside pt-2 space-y-1">
+                          {edu.achievements.map((achievement) => (
+                            <li key={achievement} className="text-editor-comment">
+                              {achievement}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Publications Section */}
+          <section className="space-y-6">
+            <h2 className="text-2xl font-medium flex items-center gap-2">
+              <ScrollText className="w-6 h-6 text-editor-accent" />
+              Publications
+            </h2>
+            <div className="grid gap-6">
+              {publications.map((publication) => (
+                <a
+                  key={publication.title}
+                  href={publication.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="radix-card p-6 space-y-3 hover:bg-editor-bg/50 transition-colors"
+                >
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-start gap-4">
+                      <h3 className="text-xl font-medium text-editor-text">{publication.title}</h3>
+                      <span className="text-editor-comment text-sm whitespace-nowrap">{publication.date}</span>
+                    </div>
+                    <p className="text-editor-text">{publication.publisher}</p>
+                    {publication.description && (
+                      <p className="text-editor-comment text-sm">{publication.description}</p>
+                    )}
+                  </div>
+                </a>
+              ))}
+            </div>
+          </section>
+
+          {/* Featured Articles Section */}
+          <section className="space-y-6">
+            <h2 className="text-2xl font-medium flex items-center gap-2">
+              <Newspaper className="w-6 h-6 text-editor-accent" />
+              Featured Articles
+            </h2>
+            <div className="grid gap-6">
+              {articles.map((article) => (
+                <a
+                  key={article.title}
+                  href={article.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="radix-card p-4 hover:bg-editor-bg/50 transition-colors"
+                >
+                  <div className="flex gap-4 items-center">
+                    <div className="relative w-24 h-24 flex-shrink-0">
+                      <Image
+                        src={article.imageSrc}
+                        alt={article.title}
+                        fill
+                        className="object-cover rounded-lg"
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-medium text-editor-text">{article.title}</h3>
+                      <p className="text-editor-comment text-sm">{article.description}</p>
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </section>
+
+          {/* Volunteering Section */}
+          <section className="space-y-6">
+            <h2 className="text-2xl font-medium flex items-center gap-2">
+              <Heart className="w-6 h-6 text-editor-accent" />
+              Volunteering
+            </h2>
+            <div className="grid gap-6">
+              {volunteering.map((volunteer) => (
+                <div
+                  key={volunteer.role}
+                  className="radix-card p-6 space-y-4"
+                >
+                  <div className="flex flex-col md:flex-row gap-4 items-start">
+                    {volunteer.imageSrc && (
+                      <div className="relative w-16 h-16 flex-shrink-0">
                         <Image
-                          src={exp.imageSrc}
-                          alt={exp.company}
+                          src={volunteer.imageSrc}
+                          alt={volunteer.organization}
                           fill
                           className="object-contain"
                         />
                       </div>
                     )}
-                    <div className="flex-1">
-                      <div className="flex justify-between items-center gap-4">
-                        <div>
-                          <h3 className="text-xl font-medium text-editor-text">{exp.company}</h3>
-                          <p className="text-editor-comment">{exp.companyLocation}</p>
-                        </div>
-                        <ChevronDown 
-                          className={`w-5 h-5 text-editor-comment transition-transform duration-200 ${
-                            openExperiences.includes(exp.company) ? 'rotate-180' : ''
-                          }`}
-                        />
-                      </div>
+                    <div className="flex-1 space-y-2">
+                      <h3 className="text-xl font-medium text-editor-text">{volunteer.role}</h3>
+                      <p className="text-editor-text">{volunteer.organization}</p>
+                      <p className="text-editor-comment text-sm">{volunteer.period}</p>
+                      <p className="text-editor-comment text-sm">{volunteer.category}</p>
+                      <p className="text-editor-comment">{volunteer.description}</p>
                     </div>
                   </div>
-                </Collapsible.Trigger>
+                </div>
+              ))}
+            </div>
+          </section>
 
-                <Collapsible.Content>
-                  <div className="px-6 pb-6">
-                    <div className="space-y-8 pl-4 border-l-2 border-editor-comment/20">
-                      {exp.positions.map((position, index) => (
-                        <div key={`${position.title}-${index}`} className="relative">
-                          <div className="absolute -left-[25px] top-2 w-4 h-4 rounded-full bg-editor-bg border-2 border-editor-accent"></div>
-                          <div className="space-y-2">
-                            <div className="flex justify-between items-start gap-4">
-                              <div>
-                                <h4 className="text-lg font-medium text-editor-keyword">{position.title}</h4>
-                                {position.type && (
-                                  <p className="text-editor-comment text-sm">{position.type}</p>
-                                )}
-                              </div>
-                              <span className="text-editor-comment text-sm whitespace-nowrap">{position.period}</span>
-                            </div>
-                            {position.location && (
-                              <p className="text-editor-comment text-sm">{position.location}</p>
-                            )}
-                            <p className="text-editor-text">{position.description}</p>
-                            <div className="flex flex-wrap gap-2">
-                              {position.skills.map((skill) => (
-                                <span
-                                  key={skill}
-                                  className="px-2 py-1 text-xs rounded-full bg-editor-accent/10 text-editor-accent"
-                                >
-                                  {skill}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
+          {/* Honors & Awards Section */}
+          <section className="space-y-6">
+            <h2 className="text-2xl font-medium flex items-center gap-2">
+              <Trophy className="w-6 h-6 text-editor-accent" />
+              Honors & Awards
+            </h2>
+            <div className="grid gap-6">
+              {awards.map((award) => (
+                <div
+                  key={award.title}
+                  className="radix-card p-6 space-y-3"
+                >
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-start gap-4">
+                      <h3 className="text-xl font-medium text-editor-text">{award.title}</h3>
+                      <span className="text-editor-comment text-sm whitespace-nowrap">{award.date}</span>
                     </div>
-                  </div>
-                </Collapsible.Content>
-              </Collapsible.Root>
-            ))}
-          </div>
-        </section>
-
-        {/* Education Section */}
-        <section className="space-y-6">
-          <h2 className="text-2xl font-medium flex items-center gap-2">
-            <GraduationCap className="w-6 h-6 text-editor-accent" />
-            Education
-          </h2>
-          <div className="space-y-8">
-            {education.map((edu) => (
-              <div key={edu.school} className="radix-card p-6 space-y-4">
-                <div className="flex flex-col md:flex-row gap-4 items-start">
-                  <div className="relative w-16 h-16 flex-shrink-0">
-                    <Image
-                      src={edu.imageSrc}
-                      alt={edu.school}
-                      fill
-                      className="object-contain"
-                    />
-                  </div>
-                  <div className="flex-1 space-y-2">
-                    <h3 className="text-xl font-medium text-editor-text">{edu.school}</h3>
-                    <p className="text-editor-text">{edu.degree}</p>
-                    <p className="text-editor-comment text-sm">{edu.period}</p>
-                    
-                    {edu.activities.length > 0 && (
-                      <div className="pt-2">
-                        <p className="text-editor-text font-medium">Activities and Societies:</p>
-                        <p className="text-editor-comment">{edu.activities.join(", ")}</p>
-                      </div>
+                    <p className="text-editor-text">Issued by {award.issuedBy}</p>
+                    {award.description && (
+                      <p className="text-editor-comment text-sm">{award.description}</p>
                     )}
-                    
-                    {edu.achievements.length > 0 && (
-                      <ul className="list-disc list-inside pt-2 space-y-1">
-                        {edu.achievements.map((achievement) => (
-                          <li key={achievement} className="text-editor-comment">
-                            {achievement}
-                          </li>
-                        ))}
-                      </ul>
+                    {award.link && (
+                      <a 
+                        href="#" 
+                        className="text-editor-accent hover:text-editor-accent/80 text-sm inline-flex items-center gap-1"
+                      >
+                        {award.link}
+                      </a>
                     )}
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </section>
+              ))}
+            </div>
+          </section>
 
-        {/* Publications Section */}
-        <section className="space-y-6">
-          <h2 className="text-2xl font-medium flex items-center gap-2">
-            <ScrollText className="w-6 h-6 text-editor-accent" />
-            Publications
-          </h2>
-          <div className="grid gap-6">
-            {publications.map((publication) => (
-              <a
-                key={publication.title}
-                href={publication.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="radix-card p-6 space-y-3 hover:bg-editor-bg/50 transition-colors"
-              >
-                <div className="space-y-2">
-                  <div className="flex justify-between items-start gap-4">
-                    <h3 className="text-xl font-medium text-editor-text">{publication.title}</h3>
-                    <span className="text-editor-comment text-sm whitespace-nowrap">{publication.date}</span>
+          {/* Reading List Section */}
+          <section className="space-y-6">
+            <h2 className="text-2xl font-medium flex items-center gap-2">
+              <BookOpen className="w-6 h-6 text-editor-accent" />
+              Reading List
+            </h2>
+            <div className="grid gap-6">
+              {favoriteBooks.map((book, index) => (
+                <div key={book.title} className="radix-card p-4 space-y-2">
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-editor-accent font-medium">{index + 1}.</span>
+                    <h3 className="text-lg font-medium text-editor-text">
+                      {book.title}
+                      <span className="text-editor-comment text-sm ml-2">by {book.author}</span>
+                    </h3>
                   </div>
-                  <p className="text-editor-text">{publication.publisher}</p>
-                  {publication.description && (
-                    <p className="text-editor-comment text-sm">{publication.description}</p>
-                  )}
+                  <p className="text-editor-comment text-sm pl-6">
+                    {book.description}
+                  </p>
                 </div>
-              </a>
-            ))}
-          </div>
-        </section>
-
-        {/* Featured Articles Section */}
-        <section className="space-y-6">
-          <h2 className="text-2xl font-medium flex items-center gap-2">
-            <Newspaper className="w-6 h-6 text-editor-accent" />
-            Featured Articles
-          </h2>
-          <div className="grid gap-6">
-            {articles.map((article) => (
-              <a
-                key={article.title}
-                href={article.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="radix-card p-4 hover:bg-editor-bg/50 transition-colors"
-              >
-                <div className="flex gap-4 items-center">
-                  <div className="relative w-24 h-24 flex-shrink-0">
-                    <Image
-                      src={article.imageSrc}
-                      alt={article.title}
-                      fill
-                      className="object-cover rounded-lg"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-lg font-medium text-editor-text">{article.title}</h3>
-                    <p className="text-editor-comment text-sm">{article.description}</p>
-                  </div>
-                </div>
-              </a>
-            ))}
-          </div>
-        </section>
-
-        {/* Volunteering Section */}
-        <section className="space-y-6">
-          <h2 className="text-2xl font-medium flex items-center gap-2">
-            <Heart className="w-6 h-6 text-editor-accent" />
-            Volunteering
-          </h2>
-          <div className="grid gap-6">
-            {volunteering.map((volunteer) => (
-              <div
-                key={volunteer.role}
-                className="radix-card p-6 space-y-4"
-              >
-                <div className="flex flex-col md:flex-row gap-4 items-start">
-                  {volunteer.imageSrc && (
-                    <div className="relative w-16 h-16 flex-shrink-0">
-                      <Image
-                        src={volunteer.imageSrc}
-                        alt={volunteer.organization}
-                        fill
-                        className="object-contain"
-                      />
-                    </div>
-                  )}
-                  <div className="flex-1 space-y-2">
-                    <h3 className="text-xl font-medium text-editor-text">{volunteer.role}</h3>
-                    <p className="text-editor-text">{volunteer.organization}</p>
-                    <p className="text-editor-comment text-sm">{volunteer.period}</p>
-                    <p className="text-editor-comment text-sm">{volunteer.category}</p>
-                    <p className="text-editor-comment">{volunteer.description}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Honors & Awards Section */}
-        <section className="space-y-6">
-          <h2 className="text-2xl font-medium flex items-center gap-2">
-            <Trophy className="w-6 h-6 text-editor-accent" />
-            Honors & Awards
-          </h2>
-          <div className="grid gap-6">
-            {awards.map((award) => (
-              <div
-                key={award.title}
-                className="radix-card p-6 space-y-3"
-              >
-                <div className="space-y-2">
-                  <div className="flex justify-between items-start gap-4">
-                    <h3 className="text-xl font-medium text-editor-text">{award.title}</h3>
-                    <span className="text-editor-comment text-sm whitespace-nowrap">{award.date}</span>
-                  </div>
-                  <p className="text-editor-text">Issued by {award.issuedBy}</p>
-                  {award.description && (
-                    <p className="text-editor-comment text-sm">{award.description}</p>
-                  )}
-                  {award.link && (
-                    <a 
-                      href="#" 
-                      className="text-editor-accent hover:text-editor-accent/80 text-sm inline-flex items-center gap-1"
-                    >
-                      {award.link}
-                    </a>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Reading List Section */}
-        <section className="space-y-6">
-          <h2 className="text-2xl font-medium flex items-center gap-2">
-            <BookOpen className="w-6 h-6 text-editor-accent" />
-            Reading List
-          </h2>
-          <div className="grid gap-6">
-            {favoriteBooks.map((book, index) => (
-              <div key={book.title} className="radix-card p-4 space-y-2">
-                <div className="flex items-baseline gap-2">
-                  <span className="text-editor-accent font-medium">{index + 1}.</span>
-                  <h3 className="text-lg font-medium text-editor-text">
-                    {book.title}
-                    <span className="text-editor-comment text-sm ml-2">by {book.author}</span>
-                  </h3>
-                </div>
-                <p className="text-editor-comment text-sm pl-6">
-                  {book.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
-      </div>
+              ))}
+            </div>
+          </section>
+        </div>
+      </main>
     </Layout>
   )
 }
