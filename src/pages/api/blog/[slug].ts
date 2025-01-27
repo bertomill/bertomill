@@ -15,8 +15,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (fetchError) throw fetchError
 
       res.status(200).json(post)
-    } catch (err) {
-      res.status(500).json({ message: 'Error fetching post', details: err.message })
+    } catch (err: any) {
+      res.status(500).json({ 
+        message: 'Error fetching post', 
+        details: err?.message || 'Unknown error' 
+      })
     }
   } else if (req.method === 'PUT') {
     try {
@@ -29,8 +32,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (updateError) throw updateError
 
       res.status(200).json(updatedPost)
-    } catch (err) {
-      res.status(500).json({ message: 'Error updating post', details: err.message })
+    } catch (err: any) {
+      res.status(500).json({ 
+        message: 'Error updating post', 
+        details: err?.message || 'Unknown error' 
+      })
     }
   } else if (req.method === 'DELETE') {
     try {
@@ -43,8 +49,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (deleteError) throw deleteError
 
       res.status(200).json(deletedPost)
-    } catch (err) {
-      res.status(500).json({ message: 'Error deleting post', details: err.message })
+    } catch (err: any) {
+      res.status(500).json({ 
+        message: 'Error deleting post', 
+        details: err?.message || 'Unknown error' 
+      })
     }
   } else {
     res.setHeader('Allow', ['GET', 'PUT', 'DELETE'])
