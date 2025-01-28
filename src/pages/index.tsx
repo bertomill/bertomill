@@ -19,24 +19,7 @@ interface HomeProps {
   featuredProjects: Project[]
 }
 
-const captions = [
-  { text: "AI is not just about technology", time: 0 },
-  { text: "It's about enhancing human capabilities", time: 2 },
-  { text: "Making our world more connected", time: 4 },
-  { text: "And our future brighter", time: 6 }
-]
-
 export default function Home({ featuredProjects }: HomeProps) {
-  const [currentCaption, setCurrentCaption] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentCaption((prev) => (prev + 1) % captions.length);
-    }, 2000);
-
-    return () => clearInterval(interval);
-  }, []);
-
   return (
     <Layout>
       <Head>
