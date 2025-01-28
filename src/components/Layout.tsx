@@ -5,6 +5,7 @@ import { useTheme } from 'next-themes'
 import ChatInterface from './ChatInterface'
 import NavbarAuth from './NavbarAuth'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 
 interface LayoutProps {
   children: ReactNode
@@ -13,6 +14,7 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
+  const router = useRouter()
 
   useEffect(() => {
     setMounted(true)
@@ -25,7 +27,7 @@ export default function Layout({ children }: LayoutProps) {
       </Head>
       <div className="min-h-screen bg-[#1C1917] text-stone-200">
         {/* Vertical Navigation */}
-        <nav className="fixed left-0 top-0 h-full w-48 bg-[#1C1917] z-50 border-r border-stone-800">
+        <nav className="fixed left-0 top-0 h-full w-48 bg-[#1C1917] z-50 border-r border-[#4A5D41]/20">
           <div className="h-full flex flex-col py-12">
             <Link href="/" className="text-center text-xl font-light tracking-[0.2em] px-6 mb-16">
               BERTO
@@ -34,16 +36,44 @@ export default function Layout({ children }: LayoutProps) {
             </Link>
             
             <div className="flex flex-col gap-8 px-6 text-sm tracking-widest">
-              <Link href="/blog" className="hover:text-emerald-500 transition-colors duration-300">
+              <Link 
+                href="/blog" 
+                className={`transition-colors duration-300 ${
+                  router.pathname.startsWith('/blog') 
+                    ? 'text-[#8B9D7D]' 
+                    : 'text-stone-400 hover:text-[#8B9D7D]'
+                }`}
+              >
                 BLOG
               </Link>
-              <Link href="/docs" className="hover:text-emerald-500 transition-colors duration-300">
+              <Link 
+                href="/docs"
+                className={`transition-colors duration-300 ${
+                  router.pathname.startsWith('/docs')
+                    ? 'text-[#8B9D7D]'
+                    : 'text-stone-400 hover:text-[#8B9D7D]'
+                }`}
+              >
                 DOCS
               </Link>
-              <Link href="/projects" className="hover:text-emerald-500 transition-colors duration-300">
+              <Link 
+                href="/projects"
+                className={`transition-colors duration-300 ${
+                  router.pathname.startsWith('/projects')
+                    ? 'text-[#8B9D7D]'
+                    : 'text-stone-400 hover:text-[#8B9D7D]'
+                }`}
+              >
                 PROJECTS
               </Link>
-              <Link href="/about" className="hover:text-emerald-500 transition-colors duration-300">
+              <Link 
+                href="/about"
+                className={`transition-colors duration-300 ${
+                  router.pathname.startsWith('/about')
+                    ? 'text-[#8B9D7D]'
+                    : 'text-stone-400 hover:text-[#8B9D7D]'
+                }`}
+              >
                 ABOUT
               </Link>
               <NavbarAuth />

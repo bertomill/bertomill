@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react'
 import GradientBackground from '@/components/GradientBackground'
 import Link from 'next/link'
 import Image from 'next/image'
+import AthleticsSection from '@/components/AthleticsSection'
 
 interface Project {
   title: string
@@ -64,13 +65,13 @@ export default function Home({ featuredProjects }: HomeProps) {
                   initial={{ opacity: 0, x: -50 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 1.2, delay: 0.3 }}
-                  className="text-2xl md:text-3xl font-light tracking-wide text-emerald-500 max-w-2xl"
+                  className="text-2xl md:text-3xl font-light tracking-wide text-[#8B9D7D] max-w-2xl"
                 >
                   SHAPING TOMORROW&apos;S TECHNOLOGY TODAY THROUGH CUTTING-EDGE AI INNOVATION
                 </motion.p>
               </div>
               
-              <div className="relative aspect-video w-full rounded-2xl overflow-hidden bg-stone-900/50 border border-stone-800">
+              <div className="relative aspect-video w-full rounded-2xl overflow-hidden bg-[#4A5D41]/20 border border-[#8B9D7D]/30">
                 <iframe
                   width="100%"
                   height="100%"
@@ -111,25 +112,25 @@ export default function Home({ featuredProjects }: HomeProps) {
                 >
                   <Link href={project.link}>
                     <div className="space-y-6">
-                      <div className="relative aspect-[4/3] overflow-hidden">
+                      <div className="relative aspect-[4/3] overflow-hidden rounded-2xl">
                         <Image
                           src={project.image}
                           alt={project.title}
                           fill
                           className="object-cover transition-transform duration-700 group-hover:scale-105"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/30 to-black/50 group-hover:opacity-50 transition-opacity duration-300" />
+                        <div className="absolute inset-0 bg-gradient-to-br from-[#4A5D41]/30 to-black/50 group-hover:opacity-50 transition-opacity duration-300" />
                         
                         <div className="absolute bottom-0 left-0 right-0 p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
                           <div className="space-y-4">
-                            <p className="text-gray-300 tracking-wide">
+                            <p className="text-stone-300 tracking-wide">
                               {project.description}
                             </p>
                             <div className="flex flex-wrap gap-3">
                               {project.technologies.map((tech) => (
                                 <span
                                   key={tech}
-                                  className="px-4 py-1 text-sm border border-white/20 text-gray-300 backdrop-blur-sm"
+                                  className="px-4 py-1 text-sm border border-[#8B9D7D]/20 text-[#8B9D7D] backdrop-blur-sm"
                                 >
                                   {tech}
                                 </span>
@@ -138,7 +139,7 @@ export default function Home({ featuredProjects }: HomeProps) {
                           </div>
                         </div>
                       </div>
-                      <h3 className="text-2xl font-light tracking-wider group-hover:text-emerald-500 transition-colors duration-300">
+                      <h3 className="text-2xl font-light tracking-wider group-hover:text-[#8B9D7D] transition-colors duration-300">
                         {project.title.toUpperCase()}
                       </h3>
                     </div>
@@ -170,6 +171,8 @@ export default function Home({ featuredProjects }: HomeProps) {
             My research explores how AI can enhance human capabilities while maintaining the essential human element in our interactions.
           </p>
         </section>
+
+        <AthleticsSection />
       </main>
     </Layout>
   )
