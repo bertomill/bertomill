@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Define gradients -->
+  <defs>
+    <linearGradient id="mainGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#34d399"/>
+      <stop offset="100%" style="stop-color:#059669"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feOffset dx="1" dy="1" in="SourceAlpha" result="offsetblur"/>
+      <feGaussianBlur in="offsetblur" stdDeviation="1"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.3"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="16" cy="16" r="15" fill="url(#mainGradient)" filter="url(#shadow)"/>
+  
+  <!-- Letter B -->
+  <path d="M12 8h6.5c1.93 0 3.5.5 4.5 1.5s1.5 2.3 1.5 3.8c0 1-.25 1.85-.75 2.55s-1.2 1.23-2.1 1.55v.2c1.1.3 1.93.83 2.48 1.58s.82 1.67.82 2.77c0 1.7-.57 3.02-1.7 3.97S20.63 27 18.7 27H12V8zm4 7h2.5c.73 0 1.3-.18 1.7-.55s.6-.87.6-1.5c0-.6-.18-1.07-.55-1.4s-.87-.5-1.5-.5H16v3.95zm0 8h2.7c.77 0 1.35-.2 1.75-.6s.6-.93.6-1.6c0-.63-.2-1.13-.6-1.5s-.97-.55-1.7-.55H16v4.25z" fill="white"/>
+</svg>
