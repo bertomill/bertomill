@@ -2,10 +2,10 @@ import { ReactNode, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Sun, Moon } from 'lucide-react'
 import { useTheme } from 'next-themes'
-import ChatInterface from './ChatInterface'
 import NavbarAuth from './NavbarAuth'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
+import InteractiveAI from './InteractiveAI'
 
 interface LayoutProps {
   children: ReactNode
@@ -97,7 +97,7 @@ export default function Layout({ children }: LayoutProps) {
           </div>
         </nav>
         <main className="pl-48">{children}</main>
-        <ChatInterface />
+        <InteractiveAI />
       </div>
     </>
   )

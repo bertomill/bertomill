@@ -63,7 +63,6 @@ export default function Home({ featuredProjects }: HomeProps) {
                   allowFullScreen
                   className="border-0"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
               </div>
             </div>
           </div>
@@ -101,7 +100,6 @@ export default function Home({ featuredProjects }: HomeProps) {
                           fill
                           className="object-cover transition-transform duration-700 group-hover:scale-105"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-br from-[#4A5D41]/30 to-black/50 group-hover:opacity-50 transition-opacity duration-300" />
                         
                         <div className="absolute bottom-0 left-0 right-0 p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
                           <div className="space-y-4">
@@ -130,9 +128,6 @@ export default function Home({ featuredProjects }: HomeProps) {
               ))}
             </div>
           </div>
-
-          {/* Diagonal Divider */}
-          <div className="absolute bottom-0 left-0 right-0 h-32 bg-black transform skew-y-3 origin-left" />
         </section>
 
         <section className="space-y-6">
