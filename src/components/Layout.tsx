@@ -18,9 +18,9 @@ export default function Layout({ children }: LayoutProps) {
   }, [])
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-[#1C1917] text-stone-200">
       {/* Vertical Navigation */}
-      <nav className="fixed left-0 top-0 h-full w-48 bg-black z-50 border-r border-white/10">
+      <nav className="fixed left-0 top-0 h-full w-48 bg-[#1C1917] z-50 border-r border-stone-800">
         <div className="h-full flex flex-col py-12">
           <Link href="/" className="text-center text-xl font-light tracking-[0.2em] px-6 mb-16">
             BERTO
@@ -30,7 +30,10 @@ export default function Layout({ children }: LayoutProps) {
           
           <div className="flex flex-col gap-8 px-6 text-sm tracking-widest">
             <Link href="/blog" className="hover:text-emerald-500 transition-colors duration-300">
-              NOW
+              BLOG
+            </Link>
+            <Link href="/docs" className="hover:text-emerald-500 transition-colors duration-300">
+              DOCS
             </Link>
             <Link href="/projects" className="hover:text-emerald-500 transition-colors duration-300">
               PROJECTS
