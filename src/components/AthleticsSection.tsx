@@ -21,7 +21,7 @@ export default function AthleticsSection() {
             transition={{ duration: 1 }}
             className="text-xl text-stone-300 leading-relaxed"
           >
-            Beyond technology, I'm passionate about athletics and team sports. 
+            Beyond technology, I&apos;m passionate about athletics and team sports. 
             During my time at Western University, I had the privilege of being 
             part of the football program, where I learned valuable lessons about 
             leadership, dedication, and teamwork.
