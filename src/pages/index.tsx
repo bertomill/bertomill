@@ -7,6 +7,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import AthleticsSection from '@/components/AthleticsSection'
 import ConsultingSection from '@/components/ConsultingSection'
+import StartupSection from '@/components/StartupSection'
 
 interface Project {
   title: string
@@ -151,6 +152,7 @@ export default function Home({ featuredProjects }: HomeProps) {
         </section>
 
         <ConsultingSection />
+        <StartupSection />
         <AthleticsSection />
       </main>
     </Layout>
