@@ -32,18 +32,20 @@ export default async function handler(
   }
 
   try {
-    const { message } = req.body
+    const { messages } = req.body
 
-    if (!message) {
-      return res.status(400).json({ error: 'Message is required' })
+    if (!messages || !Array.isArray(messages)) {
+      return res.status(400).json({ error: 'Messages array is required' })
     }
+
+    const latestMessage = messages[messages.length - 1].content
 
     // Create embedding for the query
     const embeddings = new OpenAIEmbeddings({
       openAIApiKey: process.env.OPENAI_API_KEY,
     })
     
-    const queryEmbedding = await embeddings.embedQuery(message)
+    const queryEmbedding = await embeddings.embedQuery(latestMessage)
 
     // Initialize Pinecone
     const pc = new Pinecone({
@@ -68,20 +70,25 @@ export default async function handler(
       messages: [
         {
           role: 'system',
-          content: `You are an AI assistant that answers questions about Berto Mill. Use the following content to answer questions, and if you don't know something, say so:\n\n${relevantContent}`
+          content: `You are Berto Mill's AI assistant. You help answer questions about Berto's work, projects, and experience. 
+Use the following content to inform your answers, and if you don't know something, be honest about it:
+
+${relevantContent}
+
+Keep your responses friendly and conversational, but professional. Use emojis sparingly if at all.`
         },
-        { role: 'user', content: message }
+        ...messages
       ],
       temperature: 0.7,
       max_tokens: 500
     })
 
     return res.status(200).json({
-      answer: completion.choices[0].message.content,
+      message: completion.choices[0].message.content,
       sources: results.matches?.map(match => match.metadata?.source)
     })
   } catch (error) {
     console.error('Chat API error:', error)
     return res.status(500).json({ error: 'Internal server error' })
   }
-} 
+}

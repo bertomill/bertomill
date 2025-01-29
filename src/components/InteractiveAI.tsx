@@ -4,28 +4,75 @@ import { HiX } from 'react-icons/hi'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
 
+interface Message {
+  role: 'user' | 'assistant'
+  content: string
+}
+
 export default function InteractiveAI() {
   const [isVisible, setIsVisible] = useState(false)
   const [isChatOpen, setIsChatOpen] = useState(false)
   const [message, setMessage] = useState('')
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      role: 'assistant',
+      content: "Hi! I'm your AI assistant. I can help you learn more about Berto's work, projects, and experience. What would you like to know?"
+    }
+  ])
+  const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
-    // Show the avatar after a short delay
     const timer = setTimeout(() => {
       setIsVisible(true)
     }, 1000)
-
     return () => clearTimeout(timer)
   }, [])
 
-  // Reset visibility when route changes
   useEffect(() => {
     setIsVisible(true)
   }, [router.pathname])
 
+  const handleSendMessage = async () => {
+    if (!message.trim() || isLoading) return
+
+    const userMessage = message.trim()
+    setMessage('')
+    
+    // Add user message to chat
+    setMessages(prev => [...prev, { role: 'user', content: userMessage }])
+    
+    setIsLoading(true)
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messages: [...messages, { role: 'user', content: userMessage }]
+        }),
+      })
+
+      if (!response.ok) throw new Error('Failed to get response')
+
+      const data = await response.json()
+      
+      // Add AI response to chat
+      setMessages(prev => [...prev, { role: 'assistant', content: data.message }])
+    } catch (error) {
+      console.error('Error:', error)
+      setMessages(prev => [...prev, { 
+        role: 'assistant', 
+        content: "I apologize, but I'm having trouble connecting right now. Please try again in a moment." 
+      }])
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   return (
-    <div className="fixed bottom-8 right-8 z-50 pointer-events-none">
+    <div className="fixed bottom-8 right-8 z-[100]">
       <AnimatePresence>
         {isVisible && (
           <>
@@ -48,7 +95,7 @@ export default function InteractiveAI() {
                 transition: { duration: 0.2 }
               }}
               exit={{ x: 200, rotate: 10, scale: 0.8 }}
-              className="relative cursor-pointer pointer-events-auto group"
+              className="relative cursor-pointer group"
               onClick={() => setIsChatOpen(true)}
             >
               {/* Speech Bubble */}
@@ -56,7 +103,7 @@ export default function InteractiveAI() {
                 initial={{ opacity: 0, scale: 0.8, y: 10 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 transition={{ delay: 1, duration: 0.5 }}
-                className="absolute -left-64 top-6 w-60"
+                className="absolute -left-64 top-6 w-60 select-none"
               >
                 <div className="relative">
                   {/* Background shapes */}
@@ -122,7 +169,7 @@ export default function InteractiveAI() {
                   animate={{ opacity: 1, x: 0, y: 0 }}
                   exit={{ opacity: 0, x: 20, y: 20 }}
                   transition={{ type: "spring", damping: 20 }}
-                  className="absolute bottom-full right-0 mb-4 w-96 bg-stone-900 rounded-xl shadow-2xl border border-[#8B9D7D]/20 overflow-hidden pointer-events-auto"
+                  className="absolute bottom-full right-0 mb-4 w-96 bg-stone-900 rounded-xl shadow-2xl border border-[#8B9D7D]/20 overflow-hidden"
                 >
                   {/* Chat Header */}
                   <motion.div 
@@ -143,42 +190,70 @@ export default function InteractiveAI() {
                   {/* Chat Messages */}
                   <div className="h-96 overflow-y-auto p-4">
                     <div className="space-y-4">
-                      <motion.div 
-                        className="flex items-start gap-3"
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2 }}
-                      >
-                        {/* Avatar in chat with creative shape */}
-                        <div className="relative w-8 h-8">
-                          <motion.div 
-                            className="absolute inset-0 bg-[#4A5D41]/20 rounded-lg"
-                            animate={{ rotate: [6, 12, 6] }}
-                            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                          />
-                          <motion.div 
-                            className="absolute inset-0 bg-white/10 rounded-lg"
-                            animate={{ rotate: [-3, 3, -3] }}
-                            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                          />
-                          <div className="relative w-full h-full rounded-lg overflow-hidden">
-                            <Image
-                              src="/Berto_Avatar.png"
-                              alt="AI Assistant"
-                              fill
-                              className="object-contain"
-                              priority
+                      {messages.map((msg, index) => (
+                        <motion.div 
+                          key={index}
+                          className="flex items-start gap-3"
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: index * 0.1 }}
+                        >
+                          {msg.role === 'assistant' && (
+                            <div className="relative w-8 h-8">
+                              <motion.div 
+                                className="absolute inset-0 bg-[#4A5D41]/20 rounded-lg"
+                                animate={{ rotate: [6, 12, 6] }}
+                                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                              />
+                              <motion.div 
+                                className="absolute inset-0 bg-white/10 rounded-lg"
+                                animate={{ rotate: [-3, 3, -3] }}
+                                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                              />
+                              <div className="relative w-full h-full rounded-lg overflow-hidden">
+                                <Image
+                                  src="/Berto_Avatar.png"
+                                  alt="AI Assistant"
+                                  fill
+                                  className="object-contain"
+                                  priority
+                                />
+                              </div>
+                            </div>
+                          )}
+                          
+                          <div className={`flex-1 rounded-lg p-3 ${
+                            msg.role === 'assistant' 
+                              ? 'bg-[#4A5D41]/10 border border-[#8B9D7D]/20' 
+                              : 'bg-[#8B9D7D]/20 ml-11'
+                          }`}>
+                            <p className="text-white/90 text-sm tracking-wide">
+                              {msg.content}
+                            </p>
+                          </div>
+                        </motion.div>
+                      ))}
+                      
+                      {isLoading && (
+                        <motion.div 
+                          className="flex items-start gap-3"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                        >
+                          <div className="relative w-8 h-8">
+                            <motion.div 
+                              className="absolute inset-0 bg-[#4A5D41]/20 rounded-lg"
+                              animate={{ rotate: [0, 360] }}
+                              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
                             />
                           </div>
-                        </div>
-                        
-                        <div className="flex-1 bg-[#4A5D41]/10 rounded-lg p-3 border border-[#8B9D7D]/20">
-                          <p className="text-white/90 text-sm tracking-wide">
-                            Hi! I&apos;m your AI assistant. I can help you learn more about Berto&apos;s work, projects, and experience.
-                            What would you like to know?
-                          </p>
-                        </div>
-                      </motion.div>
+                          <div className="flex-1 bg-[#4A5D41]/10 rounded-lg p-3 border border-[#8B9D7D]/20">
+                            <p className="text-white/90 text-sm tracking-wide">
+                              Thinking...
+                            </p>
+                          </div>
+                        </motion.div>
+                      )}
                     </div>
                   </div>
 
@@ -194,15 +269,23 @@ export default function InteractiveAI() {
                         type="text"
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault()
+                            handleSendMessage()
+                          }
+                        }}
                         placeholder="Type your message..."
                         className="flex-1 bg-[#4A5D41]/10 text-white placeholder-white/50 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8B9D7D]/50"
                       />
                       <button
-                        onClick={() => {
-                          // Handle message send
-                          setMessage('')
-                        }}
-                        className="px-4 py-2 bg-[#8B9D7D] text-white rounded-lg hover:bg-[#4A5D41] transition-colors font-light tracking-wide"
+                        onClick={handleSendMessage}
+                        disabled={isLoading}
+                        className={`px-4 py-2 bg-[#8B9D7D] text-white rounded-lg transition-colors font-light tracking-wide ${
+                          isLoading 
+                            ? 'opacity-50 cursor-not-allowed' 
+                            : 'hover:bg-[#4A5D41]'
+                        }`}
                       >
                         Send
                       </button>
