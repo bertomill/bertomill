@@ -8,7 +8,7 @@ export default function ConsultingSection() {
   const consultingStory = [
     {
       image: '/consulting-1.JPG',
-      text: '🏆 Exciting moment! Our team won first place in CIBC\'s innovation competition!'
+      text: '🏆 Exciting moment! Our team won first place in CIBC&apos;s innovation competition!'
     },
     {
       image: '/consulting-2.JPG',
@@ -44,7 +44,7 @@ export default function ConsultingSection() {
             className="text-stone-400 leading-relaxed max-w-3xl text-lg"
           >
             Working as a consultant has been an incredible journey! I love helping organizations embrace new technologies 
-            and find innovative solutions. It's amazing to see how combining technical expertise with strategic thinking 
+            and find innovative solutions. It&apos;s amazing to see how combining technical expertise with strategic thinking 
             can create real impact. 🚀
           </motion.p>
 
