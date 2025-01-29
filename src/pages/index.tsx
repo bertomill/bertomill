@@ -6,6 +6,7 @@ import GradientBackground from '@/components/GradientBackground'
 import Link from 'next/link'
 import Image from 'next/image'
 import AthleticsSection from '@/components/AthleticsSection'
+import ConsultingSection from '@/components/ConsultingSection'
 
 interface Project {
   title: string
@@ -149,6 +150,7 @@ export default function Home({ featuredProjects }: HomeProps) {
           </p>
         </section>
 
+        <ConsultingSection />
         <AthleticsSection />
       </main>
     </Layout>
