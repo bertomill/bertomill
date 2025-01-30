@@ -11,15 +11,11 @@ let prisma: PrismaClient
 
 if (process.env.NODE_ENV === 'production') {
   const connectionString = process.env.DATABASE_URL!
-  const pool = new Pool({ connectionString })
-  const adapter = new PrismaNeon(pool)
-  prisma = new PrismaClient({ adapter })
+  prisma = new PrismaClient()
 } else {
   if (!global.cachedPrisma) {
     const connectionString = process.env.DATABASE_URL!
-    const pool = new Pool({ connectionString })
-    const adapter = new PrismaNeon(pool)
-    global.cachedPrisma = new PrismaClient({ adapter })
+    global.cachedPrisma = new PrismaClient()
   }
   prisma = global.cachedPrisma
 }
