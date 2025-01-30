@@ -109,6 +109,10 @@ export default function BrotherGuessHeatmap({
     }
   }
 
+  useEffect(() => {
+    generateHeatmap()
+  }, [generateHeatmap])
+
   return (
     <div
       className="relative w-full h-full cursor-crosshair"

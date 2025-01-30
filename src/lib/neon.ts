@@ -1,7 +1,7 @@
 import { Pool } from '@neondatabase/serverless'
 import { PrismaNeon } from '@prisma/adapter-neon'
 import { PrismaClient } from '@prisma/client'
-import ws from 'ws'
+// import { ws } from '@neon-io/postgres'
 
 declare global {
   var cachedPrisma: PrismaClient
@@ -23,5 +23,7 @@ if (process.env.NODE_ENV === 'production') {
   }
   prisma = global.cachedPrisma
 }
+
+const neon = postgres(process.env.DATABASE_URL!)
 
 export default prisma
