@@ -6,12 +6,12 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
+  url = env("DATABASE_URL")
 }
 
 model Account {
@@ -70,4 +70,12 @@ model Book {
   updatedAt   DateTime @updatedAt
   addedBy     User     @relation(fields: [userId], references: [id])
   userId      String
+}
+
+model BrotherGuess {
+  id        String   @id @default(cuid())
+  x         Float
+  y         Float
+  createdAt DateTime @default(now())
+  isCorrect Boolean
 }

@@ -29,33 +29,37 @@ export default function Home({ featuredProjects }: HomeProps) {
         <meta name="description" content="Personal website of Berto Mill" />
       </Head>
 
-      <main className="min-h-screen">
+      <main className="min-h-screen font-mono bg-[#1a1b26]">
         {/* Hero Section */}
-        <section className="relative min-h-[80vh] flex items-center overflow-hidden">
+        <section className="relative min-h-[80vh] flex items-center overflow-hidden px-4">
           <GradientBackground />
           
           <div className="relative z-10 w-full">
-            <div className="max-w-[90%] mx-auto w-full grid md:grid-cols-2 gap-12 items-center">
-              <div className="space-y-8">
+            <div className="max-w-[90%] mx-auto w-full flex flex-col md:grid md:grid-cols-2 gap-12 md:gap-12 items-center">
+              <div className="w-full space-y-6 md:space-y-8 text-center md:text-left">
                 <motion.h1 
                   initial={{ opacity: 0, x: -50 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 1.2 }}
-                  className="text-8xl md:text-[12rem] font-light tracking-tight leading-none"
+                  className="text-4xl sm:text-5xl md:text-6xl tracking-[0.1em] leading-relaxed uppercase text-[#c0caf5]"
                 >
-                  2025
+                  Health,
+                  <br />
+                  Innovation,
+                  <br />
+                  Community
                 </motion.h1>
                 <motion.p
                   initial={{ opacity: 0, x: -50 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 1.2, delay: 0.3 }}
-                  className="text-2xl md:text-3xl font-light tracking-wide text-[#8B9D7D] max-w-2xl"
+                  className="text-base sm:text-lg md:text-xl tracking-[0.15em] uppercase text-[#7aa2f7] max-w-2xl mx-auto md:mx-0"
                 >
-                  SHAPING TOMORROW&apos;S TECHNOLOGY TODAY THROUGH CUTTING-EDGE AI INNOVATION
+                  A Holistic Approach
                 </motion.p>
               </div>
               
-              <div className="relative aspect-video w-full rounded-2xl overflow-hidden bg-[#4A5D41]/20 border border-[#8B9D7D]/30">
+              <div className="w-[95vw] md:w-full relative aspect-video rounded-2xl overflow-hidden bg-[#1a1b26] border border-[#414868]/30">
                 <iframe
                   width="100%"
                   height="100%"
@@ -71,17 +75,17 @@ export default function Home({ featuredProjects }: HomeProps) {
         </section>
 
         {/* Projects Section */}
-        <section className="relative bg-stone-950 py-32">
+        <section className="relative bg-[#16161e] py-32">
           <div className="max-w-[90%] mx-auto">
             <motion.h2 
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 1 }}
-              className="text-4xl md:text-7xl font-light tracking-tight mb-24"
+              className="text-2xl md:text-4xl tracking-[0.2em] uppercase mb-24 text-[#bb9af7]"
             >
-              FEATURED
+              Featured
               <br />
-              PROJECTS
+              Projects
             </motion.h2>
             
             <div className="grid md:grid-cols-2 gap-16">
@@ -103,16 +107,16 @@ export default function Home({ featuredProjects }: HomeProps) {
                           className="object-cover transition-transform duration-700 group-hover:scale-105"
                         />
                         
-                        <div className="absolute bottom-0 left-0 right-0 p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
+                        <div className="absolute bottom-0 left-0 right-0 p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500 bg-gradient-to-t from-[#1a1b26] to-transparent">
                           <div className="space-y-4">
-                            <p className="text-stone-300 tracking-wide">
+                            <p className="text-[#a9b1d6] tracking-wide">
                               {project.description}
                             </p>
                             <div className="flex flex-wrap gap-3">
                               {project.technologies.map((tech) => (
                                 <span
                                   key={tech}
-                                  className="px-4 py-1 text-sm border border-[#8B9D7D]/20 text-[#8B9D7D] backdrop-blur-sm"
+                                  className="px-4 py-1 text-sm border border-[#414868] text-[#7aa2f7] backdrop-blur-sm bg-[#1a1b26]/80"
                                 >
                                   {tech}
                                 </span>
@@ -121,7 +125,7 @@ export default function Home({ featuredProjects }: HomeProps) {
                           </div>
                         </div>
                       </div>
-                      <h3 className="text-2xl font-light tracking-wider group-hover:text-[#8B9D7D] transition-colors duration-300">
+                      <h3 className="text-2xl tracking-wider text-[#c0caf5] group-hover:text-[#7aa2f7] transition-colors duration-300">
                         {project.title.toUpperCase()}
                       </h3>
                     </div>
