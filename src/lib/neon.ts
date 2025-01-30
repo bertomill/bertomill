@@ -4,7 +4,7 @@ import { PrismaClient } from '@prisma/client'
 // import { ws } from '@neon-io/postgres'
 
 declare global {
-  var cachedPrisma: PrismaClient
+  let cachedPrisma: PrismaClient
 }
 
 let prisma: PrismaClient
@@ -23,7 +23,5 @@ if (process.env.NODE_ENV === 'production') {
   }
   prisma = global.cachedPrisma
 }
-
-const neon = postgres(process.env.DATABASE_URL!)
 
 export default prisma

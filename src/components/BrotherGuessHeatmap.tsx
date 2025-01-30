@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 interface BrotherGuessHeatmapProps {
@@ -28,7 +28,6 @@ export default function BrotherGuessHeatmap({
   const [guesses, setGuesses] = useState<Guess[]>([])
   const [hasGuessed, setHasGuessed] = useState(false)
   const [message, setMessage] = useState('Can you guess who my brother is? Click anywhere to make your guess! 🤔')
-  const [stats, setStats] = useState({ total: 0, correct: 0, accuracy: 0 })
   const [heatmapData, setHeatmapData] = useState<HeatmapCell[]>([])
   const cellSize = 20 // Size of each heatmap cell in pixels
 
@@ -45,11 +44,10 @@ export default function BrotherGuessHeatmap({
   }, [isActive])
 
   // Generate heatmap data from guesses
-  const generateHeatmap = (guesses: Guess[]) => {
+  const generateHeatmap = useCallback((currentGuesses: Guess[] = guesses) => {
     const cells: { [key: string]: HeatmapCell } = {}
     
-    // Group clicks into cells
-    guesses.forEach(guess => {
+    currentGuesses.forEach(guess => {
       const cellX = Math.floor(guess.x / (100 / Math.floor(imageWidth / cellSize)))
       const cellY = Math.floor(guess.y / (100 / Math.floor(imageHeight / cellSize)))
       const key = `${cellX}-${cellY}`
@@ -65,16 +63,14 @@ export default function BrotherGuessHeatmap({
       cells[key].intensity++
     })
 
-    // Convert to array and normalize intensities
     const maxIntensity = Math.max(...Object.values(cells).map(cell => cell.intensity))
     const heatmapCells = Object.values(cells).map(cell => ({
       ...cell,
-      // Use logarithmic scaling for intensity to prevent oversaturation
       intensity: Math.log(cell.intensity + 1) / Math.log(maxIntensity + 1)
     }))
 
     setHeatmapData(heatmapCells)
-  }
+  }, [guesses, imageWidth, imageHeight, cellSize])
 
   const handleClick = async (e: React.MouseEvent<HTMLDivElement>) => {
     if (hasGuessed) return
@@ -97,7 +93,6 @@ export default function BrotherGuessHeatmap({
         const newGuess = data.guess
         setGuesses(prev => [...prev, newGuess])
         generateHeatmap([...guesses, newGuess])
-        setStats(data.stats)
         setMessage(
           newGuess.isCorrect
             ? `🎉 You got it! That's my brother in the gray shirt! ${data.stats.accuracy}% of people found him.`
