@@ -13,7 +13,8 @@ export default async function handler(
       openai: openaiHealth,
       pinecone: pineconeHealth
     })
-  } catch (error) {
+  } catch (err) {
+    console.error('Health check error:', err)
     res.status(500).json({ error: 'Health check failed' })
   }
 } 
