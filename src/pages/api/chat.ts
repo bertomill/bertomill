@@ -29,6 +29,7 @@ export const config = {
     bodyParser: {
       sizeLimit: '1mb',
     },
+    externalResolver: true,
   },
 }
 
@@ -36,76 +37,115 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' })
+  res.setHeader('Access-Control-Allow-Credentials', 'true')
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
+  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version')
+
+  if (req.method === 'OPTIONS') {
+    res.status(200).end()
+    return
   }
 
   try {
-    // Set CORS headers
-    res.setHeader('Access-Control-Allow-Origin', '*')
-    res.setHeader('Access-Control-Allow-Methods', 'POST')
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
-
-    const { messages } = req.body
-
-    if (!messages || !Array.isArray(messages)) {
-      return res.status(400).json({ error: 'Messages array is required' })
-    }
-
-    const latestMessage = messages[messages.length - 1].content
-
-    // Create embedding for the query
-    const embeddings = new OpenAIEmbeddings({
-      openAIApiKey: process.env.OPENAI_API_KEY,
-    })
-    
-    const queryEmbedding = await embeddings.embedQuery(latestMessage)
-
-    // Initialize Pinecone
-    const pc = new Pinecone({
-      apiKey: process.env.PINECONE_API_KEY!
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error('Request timeout')), 30000)
     })
 
-    const index = pc.index(process.env.PINECONE_INDEX!)
+    const chatPromise = async () => {
+      const { messages } = req.body
 
-    // Query Pinecone
-    const results = await index.query({
-      vector: queryEmbedding,
-      topK: 3,
-      includeValues: false,
-      includeMetadata: true
-    })
+      const retryOperation = async (operation: () => Promise<any>, maxRetries = 3) => {
+        for (let i = 0; i < maxRetries; i++) {
+          try {
+            return await operation()
+          } catch (error) {
+            if (i === maxRetries - 1) throw error
+            await new Promise(resolve => setTimeout(resolve, 1000 * Math.pow(2, i)))
+          }
+        }
+      }
 
-    // Use OpenAI to generate a response based on the relevant content
-    const relevantContent = results.matches?.map(match => match.metadata?.text).join('\n\n')
-    
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-4',
-      messages: [
-        {
-          role: 'system',
-          content: `You are Berto Mill's AI assistant. You help answer questions about Berto's work, projects, and experience. 
+      if (!messages || !Array.isArray(messages)) {
+        return { error: 'Messages array is required' }
+      }
+
+      try {
+        const embeddings = new OpenAIEmbeddings({
+          openAIApiKey: process.env.OPENAI_API_KEY,
+        })
+        
+        const queryEmbedding = await retryOperation(() => 
+          embeddings.embedQuery(messages[messages.length - 1].content)
+        )
+
+        const pc = new Pinecone({
+          apiKey: process.env.PINECONE_API_KEY!
+        })
+
+        const index = pc.index(process.env.PINECONE_INDEX!)
+        
+        const results = await retryOperation(() => 
+          index.query({
+            vector: queryEmbedding,
+            topK: 3,
+            includeValues: false,
+            includeMetadata: true
+          })
+        )
+
+        const relevantContent = results.matches?.map(match => match.metadata?.text).join('\n\n')
+        
+        const completion = await retryOperation(() => 
+          openai.chat.completions.create({
+            model: 'gpt-4',
+            messages: [
+              {
+                role: 'system',
+                content: `You are Berto Mill's AI assistant. You help answer questions about Berto's work, projects, and experience. 
 Use the following content to inform your answers, and if you don't know something, be honest about it:
 
 ${relevantContent}
 
-Keep your responses friendly and conversational, but professional. Use emojis sparingly if at all.`
-        },
-        ...messages
-      ],
-      temperature: 0.7,
-      max_tokens: 500
-    })
+Keep your responses friendly and conversational, but professional.`
+              },
+              ...messages
+            ],
+            temperature: 0.7,
+            max_tokens: 500
+          })
+        )
 
-    return res.status(200).json({
-      message: completion.choices[0].message.content,
-      sources: results.matches?.map(match => match.metadata?.source)
-    })
+        return {
+          message: completion.choices[0].message.content,
+          sources: results.matches?.map(match => match.metadata?.source)
+        }
+      } catch (error) {
+        console.error('Specific operation error:', error)
+        throw error
+      }
+    }
+
+    const result = await Promise.race([
+      chatPromise(),
+      timeoutPromise
+    ])
+
+    if (result.error) {
+      return res.status(400).json(result)
+    }
+
+    return res.status(200).json(result)
   } catch (err) {
     console.error('Chat API Error:', err)
-    return res.status(500).json({ 
-      error: 'Internal server error',
-      message: "I'm having trouble connecting right now. Please try again in a moment."
+    const isTimeout = err.message === 'Request timeout'
+    const status = isTimeout ? 504 : 500
+    
+    return res.status(status).json({ 
+      error: err.message || 'Internal server error',
+      message: isTimeout 
+        ? "The request took too long to process. Please try a shorter message or try again later."
+        : "I'm having trouble connecting right now. Please try again in a moment."
     })
   }
 }

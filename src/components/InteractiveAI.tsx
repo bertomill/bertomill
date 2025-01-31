@@ -26,6 +26,7 @@ export default function InteractiveAI() {
   const [isTyping, setIsTyping] = useState(false)
   const latestMessageRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
+  const [error, setError] = useState<string | null>(null)
 
   const initialSuggestions = [
     "Tell me about your projects",
@@ -56,17 +57,14 @@ export default function InteractiveAI() {
 
   const handleSendMessage = async () => {
     if (!message.trim() || isLoading) return
-
+    
+    setError(null) // Clear any previous errors
     const userMessage = message.trim()
     setMessage('')
     
     setMessages(prev => [...prev, { role: 'user', content: userMessage }])
-    
     setIsLoading(true)
     setIsTyping(true)
-
-    const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), 15000) // 15 second timeout
 
     try {
       const response = await fetch('/api/chat', {
@@ -77,10 +75,9 @@ export default function InteractiveAI() {
         body: JSON.stringify({
           messages: [...messages, { role: 'user', content: userMessage }]
         }),
-        signal: controller.signal
+        credentials: 'include',
+        signal: AbortSignal.timeout(15000)
       })
-
-      clearTimeout(timeoutId)
 
       if (!response.ok) {
         throw new Error(`API error: ${response.status}`)
@@ -105,6 +102,7 @@ export default function InteractiveAI() {
 
     } catch (err) {
       console.error('Chat API Error:', err)
+      setError(err.message)
       
       // Update service status on error
       serviceStatus.openai = false
@@ -112,13 +110,7 @@ export default function InteractiveAI() {
 
       setMessages(prev => [...prev, { 
         role: 'assistant', 
-        content: (err instanceof Error && err.name === 'AbortError')
-          ? "I apologize, but the request timed out. This might be because:\n\n" +
-            "1. The server is experiencing high load\n" +
-            "2. The connection is unstable\n" +
-            "3. The service is temporarily unavailable\n\n" +
-            "Please try again in a moment."
-          : "I apologize, but I'm having trouble connecting to the server right now. Please try again in a moment.",
+        content: "I apologize, but I'm having trouble connecting right now. Please try again in a moment.",
         suggestions: ["Try again", "What else can you tell me?"]
       }])
     } finally {
