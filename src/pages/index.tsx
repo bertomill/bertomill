@@ -172,7 +172,7 @@ export const getStaticProps: GetStaticProps<HomeProps> = async () => {
     {
       title: "Canadian Financial News Tracker",
       description: "AI-powered application that tracks and analyzes financial news",
-      image: "/cdn-Bank-Tracker.png",
+      image: "/cdn-bank-tracker.png",
       link: "/projects/canadian-financial-news-tracker",
       technologies: ["TypeScript", "Python", "Next.js", "OpenAI"]
     }
