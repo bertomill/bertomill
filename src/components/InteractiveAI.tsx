@@ -103,8 +103,8 @@ export default function InteractiveAI() {
       serviceStatus.openai = true
       serviceStatus.pinecone = true
 
-    } catch (error) {
-      console.error('Chat API Error:', error)
+    } catch (err) {
+      console.error('Chat API Error:', err)
       
       // Update service status on error
       serviceStatus.openai = false
@@ -112,7 +112,7 @@ export default function InteractiveAI() {
 
       setMessages(prev => [...prev, { 
         role: 'assistant', 
-        content: error.name === 'AbortError' 
+        content: (err instanceof Error && err.name === 'AbortError')
           ? "I apologize, but the request timed out. This might be because:\n\n" +
             "1. The server is experiencing high load\n" +
             "2. The connection is unstable\n" +
