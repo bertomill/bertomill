@@ -12,7 +12,7 @@ interface Message {
 }
 
 const serviceStatus = {
-  openai: true,  // You can make these dynamic based on actual service status
+  openai: true,
   pinecone: true
 }
 
@@ -169,7 +169,7 @@ export default function InteractiveAI() {
                             strokeDashoffset: '63',
                             transformOrigin: 'center',
                             transform: 'rotate(-90deg)',
-                            animation: 'loadCircle 2s ease-out forwards'
+                            animation: serviceStatus.openai ? 'loadCircle 2s ease-out forwards' : 'none'
                           }}
                         />
                       </svg>
@@ -213,7 +213,7 @@ export default function InteractiveAI() {
                             strokeDashoffset: '63',
                             transformOrigin: 'center',
                             transform: 'rotate(-90deg)',
-                            animation: 'loadCircle 2s ease-out forwards',
+                            animation: serviceStatus.pinecone ? 'loadCircle 2s ease-out forwards' : 'none',
                             animationDelay: '0.8s'
                           }}
                         />
