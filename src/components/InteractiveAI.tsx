@@ -107,318 +107,104 @@ export default function InteractiveAI() {
                   bounce: 0.4
                 }
               }}
-              whileHover={{ 
-                y: -5,
-                transition: { duration: 0.2 }
-              }}
-              className="relative cursor-pointer group flex items-end gap-4"
+              className="relative cursor-pointer"
               onClick={() => setIsChatOpen(true)}
             >
-              {/* Avatar Container with Creative Shape */}
-              <div className="relative w-24 h-24">
-                {/* Background shapes */}
-                <motion.div 
-                  className="absolute inset-0 bg-[#4A5D41]/20 rounded-2xl"
-                  animate={{ rotate: [6, 12, 6] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                />
-                <motion.div 
-                  className="absolute inset-0 bg-white/10 rounded-2xl"
-                  animate={{ rotate: [-3, 3, -3] }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                />
-                
-                {/* Avatar Image */}
-                <motion.div 
-                  className="relative w-full h-full rounded-2xl overflow-hidden"
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ duration: 0.2 }}
+              {/* Initial Message with Avatar */}
+              <div className="flex items-start gap-3">
+                <div className="relative w-12 h-12">
+                  <motion.div 
+                    className="relative w-full h-full rounded-full overflow-hidden"
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <Image
+                      src="/bmavatar.png"
+                      alt="AI Assistant"
+                      fill
+                      className="object-contain"
+                      priority
+                    />
+                  </motion.div>
+                </div>
+
+                {/* Initial Message Bubble - iPhone Style */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.5 }}
+                  className="relative max-w-[80%]"
                 >
-                  <Image
-                    src="/bmavatar.png"
-                    alt="AI Assistant"
-                    fill
-                    className="object-contain p-1"
-                    priority
-                  />
+                  <div className="bg-[#303030] px-4 py-2 rounded-2xl rounded-tl-sm">
+                    <p className="text-white/90 text-sm">
+                      Hey! Ask me anything about Berto&apos;s work
+                    </p>
+                  </div>
                 </motion.div>
               </div>
 
-              {/* Speech Bubble */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 1, duration: 0.5 }}
-                className="relative w-60 mb-4"
-              >
-                <div className="relative">
-                  {/* Background shapes */}
-                  <div className="absolute inset-0 bg-[#4A5D41]/10 rounded-lg transform rotate-1" />
-                  <div className="absolute inset-0 bg-white/5 rounded-lg transform -rotate-1" />
-                  
-                  {/* Main bubble */}
-                  <div className="relative bg-[#8B9D7D] rounded-lg p-3 transform hover:scale-105 transition-transform">
-                    <p className="text-sm font-light tracking-wide text-white/90">
-                      Hey! Ask me anything about Berto&apos;s work
-                    </p>
-                    
-                    {/* Custom arrow - now pointing right */}
-                    <div className="absolute -left-6 top-1/2 transform -translate-y-1/2 rotate-180">
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                        <path 
-                          d="M0 0L20 12L0 24V0Z" 
-                          fill="#8B9D7D"
-                          className="drop-shadow-lg"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            </motion.div>
-
-            {/* Chat Interface */}
-            <AnimatePresence>
-              {isChatOpen && (
-                <motion.div
-                  initial={{ opacity: 0, x: 20, y: 20 }}
-                  animate={{ opacity: 1, x: 0, y: 0 }}
-                  exit={{ opacity: 0, x: 20, y: 20 }}
-                  transition={{ type: "spring", damping: 20 }}
-                  className="absolute bottom-full right-0 mb-4 w-96 bg-stone-900 rounded-xl shadow-2xl border border-[#8B9D7D]/20 overflow-hidden"
-                >
-                  {/* Chat Header */}
-                  <motion.div 
-                    className="flex items-center justify-between px-4 py-3 bg-[#4A5D41]/10 border-b border-[#8B9D7D]/20"
-                    initial={{ backgroundColor: "rgba(74, 93, 65, 0)" }}
-                    animate={{ backgroundColor: "rgba(74, 93, 65, 0.1)" }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    <span className="text-[#8B9D7D] font-light tracking-wide">Chat with Berto&apos;s AI Assistant</span>
-                    <button
-                      onClick={() => setIsChatOpen(false)}
-                      className="text-[#8B9D7D]/70 hover:text-[#8B9D7D] transition-colors"
-                    >
-                      <HiX size={24} />
-                    </button>
-                  </motion.div>
-
-                  {/* Service Loading Indicators */}
-                  <div className="px-4 py-2 bg-[#1a1b26] border-b border-[#414868]/20">
-                    <div className="flex items-center justify-center gap-6">
-                      {/* Pinecone */}
+              {/* Chat Messages - iPhone Style */}
+              <AnimatePresence>
+                {isChatOpen && (
+                  <div className="mt-4 space-y-3">
+                    {messages.map((msg, index) => (
                       <motion.div 
-                        className="flex items-center gap-2"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.2 }}
+                        key={index}
+                        className={`flex items-start gap-3 ${
+                          msg.role === 'user' ? 'justify-end' : ''
+                        }`}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.1 }}
                       >
-                        <div className="relative w-8 h-8">
-                          <svg className="w-full h-full -rotate-90">
-                            <motion.circle
-                              cx="16"
-                              cy="16"
-                              r="15"
-                              fill="none"
-                              stroke={loadingStates.pinecone ? '#4ade80' : '#7aa2f7'}
-                              strokeWidth="2"
-                              initial={{ pathLength: 0 }}
-                              animate={{ 
-                                pathLength: loadingStates.pinecone ? 1 : [0, 1],
-                              }}
-                              transition={loadingStates.pinecone ? 
-                                { duration: 0.3, ease: "easeOut" } : 
-                                { duration: 2, repeat: Infinity, ease: "linear" }
-                              }
-                              className={`stroke-[3] ${loadingStates.pinecone ? '' : 'transition-all duration-300'}`}
+                        {msg.role === 'assistant' && (
+                          <div className="relative w-12 h-12">
+                            <Image
+                              src="/bmavatar.png"
+                              alt="AI Assistant"
+                              fill
+                              className="object-contain rounded-full"
+                              priority
                             />
-                          </svg>
-                          <div className="absolute inset-[2px] rounded-full overflow-hidden bg-[#1a1b26]">
-                            <div className="absolute inset-1 rounded-full overflow-hidden">
-                              <Image
-                                src="/pinecone.png"
-                                alt="Pinecone"
-                                fill
-                                className={`object-contain transition-opacity duration-300 rounded-full ${
-                                  loadingStates.pinecone ? 'opacity-100' : 'opacity-50'
-                                }`}
-                              />
-                            </div>
                           </div>
-                          {loadingStates.pinecone && (
-                            <motion.div
-                              initial={{ scale: 0 }}
-                              animate={{ scale: 1 }}
-                              className="absolute inset-0 flex items-center justify-center"
-                            >
-                              <HiCheck className="text-green-400 text-lg z-10" />
-                            </motion.div>
-                          )}
+                        )}
+                        
+                        <div className={`max-w-[80%] ${
+                          msg.role === 'assistant' 
+                            ? 'bg-[#303030] rounded-2xl rounded-tl-sm' 
+                            : 'bg-[#0084ff] rounded-2xl rounded-tr-sm'
+                        } px-4 py-2`}>
+                          <p className="text-white/90 text-sm">
+                            {msg.content}
+                          </p>
                         </div>
-                        <span className="text-xs text-[#7aa2f7]">Pinecone</span>
                       </motion.div>
+                    ))}
 
-                      {/* OpenAI */}
-                      <motion.div 
-                        className="flex items-center gap-2"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.4 }}
-                      >
-                        <div className="relative w-8 h-8">
-                          <svg className="w-full h-full -rotate-90">
-                            <motion.circle
-                              cx="16"
-                              cy="16"
-                              r="15"
-                              fill="none"
-                              stroke={loadingStates.openai ? '#4ade80' : '#7aa2f7'}
-                              strokeWidth="2"
-                              initial={{ pathLength: 0 }}
-                              animate={{ 
-                                pathLength: loadingStates.openai ? 1 : [0, 1],
-                              }}
-                              transition={loadingStates.openai ? 
-                                { duration: 0.3, ease: "easeOut" } : 
-                                { duration: 2, repeat: Infinity, ease: "linear" }
-                              }
-                              className={`stroke-[3] ${loadingStates.openai ? '' : 'transition-all duration-300'}`}
-                            />
-                          </svg>
-                          <div className="absolute inset-[2px] rounded-full overflow-hidden bg-[#1a1b26]">
-                            <div className="absolute inset-1 rounded-full overflow-hidden">
-                              <Image
-                                src="/openai.png"
-                                alt="OpenAI"
-                                fill
-                                className={`object-contain transition-opacity duration-300 rounded-full ${
-                                  loadingStates.openai ? 'opacity-100' : 'opacity-50'
-                                }`}
-                              />
-                            </div>
-                          </div>
-                          {loadingStates.openai && (
-                            <motion.div
-                              initial={{ scale: 0 }}
-                              animate={{ scale: 1 }}
-                              className="absolute inset-0 flex items-center justify-center"
-                            >
-                              <HiCheck className="text-green-400 text-lg z-10" />
-                            </motion.div>
-                          )}
-                        </div>
-                        <span className="text-xs text-[#7aa2f7]">OpenAI</span>
-                      </motion.div>
-                    </div>
-                  </div>
-
-                  {/* Chat Messages */}
-                  <div className="h-96 overflow-y-auto p-4">
-                    <div className="space-y-4">
-                      {messages.map((msg, index) => (
-                        <motion.div 
-                          key={index}
-                          className="flex items-start gap-3"
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: index * 0.1 }}
-                        >
-                          {msg.role === 'assistant' && (
-                            <div className="relative w-8 h-8">
-                              <motion.div 
-                                className="absolute inset-0 bg-[#4A5D41]/20 rounded-lg"
-                                animate={{ rotate: [6, 12, 6] }}
-                                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                              />
-                              <motion.div 
-                                className="absolute inset-0 bg-white/10 rounded-lg"
-                                animate={{ rotate: [-3, 3, -3] }}
-                                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                              />
-                              <div className="relative w-full h-full rounded-lg overflow-hidden">
-                                <Image
-                                  src="/BM.png"
-                                  alt="AI Assistant"
-                                  fill
-                                  className="object-contain p-1"
-                                  priority
-                                />
-                              </div>
-                            </div>
-                          )}
-                          
-                          <div className={`flex-1 rounded-lg p-3 ${
-                            msg.role === 'assistant' 
-                              ? 'bg-[#4A5D41]/10 border border-[#8B9D7D]/20' 
-                              : 'bg-[#8B9D7D]/20 ml-11'
-                          }`}>
-                            <p className="text-white/90 text-sm tracking-wide">
-                              {msg.content}
-                            </p>
-                          </div>
-                        </motion.div>
-                      ))}
-                      
-                      {isLoading && (
-                        <motion.div 
-                          className="flex items-start gap-3"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                        >
-                          <div className="relative w-8 h-8">
-                            <motion.div 
-                              className="absolute inset-0 bg-[#4A5D41]/20 rounded-lg"
-                              animate={{ rotate: [0, 360] }}
-                              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                            />
-                          </div>
-                          <div className="flex-1 bg-[#4A5D41]/10 rounded-lg p-3 border border-[#8B9D7D]/20">
-                            <p className="text-white/90 text-sm tracking-wide">
-                              Thinking...
-                            </p>
-                          </div>
-                        </motion.div>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Input Area */}
-                  <motion.div 
-                    className="p-4 border-t border-[#8B9D7D]/20"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.3 }}
-                  >
-                    <div className="flex gap-2">
+                    {/* Message Input */}
+                    <div className="mt-4 flex gap-2">
                       <input
                         type="text"
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' && !e.shiftKey) {
-                            e.preventDefault()
-                            handleSendMessage()
-                          }
-                        }}
+                        onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                         placeholder="Type your message..."
-                        className="flex-1 bg-[#4A5D41]/10 text-white placeholder-white/50 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8B9D7D]/50"
+                        className="flex-1 bg-[#303030] rounded-full px-4 py-2 text-sm text-white/90 focus:outline-none focus:ring-2 focus:ring-[#0084ff]"
                       />
                       <button
                         onClick={handleSendMessage}
                         disabled={isLoading}
-                        className={`px-4 py-2 bg-[#8B9D7D] text-white rounded-lg transition-colors font-light tracking-wide ${
-                          isLoading 
-                            ? 'opacity-50 cursor-not-allowed' 
-                            : 'hover:bg-[#4A5D41]'
-                        }`}
+                        className="bg-[#0084ff] text-white rounded-full p-2 hover:bg-[#0084ff]/80 transition-colors"
                       >
-                        Send
+                        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                          <path d="M22 2L11 13M22 2L15 22L11 13M11 13L2 9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
                       </button>
                     </div>
-                  </motion.div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+                  </div>
+                )}
+              </AnimatePresence>
+            </motion.div>
           </>
         )}
       </AnimatePresence>
