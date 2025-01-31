@@ -43,7 +43,7 @@ export default function Home({ featuredProjects }: HomeProps) {
                   transition={{ duration: 1.2 }}
                   className="text-base sm:text-lg md:text-xl tracking-[0.15em] uppercase text-[#7aa2f7] max-w-2xl mx-auto md:mx-0"
                 >
-                  I&apos;m passionate about holistic living
+                  I&apos;m <span className="italic">passionate</span> about promoting <span className="italic">holistic</span> living
                 </motion.p>
                 <motion.h1 
                   initial={{ opacity: 0, x: -50 }}
