@@ -12,12 +12,7 @@ export default function InteractiveAI() {
   const [isVisible, setIsVisible] = useState(false)
   const [isChatOpen, setIsChatOpen] = useState(false)
   const [message, setMessage] = useState('')
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      role: 'assistant',
-      content: "Hi! I'm your AI assistant. I can help you learn more about Berto's work, projects, and experience. What would you like to know?"
-    }
-  ])
+  const [messages, setMessages] = useState<Message[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
 
@@ -71,126 +66,117 @@ export default function InteractiveAI() {
   }
 
   return (
-    <div className="absolute top-[70%] left-0 z-[100] w-[400px]">
+    <div className="absolute top-[70%] left-0 z-[9999] w-[400px]">
       <AnimatePresence>
         {isVisible && (
-          <>
-            {/* Animated Avatar Container */}
-            <motion.div
-              initial={{ y: -100, opacity: 0 }}
-              animate={{ 
-                y: 0, 
-                opacity: 1,
-                transition: {
-                  type: "spring",
-                  duration: 1.2,
-                  bounce: 0.4
-                }
-              }}
-              className="relative cursor-pointer"
-              onClick={() => setIsChatOpen(true)}
-            >
-              {/* Initial Message with Avatar */}
-              <div className="flex items-start gap-3 px-4">
+          <motion.div
+            initial={{ y: -100, opacity: 0 }}
+            animate={{ 
+              y: 0, 
+              opacity: 1,
+              transition: {
+                type: "spring",
+                duration: 1.2,
+                bounce: 0.4
+              }
+            }}
+            className="relative"
+          >
+            {/* Messages Container */}
+            <div className="flex flex-col gap-4 px-4">
+              {/* Initial Message - Made Clickable */}
+              <div 
+                className="flex items-start gap-3 cursor-pointer hover:opacity-90 transition-opacity"
+                onClick={() => setIsChatOpen(true)}
+              >
                 <div className="relative w-12 h-12 shrink-0">
-                  <motion.div 
-                    className="relative w-full h-full rounded-full overflow-hidden"
-                    whileHover={{ scale: 1.05 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Image
-                      src="/bmavatar.png"
-                      alt="AI Assistant"
-                      fill
-                      className="object-contain"
-                      priority
-                    />
-                  </motion.div>
+                  <Image
+                    src="/bmavatar.png"
+                    alt="AI Assistant"
+                    fill
+                    className="object-contain rounded-full"
+                    priority
+                  />
                 </div>
-
-                {/* Message Bubbles Container with Backdrop Blur */}
-                <div className="relative flex-1">
-                  <div className="absolute inset-0 backdrop-blur-sm rounded-2xl" />
-                  
-                  {/* Initial Message Bubble - iPhone Style */}
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.5 }}
-                    className="relative max-w-[80%]"
-                  >
-                    <div className="bg-[#303030] px-4 py-2 rounded-2xl rounded-tl-sm">
-                      <p className="text-white/90 text-sm">
-                        Hey! Ask me anything about Berto&apos;s work
-                      </p>
-                    </div>
-                  </motion.div>
-
-                  {/* Chat Messages - iPhone Style */}
-                  <AnimatePresence>
-                    {isChatOpen && (
-                      <div className="mt-4 space-y-3">
-                        {messages.map((msg, index) => (
-                          <motion.div 
-                            key={index}
-                            className={`flex items-start gap-3 ${
-                              msg.role === 'user' ? 'justify-end' : ''
-                            }`}
-                            initial={{ opacity: 0, y: -10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: index * 0.1 }}
-                          >
-                            {msg.role === 'assistant' && (
-                              <div className="relative w-12 h-12 shrink-0">
-                                <Image
-                                  src="/bmavatar.png"
-                                  alt="AI Assistant"
-                                  fill
-                                  className="object-contain rounded-full"
-                                  priority
-                                />
-                              </div>
-                            )}
-                            
-                            <div className={`max-w-[80%] ${
-                              msg.role === 'assistant' 
-                                ? 'bg-[#303030] rounded-2xl rounded-tl-sm' 
-                                : 'bg-[#0084ff] rounded-2xl rounded-tr-sm'
-                            } px-4 py-2`}>
-                              <p className="text-white/90 text-sm">
-                                {msg.content}
-                              </p>
-                            </div>
-                          </motion.div>
-                        ))}
-
-                        {/* Message Input */}
-                        <div className="mt-4 flex gap-2 px-2">
-                          <input
-                            type="text"
-                            value={message}
-                            onChange={(e) => setMessage(e.target.value)}
-                            onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                            placeholder="Type your message..."
-                            className="flex-1 bg-[#303030] rounded-full px-4 py-2 text-sm text-white/90 focus:outline-none focus:ring-2 focus:ring-[#0084ff]"
-                          />
-                          <button
-                            onClick={handleSendMessage}
-                            disabled={isLoading}
-                            className="bg-[#0084ff] text-white rounded-full p-2 hover:bg-[#0084ff]/80 transition-colors"
-                          >
-                            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                              <path d="M22 2L11 13M22 2L15 22L11 13M11 13L2 9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                            </svg>
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </AnimatePresence>
+                <div className="bg-[#303030] px-4 py-2 rounded-2xl rounded-tl-sm">
+                  <p className="text-white/90 text-sm">
+                    Hey! Ask me anything about Berto&apos;s work
+                  </p>
+                  {!isChatOpen && (
+                    <p className="text-[#7aa2f7] text-xs mt-1">
+                      Click to start chatting →
+                    </p>
+                  )}
                 </div>
               </div>
-            </motion.div>
-          </>
+
+              {/* Chat Messages */}
+              <AnimatePresence>
+                {isChatOpen && (
+                  <div className="space-y-4">
+                    {messages.map((msg, index) => (
+                      <motion.div 
+                        key={index}
+                        className={`flex items-start gap-3 ${
+                          msg.role === 'user' ? 'justify-end' : ''
+                        }`}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                      >
+                        {msg.role === 'assistant' && (
+                          <div className="relative w-12 h-12 shrink-0">
+                            <Image
+                              src="/bmavatar.png"
+                              alt="AI Assistant"
+                              fill
+                              className="object-contain rounded-full"
+                              priority
+                            />
+                          </div>
+                        )}
+                        <div className={`max-w-[80%] ${
+                          msg.role === 'assistant' 
+                            ? 'bg-[#303030] rounded-2xl rounded-tl-sm' 
+                            : 'bg-[#0084ff] rounded-2xl rounded-tr-sm'
+                        } px-4 py-2`}>
+                          <p className="text-white/90 text-sm">
+                            {msg.content}
+                          </p>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
+              </AnimatePresence>
+
+              {/* Input Field - Always visible when chat is open */}
+              {isChatOpen && (
+                <motion.div 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex gap-2 mt-2 bg-[#1a1b26]/80 p-2 rounded-xl backdrop-blur-sm"
+                >
+                  <input
+                    type="text"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                    placeholder="Type your message..."
+                    className="flex-1 bg-[#303030] rounded-full px-4 py-2 text-sm text-white/90 focus:outline-none focus:ring-2 focus:ring-[#0084ff]"
+                  />
+                  <button
+                    onClick={handleSendMessage}
+                    disabled={isLoading}
+                    className="bg-[#0084ff] text-white rounded-full p-2 hover:bg-[#0084ff]/80 transition-colors disabled:opacity-50"
+                  >
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <path d="M22 2L11 13M22 2L15 22L11 13M11 13L2 9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </button>
+                </motion.div>
+              )}
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>
