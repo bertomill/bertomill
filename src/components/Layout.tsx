@@ -74,16 +74,6 @@ export default function Layout({ children }: LayoutProps) {
                     BLOG
                   </Link>
                   <Link 
-                    href="/docs"
-                    className={`transition-colors duration-300 ${
-                      router.pathname.startsWith('/docs')
-                        ? 'text-[#7aa2f7]'
-                        : 'text-[#a9b1d6] hover:text-[#7aa2f7]'
-                    }`}
-                  >
-                    DOCS
-                  </Link>
-                  <Link 
                     href="/projects"
                     className={`transition-colors duration-300 ${
                       router.pathname.startsWith('/projects')
