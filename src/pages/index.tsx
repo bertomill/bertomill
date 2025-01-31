@@ -37,10 +37,18 @@ export default function Home({ featuredProjects }: HomeProps) {
           <div className="relative z-10 w-full">
             <div className="max-w-[90%] mx-auto w-full flex flex-col md:grid md:grid-cols-2 gap-12 md:gap-12 items-center">
               <div className="w-full space-y-6 md:space-y-8 text-center md:text-left">
-                <motion.h1 
+                <motion.p
                   initial={{ opacity: 0, x: -50 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 1.2 }}
+                  className="text-base sm:text-lg md:text-xl tracking-[0.15em] uppercase text-[#7aa2f7] max-w-2xl mx-auto md:mx-0"
+                >
+                  I&apos;m passionate about holistic living
+                </motion.p>
+                <motion.h1 
+                  initial={{ opacity: 0, x: -50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 1.2, delay: 0.3 }}
                   className="text-4xl sm:text-5xl md:text-6xl tracking-[0.1em] leading-relaxed uppercase text-[#c0caf5]"
                 >
                   Health,
@@ -49,14 +57,6 @@ export default function Home({ featuredProjects }: HomeProps) {
                   <br />
                   Community
                 </motion.h1>
-                <motion.p
-                  initial={{ opacity: 0, x: -50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 1.2, delay: 0.3 }}
-                  className="text-base sm:text-lg md:text-xl tracking-[0.15em] uppercase text-[#7aa2f7] max-w-2xl mx-auto md:mx-0"
-                >
-                  A Holistic Approach
-                </motion.p>
               </div>
               
               <div className="w-[95vw] md:w-full relative aspect-video rounded-2xl overflow-hidden bg-[#1a1b26] border border-[#414868]/30">

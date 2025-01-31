@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { HiX } from 'react-icons/hi'
+import { HiX, HiCheck } from 'react-icons/hi'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
 
@@ -20,6 +20,10 @@ export default function InteractiveAI() {
     }
   ])
   const [isLoading, setIsLoading] = useState(false)
+  const [loadingStates, setLoadingStates] = useState({
+    pinecone: false,
+    openai: false
+  })
   const router = useRouter()
 
   useEffect(() => {
@@ -32,6 +36,21 @@ export default function InteractiveAI() {
   useEffect(() => {
     setIsVisible(true)
   }, [router.pathname])
+
+  // Handle loading states when chat opens
+  useEffect(() => {
+    if (isChatOpen) {
+      // Slower Pinecone loading
+      setTimeout(() => {
+        setLoadingStates(prev => ({ ...prev, pinecone: true }))
+      }, 2000)
+      
+      // Slower OpenAI loading
+      setTimeout(() => {
+        setLoadingStates(prev => ({ ...prev, openai: true }))
+      }, 3500)
+    }
+  }, [isChatOpen])
 
   const handleSendMessage = async () => {
     if (!message.trim() || isLoading) return
@@ -186,6 +205,105 @@ export default function InteractiveAI() {
                       <HiX size={24} />
                     </button>
                   </motion.div>
+
+                  {/* Service Loading Indicators */}
+                  <div className="px-4 py-2 bg-[#1a1b26] border-b border-[#414868]/20">
+                    <div className="flex items-center justify-center gap-6">
+                      {/* Pinecone */}
+                      <motion.div 
+                        className="flex items-center gap-2"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.2 }}
+                      >
+                        <div className="relative w-8 h-8">
+                          <motion.div 
+                            className={`absolute inset-0 rounded-full border-2 ${
+                              loadingStates.pinecone ? 'border-green-400' : 'border-[#7aa2f7]'
+                            }`}
+                            initial={false}
+                            animate={loadingStates.pinecone ? 
+                              { borderColor: '#4ade80' } : 
+                              { rotate: 360 }
+                            }
+                            transition={loadingStates.pinecone ? 
+                              { duration: 0.3 } : 
+                              { duration: 2, repeat: Infinity, ease: "linear" }
+                            }
+                          />
+                          <div className="absolute inset-[2px] rounded-full overflow-hidden bg-[#1a1b26]">
+                            <div className="absolute inset-1 rounded-full overflow-hidden">
+                              <Image
+                                src="/pinecone.png"
+                                alt="Pinecone"
+                                fill
+                                className={`object-contain transition-opacity duration-300 rounded-full ${
+                                  loadingStates.pinecone ? 'opacity-100' : 'opacity-50'
+                                }`}
+                              />
+                            </div>
+                          </div>
+                          {loadingStates.pinecone && (
+                            <motion.div
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              className="absolute inset-0 flex items-center justify-center"
+                            >
+                              <HiCheck className="text-green-400 text-lg z-10" />
+                            </motion.div>
+                          )}
+                        </div>
+                        <span className="text-xs text-[#7aa2f7]">Pinecone</span>
+                      </motion.div>
+
+                      {/* OpenAI */}
+                      <motion.div 
+                        className="flex items-center gap-2"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.4 }}
+                      >
+                        <div className="relative w-8 h-8">
+                          <motion.div 
+                            className={`absolute inset-0 rounded-full border-2 ${
+                              loadingStates.openai ? 'border-green-400' : 'border-[#7aa2f7]'
+                            }`}
+                            initial={false}
+                            animate={loadingStates.openai ? 
+                              { borderColor: '#4ade80' } : 
+                              { rotate: 360 }
+                            }
+                            transition={loadingStates.openai ? 
+                              { duration: 0.3 } : 
+                              { duration: 2, repeat: Infinity, ease: "linear" }
+                            }
+                          />
+                          <div className="absolute inset-[2px] rounded-full overflow-hidden bg-[#1a1b26]">
+                            <div className="absolute inset-1 rounded-full overflow-hidden">
+                              <Image
+                                src="/openai.png"
+                                alt="OpenAI"
+                                fill
+                                className={`object-contain transition-opacity duration-300 rounded-full ${
+                                  loadingStates.openai ? 'opacity-100' : 'opacity-50'
+                                }`}
+                              />
+                            </div>
+                          </div>
+                          {loadingStates.openai && (
+                            <motion.div
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              className="absolute inset-0 flex items-center justify-center"
+                            >
+                              <HiCheck className="text-green-400 text-lg z-10" />
+                            </motion.div>
+                          )}
+                        </div>
+                        <span className="text-xs text-[#7aa2f7]">OpenAI</span>
+                      </motion.div>
+                    </div>
+                  </div>
 
                   {/* Chat Messages */}
                   <div className="h-96 overflow-y-auto p-4">
