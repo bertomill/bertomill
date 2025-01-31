@@ -5,6 +5,11 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
+        {/* Move font loading here from Layout */}
+        <link 
+          href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" 
+          rel="stylesheet"
+        />
         {/* Global Site Tag (gtag.js) - Google Analytics */}
         <script
           async

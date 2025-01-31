@@ -34,7 +34,7 @@ export default function Projects() {
     {
       title: "News Tracker",
       description: "An AI-powered application that tracks and analyzes news updates from major Canadian financial institutions. The system uses advanced AI to score and summarize financial news, providing real-time insights for users.",
-      image: "/news_tracker.png",
+      image: "/cdn-bank-tracker.png",
       technologies: ["TypeScript", "Python", "Next.js 14", "OpenAI API", "PostgreSQL", "Vercel", "Puppeteer", "TailwindCSS"],
       features: [
         "Real-time news tracking from major Canadian banks (RBC, TD, BMO, Scotia, CIBC)",
