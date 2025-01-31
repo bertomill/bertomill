@@ -41,7 +41,7 @@ export default function BrotherGuessHeatmap({
           generateHeatmap(data.guesses)
         })
     }
-  }, [isActive])
+  }, [isActive, generateHeatmap])
 
   // Generate heatmap data from guesses
   const generateHeatmap = useCallback((currentGuesses: Guess[] = guesses) => {

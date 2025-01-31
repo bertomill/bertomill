@@ -217,20 +217,25 @@ export default function InteractiveAI() {
                         transition={{ delay: 0.2 }}
                       >
                         <div className="relative w-8 h-8">
-                          <motion.div 
-                            className={`absolute inset-0 rounded-full border-2 ${
-                              loadingStates.pinecone ? 'border-green-400' : 'border-[#7aa2f7]'
-                            }`}
-                            initial={false}
-                            animate={loadingStates.pinecone ? 
-                              { borderColor: '#4ade80' } : 
-                              { rotate: 360 }
-                            }
-                            transition={loadingStates.pinecone ? 
-                              { duration: 0.3 } : 
-                              { duration: 2, repeat: Infinity, ease: "linear" }
-                            }
-                          />
+                          <svg className="w-full h-full -rotate-90">
+                            <motion.circle
+                              cx="16"
+                              cy="16"
+                              r="15"
+                              fill="none"
+                              stroke={loadingStates.pinecone ? '#4ade80' : '#7aa2f7'}
+                              strokeWidth="2"
+                              initial={{ pathLength: 0 }}
+                              animate={{ 
+                                pathLength: loadingStates.pinecone ? 1 : [0, 1],
+                              }}
+                              transition={loadingStates.pinecone ? 
+                                { duration: 0.3, ease: "easeOut" } : 
+                                { duration: 2, repeat: Infinity, ease: "linear" }
+                              }
+                              className={`stroke-[3] ${loadingStates.pinecone ? '' : 'transition-all duration-300'}`}
+                            />
+                          </svg>
                           <div className="absolute inset-[2px] rounded-full overflow-hidden bg-[#1a1b26]">
                             <div className="absolute inset-1 rounded-full overflow-hidden">
                               <Image
@@ -264,20 +269,25 @@ export default function InteractiveAI() {
                         transition={{ delay: 0.4 }}
                       >
                         <div className="relative w-8 h-8">
-                          <motion.div 
-                            className={`absolute inset-0 rounded-full border-2 ${
-                              loadingStates.openai ? 'border-green-400' : 'border-[#7aa2f7]'
-                            }`}
-                            initial={false}
-                            animate={loadingStates.openai ? 
-                              { borderColor: '#4ade80' } : 
-                              { rotate: 360 }
-                            }
-                            transition={loadingStates.openai ? 
-                              { duration: 0.3 } : 
-                              { duration: 2, repeat: Infinity, ease: "linear" }
-                            }
-                          />
+                          <svg className="w-full h-full -rotate-90">
+                            <motion.circle
+                              cx="16"
+                              cy="16"
+                              r="15"
+                              fill="none"
+                              stroke={loadingStates.openai ? '#4ade80' : '#7aa2f7'}
+                              strokeWidth="2"
+                              initial={{ pathLength: 0 }}
+                              animate={{ 
+                                pathLength: loadingStates.openai ? 1 : [0, 1],
+                              }}
+                              transition={loadingStates.openai ? 
+                                { duration: 0.3, ease: "easeOut" } : 
+                                { duration: 2, repeat: Infinity, ease: "linear" }
+                              }
+                              className={`stroke-[3] ${loadingStates.openai ? '' : 'transition-all duration-300'}`}
+                            />
+                          </svg>
                           <div className="absolute inset-[2px] rounded-full overflow-hidden bg-[#1a1b26]">
                             <div className="absolute inset-1 rounded-full overflow-hidden">
                               <Image

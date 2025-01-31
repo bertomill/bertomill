@@ -142,7 +142,7 @@ export default function Home({ featuredProjects }: HomeProps) {
             <iframe
               width="100%"
               height="100%"
-              src="https://www.youtube.com/embed/VPN4P6zAquo?start=32&end=52&rel=0"
+              src="https://www.youtube.com/embed/VPN4P6zAquo?start=41&end=52&rel=0"
               title="Berto Mill - Ivey MSc Experience"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
