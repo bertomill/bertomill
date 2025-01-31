@@ -17,7 +17,6 @@ export default function InteractiveAI() {
   const [messages, setMessages] = useState<Message[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [isTyping, setIsTyping] = useState(false)
-  const messagesEndRef = useRef<HTMLDivElement>(null)
   const latestMessageRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
 

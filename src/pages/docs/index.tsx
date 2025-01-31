@@ -13,7 +13,7 @@ export default function DocsPage() {
             <div className="bg-[#1a1b26] p-6 rounded-lg border border-[#414868]/30">
               <h3 className="text-xl text-[#7aa2f7] mb-4">Introduction</h3>
               <p className="text-[#a9b1d6] leading-relaxed">
-                Welcome to my documentation! Here you'll find comprehensive information 
+                Welcome to my documentation! Here you&apos;ll find comprehensive information 
                 about my work, projects, and experience.
               </p>
             </div>
@@ -27,7 +27,7 @@ export default function DocsPage() {
             <div className="bg-[#1a1b26] p-6 rounded-lg border border-[#414868]/30">
               <h3 className="text-xl text-[#7aa2f7] mb-4">Background</h3>
               <p className="text-[#a9b1d6] leading-relaxed">
-                I'm a technology enthusiast with a passion for building innovative solutions. 
+                I&apos;m a technology enthusiast with a passion for building innovative solutions. 
                 My background spans across software development, business strategy, and entrepreneurship.
               </p>
             </div>
