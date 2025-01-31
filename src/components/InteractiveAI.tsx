@@ -60,11 +60,14 @@ export default function InteractiveAI() {
     const userMessage = message.trim()
     setMessage('')
     
-    // Add user message to chat
     setMessages(prev => [...prev, { role: 'user', content: userMessage }])
     
     setIsLoading(true)
     setIsTyping(true)
+
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 15000) // 15 second timeout
+
     try {
       const response = await fetch('/api/chat', {
         method: 'POST',
@@ -74,9 +77,10 @@ export default function InteractiveAI() {
         body: JSON.stringify({
           messages: [...messages, { role: 'user', content: userMessage }]
         }),
-        // Add timeout and error handling
-        signal: AbortSignal.timeout(10000) // 10 second timeout
+        signal: controller.signal
       })
+
+      clearTimeout(timeoutId)
 
       if (!response.ok) {
         throw new Error(`API error: ${response.status}`)
@@ -84,27 +88,39 @@ export default function InteractiveAI() {
 
       const data = await response.json()
       
+      if (data.error) {
+        throw new Error(data.error)
+      }
+
       setMessages(prev => [...prev, { 
         role: 'assistant', 
         content: data.message,
         sources: data.sources,
         suggestions: data.suggestions
       }])
+
+      // Update service status on successful response
+      serviceStatus.openai = true
+      serviceStatus.pinecone = true
+
     } catch (error) {
       console.error('Chat API Error:', error)
-      setMessages(prev => [...prev, { 
-        role: 'assistant', 
-        content: "I apologize, but I'm having trouble connecting to the server right now. This could be because:\n\n" +
-                 "1. The server is currently busy\n" +
-                 "2. There might be a temporary connection issue\n" +
-                 "3. The service might be undergoing maintenance\n\n" +
-                 "Please try again in a moment.",
-        suggestions: ["Try again", "What else can you tell me?"]
-      }])
-
-      // Update service status to show failure
+      
+      // Update service status on error
       serviceStatus.openai = false
       serviceStatus.pinecone = false
+
+      setMessages(prev => [...prev, { 
+        role: 'assistant', 
+        content: error.name === 'AbortError' 
+          ? "I apologize, but the request timed out. This might be because:\n\n" +
+            "1. The server is experiencing high load\n" +
+            "2. The connection is unstable\n" +
+            "3. The service is temporarily unavailable\n\n" +
+            "Please try again in a moment."
+          : "I apologize, but I'm having trouble connecting to the server right now. Please try again in a moment.",
+        suggestions: ["Try again", "What else can you tell me?"]
+      }])
     } finally {
       setIsLoading(false)
       setIsTyping(false)

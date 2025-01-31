@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiRequest, NextApiResponse } from 'next'
 import { OpenAI } from 'openai'
 import { OpenAIEmbeddings } from '@langchain/openai'
 import { Pinecone } from '@pinecone-database/pinecone'
@@ -23,6 +23,15 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 })
 
+export const config = {
+  api: {
+    responseLimit: false,
+    bodyParser: {
+      sizeLimit: '1mb',
+    },
+  },
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -32,6 +41,11 @@ export default async function handler(
   }
 
   try {
+    // Set CORS headers
+    res.setHeader('Access-Control-Allow-Origin', '*')
+    res.setHeader('Access-Control-Allow-Methods', 'POST')
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+
     const { messages } = req.body
 
     if (!messages || !Array.isArray(messages)) {
@@ -87,8 +101,11 @@ Keep your responses friendly and conversational, but professional. Use emojis sp
       message: completion.choices[0].message.content,
       sources: results.matches?.map(match => match.metadata?.source)
     })
-  } catch (error) {
-    console.error('Chat API error:', error)
-    return res.status(500).json({ error: 'Internal server error' })
+  } catch (err) {
+    console.error('Chat API Error:', err)
+    return res.status(500).json({ 
+      error: 'Internal server error',
+      message: "I'm having trouble connecting right now. Please try again in a moment."
+    })
   }
 }
