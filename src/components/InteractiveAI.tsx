@@ -74,13 +74,16 @@ export default function InteractiveAI() {
         body: JSON.stringify({
           messages: [...messages, { role: 'user', content: userMessage }]
         }),
+        // Add timeout and error handling
+        signal: AbortSignal.timeout(10000) // 10 second timeout
       })
 
-      if (!response.ok) throw new Error('Failed to get response')
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`)
+      }
 
       const data = await response.json()
       
-      // Add AI response to chat with sources and suggestions
       setMessages(prev => [...prev, { 
         role: 'assistant', 
         content: data.message,
@@ -88,16 +91,46 @@ export default function InteractiveAI() {
         suggestions: data.suggestions
       }])
     } catch (error) {
-      console.error('Error:', error)
+      console.error('Chat API Error:', error)
       setMessages(prev => [...prev, { 
         role: 'assistant', 
-        content: "I apologize, but I'm having trouble connecting right now. Please try again in a moment." 
+        content: "I apologize, but I'm having trouble connecting to the server right now. This could be because:\n\n" +
+                 "1. The server is currently busy\n" +
+                 "2. There might be a temporary connection issue\n" +
+                 "3. The service might be undergoing maintenance\n\n" +
+                 "Please try again in a moment.",
+        suggestions: ["Try again", "What else can you tell me?"]
       }])
+
+      // Update service status to show failure
+      serviceStatus.openai = false
+      serviceStatus.pinecone = false
     } finally {
       setIsLoading(false)
       setIsTyping(false)
     }
   }
+
+  // Also add a useEffect to check API health on mount
+  useEffect(() => {
+    const checkApiHealth = async () => {
+      try {
+        const response = await fetch('/api/health')
+        if (!response.ok) {
+          throw new Error('API health check failed')
+        }
+        const data = await response.json()
+        serviceStatus.openai = data.openai
+        serviceStatus.pinecone = data.pinecone
+      } catch (error) {
+        console.error('API Health Check Error:', error)
+        serviceStatus.openai = false
+        serviceStatus.pinecone = false
+      }
+    }
+
+    checkApiHealth()
+  }, [])
 
   return (
     <div className="fixed bottom-10 right-6 z-[9999] w-[90vw] md:w-[400px]">
