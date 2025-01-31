@@ -78,7 +78,7 @@ export default function InteractiveAI() {
   }
 
   return (
-    <div className="fixed bottom-6 right-6 z-[9999] w-[400px]">
+    <div className="fixed bottom-6 right-6 z-[9999] w-[90vw] md:w-[400px]">
       <AnimatePresence>
         {isVisible && (
           <motion.div
@@ -95,13 +95,13 @@ export default function InteractiveAI() {
             className="relative"
           >
             {/* Messages Container */}
-            <div className="flex flex-col gap-4 px-4">
+            <div className="flex flex-col gap-4 px-2 md:px-4">
               {/* Initial Message - Made Clickable */}
               <div 
-                className="flex items-start gap-3 cursor-pointer hover:opacity-90 transition-opacity"
+                className="flex items-start gap-2 md:gap-3 cursor-pointer hover:opacity-90 transition-opacity"
                 onClick={() => setIsChatOpen(true)}
               >
-                <div className="relative w-12 h-12 shrink-0">
+                <div className="relative w-8 h-8 md:w-12 md:h-12 shrink-0">
                   <Image
                     src="/bmavatar.png"
                     alt="AI Assistant"
@@ -110,12 +110,12 @@ export default function InteractiveAI() {
                     priority
                   />
                 </div>
-                <div className="bg-[#303030] px-4 py-2 rounded-2xl rounded-tl-sm">
-                  <p className="text-white/90 text-base font-serif">
+                <div className="bg-[#303030] px-3 md:px-4 py-2 rounded-2xl rounded-tl-sm">
+                  <p className="text-white/90 text-sm md:text-base font-serif">
                     Hey! Ask me anything about Berto&apos;s work
                   </p>
                   {!isChatOpen && (
-                    <p className="text-[#7aa2f7] text-sm mt-1 italic">
+                    <p className="text-[#7aa2f7] text-xs md:text-sm mt-1 italic">
                       Click to start chatting →
                     </p>
                   )}
@@ -126,7 +126,7 @@ export default function InteractiveAI() {
               <AnimatePresence>
                 {isChatOpen && (
                   <div className="relative">
-                    <div className="space-y-4 max-h-[40vh] overflow-y-auto p-2 rounded-xl bg-black/20 backdrop-blur-sm scrollbar-thin scrollbar-thumb-[#414868] scrollbar-track-transparent">
+                    <div className="space-y-4 max-h-[50vh] md:max-h-[40vh] overflow-y-auto p-2 rounded-xl bg-black/20 backdrop-blur-sm scrollbar-thin scrollbar-thumb-[#414868] scrollbar-track-transparent">
                       {messages.map((msg, index) => (
                         <motion.div 
                           key={index}

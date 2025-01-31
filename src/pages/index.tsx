@@ -58,7 +58,7 @@ export default function Home({ featuredProjects }: HomeProps) {
                   <br />
                   Community
                 </motion.h1>
-                <div className="relative h-24">
+                <div className="relative h-16 md:h-24">
                   <InteractiveAI />
                 </div>
               </div>

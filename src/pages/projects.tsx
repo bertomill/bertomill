@@ -32,9 +32,9 @@ export default function Projects() {
       githubUrl: "https://github.com/bertomill/blog-buddy"
     },
     {
-      title: "Canadian Financial News Tracker",
+      title: "News Tracker",
       description: "An AI-powered application that tracks and analyzes news updates from major Canadian financial institutions. The system uses advanced AI to score and summarize financial news, providing real-time insights for users.",
-      image: "/Cdn-Bank-Tracker.png",
+      image: "/news_tracker.png",
       technologies: ["TypeScript", "Python", "Next.js 14", "OpenAI API", "PostgreSQL", "Vercel", "Puppeteer", "TailwindCSS"],
       features: [
         "Real-time news tracking from major Canadian banks (RBC, TD, BMO, Scotia, CIBC)",
