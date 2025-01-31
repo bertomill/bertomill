@@ -1,12 +1,13 @@
 import { ReactNode, useEffect, useState, useMemo } from 'react'
 import Link from 'next/link'
-import { Sun, Moon, Menu, X } from 'lucide-react'
+import { Menu, X, Github, Linkedin, Instagram, Youtube } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import NavbarAuth from './NavbarAuth'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { motion, AnimatePresence } from 'framer-motion'
 import InteractiveAI from './InteractiveAI'
+import Image from 'next/image'
 
 interface LayoutProps {
   children: ReactNode
@@ -111,19 +112,76 @@ export default function Layout({ children }: LayoutProps) {
                 </div>
 
                 <div className="mt-auto px-6 pb-8">
-                  {mounted && (
-                    <button
-                      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                      className="hover:text-[#bb9af7] transition-colors duration-300"
-                      aria-label="Toggle theme"
+                  {/* Social Links */}
+                  <div className="flex items-center justify-start gap-4 flex-wrap">
+                    <a
+                      href="https://github.com/bertomill"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[#a9b1d6] hover:text-[#7aa2f7] transition-colors duration-300"
+                      aria-label="GitHub"
                     >
-                      {theme === 'dark' ? (
-                        <Sun className="w-5 h-5" />
-                      ) : (
-                        <Moon className="w-5 h-5" />
-                      )}
-                    </button>
-                  )}
+                      <Github className="w-5 h-5" />
+                    </a>
+                    <a
+                      href="https://linkedin.com/in/bertomill"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[#a9b1d6] hover:text-[#7aa2f7] transition-colors duration-300"
+                      aria-label="LinkedIn"
+                    >
+                      <Linkedin className="w-5 h-5" />
+                    </a>
+                    <a
+                      href="https://x.com/mill_berto"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[#a9b1d6] hover:text-[#7aa2f7] transition-colors duration-300 block"
+                      aria-label="X (formerly Twitter)"
+                    >
+                      <div className="w-5 h-5 relative">
+                        <Image 
+                          src="/x_logo.svg"
+                          alt="X Logo"
+                          fill
+                          className="object-contain [&>*]:fill-current opacity-80 hover:opacity-100"
+                        />
+                      </div>
+                    </a>
+                    <a
+                      href="https://www.youtube.com/@BertoVMill"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[#a9b1d6] hover:text-[#7aa2f7] transition-colors duration-300"
+                      aria-label="YouTube"
+                    >
+                      <Youtube className="w-5 h-5" />
+                    </a>
+                    <a
+                      href="https://www.instagram.com/bertomill/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[#a9b1d6] hover:text-[#7aa2f7] transition-colors duration-300"
+                      aria-label="Instagram"
+                    >
+                      <Instagram className="w-5 h-5" />
+                    </a>
+                    <a
+                      href="https://www.tiktok.com/@berto.mill"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[#a9b1d6] hover:text-[#7aa2f7] transition-colors duration-300"
+                      aria-label="TikTok"
+                    >
+                      <svg 
+                        className="w-5 h-5" 
+                        viewBox="0 0 24 24" 
+                        fill="currentColor"
+                      >
+                        <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+                      </svg>
+                    </a>
+                  </div>
                 </div>
               </div>
             </motion.nav>
