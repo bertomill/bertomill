@@ -91,17 +91,16 @@ export default function InteractiveAI() {
   }
 
   return (
-    <div className="fixed bottom-8 right-8 z-[100]">
+    <div className="absolute bottom-0 left-0 z-[100]">
       <AnimatePresence>
         {isVisible && (
           <>
             {/* Animated Avatar Container */}
             <motion.div
-              initial={{ x: 200, rotate: -10, scale: 0.8 }}
+              initial={{ y: 100, opacity: 0 }}
               animate={{ 
-                x: 0, 
-                rotate: 0, 
-                scale: 1,
+                y: 0, 
+                opacity: 1,
                 transition: {
                   type: "spring",
                   duration: 1.2,
@@ -110,45 +109,11 @@ export default function InteractiveAI() {
               }}
               whileHover={{ 
                 y: -5,
-                rotate: -5,
                 transition: { duration: 0.2 }
               }}
-              exit={{ x: 200, rotate: 10, scale: 0.8 }}
-              className="relative cursor-pointer group"
+              className="relative cursor-pointer group flex items-end gap-4"
               onClick={() => setIsChatOpen(true)}
             >
-              {/* Speech Bubble */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8, y: 10 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                transition={{ delay: 1, duration: 0.5 }}
-                className="absolute -left-64 top-6 w-60 select-none"
-              >
-                <div className="relative">
-                  {/* Background shapes */}
-                  <div className="absolute inset-0 bg-[#4A5D41]/10 rounded-lg transform rotate-1" />
-                  <div className="absolute inset-0 bg-white/5 rounded-lg transform -rotate-1" />
-                  
-                  {/* Main bubble */}
-                  <div className="relative bg-[#8B9D7D] rounded-lg p-3 transform hover:scale-105 transition-transform">
-                    <p className="text-sm font-light tracking-wide text-white/90">
-                      Hey! Ask me anything about Berto&apos;s work
-                    </p>
-                    
-                    {/* Custom arrow */}
-                    <div className="absolute -right-6 top-1/2 transform -translate-y-1/2">
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                        <path 
-                          d="M0 0L20 12L0 24V0Z" 
-                          fill="#8B9D7D"
-                          className="drop-shadow-lg"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-
               {/* Avatar Container with Creative Shape */}
               <div className="relative w-24 h-24">
                 {/* Background shapes */}
@@ -170,14 +135,46 @@ export default function InteractiveAI() {
                   transition={{ duration: 0.2 }}
                 >
                   <Image
-                    src="/Berto_Avatar.png"
+                    src="/bmavatar.png"
                     alt="AI Assistant"
                     fill
-                    className="object-contain"
+                    className="object-contain p-1"
                     priority
                   />
                 </motion.div>
               </div>
+
+              {/* Speech Bubble */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 1, duration: 0.5 }}
+                className="relative w-60 mb-4"
+              >
+                <div className="relative">
+                  {/* Background shapes */}
+                  <div className="absolute inset-0 bg-[#4A5D41]/10 rounded-lg transform rotate-1" />
+                  <div className="absolute inset-0 bg-white/5 rounded-lg transform -rotate-1" />
+                  
+                  {/* Main bubble */}
+                  <div className="relative bg-[#8B9D7D] rounded-lg p-3 transform hover:scale-105 transition-transform">
+                    <p className="text-sm font-light tracking-wide text-white/90">
+                      Hey! Ask me anything about Berto&apos;s work
+                    </p>
+                    
+                    {/* Custom arrow - now pointing right */}
+                    <div className="absolute -left-6 top-1/2 transform -translate-y-1/2 rotate-180">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path 
+                          d="M0 0L20 12L0 24V0Z" 
+                          fill="#8B9D7D"
+                          className="drop-shadow-lg"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
             </motion.div>
 
             {/* Chat Interface */}
@@ -340,10 +337,10 @@ export default function InteractiveAI() {
                               />
                               <div className="relative w-full h-full rounded-lg overflow-hidden">
                                 <Image
-                                  src="/Berto_Avatar.png"
+                                  src="/BM.png"
                                   alt="AI Assistant"
                                   fill
-                                  className="object-contain"
+                                  className="object-contain p-1"
                                   priority
                                 />
                               </div>

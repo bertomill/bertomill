@@ -5,7 +5,6 @@ import { useTheme } from 'next-themes'
 import NavbarAuth from './NavbarAuth'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import InteractiveAI from './InteractiveAI'
 import { motion, AnimatePresence } from 'framer-motion'
 
 interface LayoutProps {
@@ -118,7 +117,6 @@ export default function Layout({ children }: LayoutProps) {
 
         {/* Main Content */}
         <main className="md:pl-48 pl-0">{children}</main>
-        <InteractiveAI />
 
         {/* Overlay for mobile menu */}
         {isMenuOpen && (

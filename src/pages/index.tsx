@@ -8,6 +8,7 @@ import Image from 'next/image'
 import AthleticsSection from '@/components/AthleticsSection'
 import ConsultingSection from '@/components/ConsultingSection'
 import StartupSection from '@/components/StartupSection'
+import InteractiveAI from '@/components/InteractiveAI'
 
 interface Project {
   title: string
@@ -57,6 +58,9 @@ export default function Home({ featuredProjects }: HomeProps) {
                   <br />
                   Community
                 </motion.h1>
+                <div className="relative h-24">
+                  <InteractiveAI />
+                </div>
               </div>
               
               <div className="w-[95vw] md:w-full relative aspect-video rounded-2xl overflow-hidden bg-[#1a1b26] border border-[#414868]/30">
