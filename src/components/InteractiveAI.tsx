@@ -128,11 +128,6 @@ export default function InteractiveAI() {
                   <p className="text-white/90 text-sm md:text-base font-serif">
                     Hey! Ask me anything about Berto&apos;s work
                   </p>
-                  {!isChatOpen && (
-                    <p className="text-[#7aa2f7] text-xs md:text-sm mt-1 italic">
-                      Click to start chatting →
-                    </p>
-                  )}
                 </div>
                 {isChatOpen && (
                   <button
