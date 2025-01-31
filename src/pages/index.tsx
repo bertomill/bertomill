@@ -30,7 +30,7 @@ export default function Home({ featuredProjects }: HomeProps) {
         <meta name="description" content="Personal website of Berto Mill" />
       </Head>
 
-      <main className="min-h-screen font-mono bg-[#1a1b26]">
+      <main className="min-h-screen font-serif bg-[#1a1b26]">
         {/* Hero Section */}
         <section className="relative min-h-[80vh] flex items-center overflow-hidden px-4">
           <GradientBackground />
