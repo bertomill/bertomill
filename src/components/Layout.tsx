@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from 'react'
+import { ReactNode, useEffect, useState, useMemo } from 'react'
 import Link from 'next/link'
 import { Sun, Moon, Menu, X } from 'lucide-react'
 import { useTheme } from 'next-themes'
@@ -145,7 +145,7 @@ export default function Layout({ children }: LayoutProps) {
         )}
 
         {/* Add InteractiveAI here */}
-        <InteractiveAI />
+        {useMemo(() => <InteractiveAI />, [])}
       </div>
     </>
   )
