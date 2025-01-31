@@ -7,6 +7,7 @@ interface Message {
   role: 'user' | 'assistant'
   content: string
   sources?: string[]
+  suggestions?: string[]
 }
 
 export default function InteractiveAI() {
@@ -67,11 +68,16 @@ export default function InteractiveAI() {
 
       const data = await response.json()
       
-      // Add AI response to chat with sources
+      // Add AI response to chat with sources and suggestions
       setMessages(prev => [...prev, { 
         role: 'assistant', 
         content: data.message,
-        sources: data.sources
+        sources: data.sources,
+        suggestions: [
+          "Tell me more about your projects",
+          "What technologies do you use?",
+          "What's your background?"
+        ]
       }])
     } catch (error) {
       console.error('Error:', error)
@@ -106,7 +112,7 @@ export default function InteractiveAI() {
             <div className="flex flex-col gap-4 px-2 md:px-4">
               {/* Initial Message - Made Clickable */}
               <div 
-                className="flex items-start gap-2 md:gap-3 cursor-pointer hover:opacity-90 transition-opacity"
+                className="flex items-start gap-2 md:gap-3 cursor-pointer hover:opacity-90 transition-opacity relative"
                 onClick={() => setIsChatOpen(true)}
               >
                 <div className="relative w-8 h-8 md:w-12 md:h-12 shrink-0">
@@ -128,6 +134,25 @@ export default function InteractiveAI() {
                     </p>
                   )}
                 </div>
+                {isChatOpen && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setIsChatOpen(false)
+                    }}
+                    className="absolute -top-2 -right-2 w-6 h-6 bg-[#414868] rounded-full flex items-center justify-center hover:bg-[#414868]/80 transition-colors"
+                  >
+                    <svg 
+                      className="w-4 h-4 text-white" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      strokeWidth="2"
+                    >
+                      <path d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                )}
               </div>
 
               {/* Chat Messages */}
@@ -169,6 +194,28 @@ export default function InteractiveAI() {
                             <p className="text-white/90 text-base font-serif">
                               {msg.content}
                             </p>
+                            
+                            {/* Add suggestion pills after assistant messages */}
+                            {msg.role === 'assistant' && (
+                              <div className="mt-3 flex flex-wrap gap-2">
+                                {[
+                                  "Tell me more about your projects",
+                                  "What technologies do you use?",
+                                  "What's your background?"
+                                ].map((suggestion, i) => (
+                                  <button
+                                    key={i}
+                                    onClick={() => {
+                                      setMessage(suggestion)
+                                      handleSendMessage()
+                                    }}
+                                    className="text-xs px-3 py-1 rounded-full bg-[#414868] text-[#7aa2f7] hover:bg-[#414868]/80 transition-colors"
+                                  >
+                                    {suggestion}
+                                  </button>
+                                ))}
+                              </div>
+                            )}
                           </div>
                         </motion.div>
                       ))}
