@@ -26,7 +26,6 @@ export default function InteractiveAI() {
   const [isTyping, setIsTyping] = useState(false)
   const latestMessageRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
-  const [error, setError] = useState<string | null>(null)
 
   const initialSuggestions = [
     "Tell me about your projects",
@@ -58,7 +57,6 @@ export default function InteractiveAI() {
   const handleSendMessage = async () => {
     if (!message.trim() || isLoading) return
     
-    setError(null) // Clear any previous errors
     const userMessage = message.trim()
     setMessage('')
     
@@ -102,7 +100,6 @@ export default function InteractiveAI() {
 
     } catch (err) {
       console.error('Chat API Error:', err)
-      setError(err.message)
       
       // Update service status on error
       serviceStatus.openai = false

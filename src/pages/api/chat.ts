@@ -55,7 +55,10 @@ export default async function handler(
     const chatPromise = async () => {
       const { messages } = req.body
 
-      const retryOperation = async (operation: () => Promise<any>, maxRetries = 3) => {
+      const retryOperation = async <T>(
+        operation: () => Promise<T>,
+        maxRetries = 3
+      ): Promise<T> => {
         for (let i = 0; i < maxRetries; i++) {
           try {
             return await operation()
@@ -64,6 +67,7 @@ export default async function handler(
             await new Promise(resolve => setTimeout(resolve, 1000 * Math.pow(2, i)))
           }
         }
+        throw new Error('Operation failed after retries')
       }
 
       if (!messages || !Array.isArray(messages)) {
