@@ -6,6 +6,7 @@ import NavbarAuth from './NavbarAuth'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { motion, AnimatePresence } from 'framer-motion'
+import InteractiveAI from './InteractiveAI'
 
 interface LayoutProps {
   children: ReactNode
@@ -142,6 +143,9 @@ export default function Layout({ children }: LayoutProps) {
             className="md:hidden fixed inset-0 bg-black/50 z-30"
           />
         )}
+
+        {/* Add InteractiveAI here */}
+        <InteractiveAI />
       </div>
     </>
   )

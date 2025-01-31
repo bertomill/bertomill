@@ -115,7 +115,7 @@ export default function InteractiveAI() {
                 className="flex items-start gap-2 md:gap-3 cursor-pointer hover:opacity-90 transition-opacity relative"
                 onClick={() => setIsChatOpen(true)}
               >
-                <div className="relative w-8 h-8 md:w-12 md:h-12 shrink-0">
+                <div className="relative w-12 h-12 md:w-16 md:h-16 shrink-0">
                   <Image
                     src="/bmavatar.png"
                     alt="AI Assistant"
@@ -123,9 +123,14 @@ export default function InteractiveAI() {
                     className="object-contain rounded-full"
                     priority
                   />
+                  <div className="absolute -bottom-1 -right-1 w-6 h-6 md:w-7 md:h-7 bg-[#7aa2f7] rounded-full flex items-center justify-center ring-2 ring-[#1a1b26]">
+                    <span className="text-[10px] md:text-xs font-bold text-[#1a1b26]">
+                      AI
+                    </span>
+                  </div>
                 </div>
-                <div className="bg-[#303030] px-3 md:px-4 py-2 rounded-2xl rounded-tl-sm">
-                  <p className="text-white/90 text-sm md:text-base font-serif">
+                <div className="bg-[#303030] px-4 md:px-5 py-3 rounded-2xl rounded-tl-sm">
+                  <p className="text-white/90 text-base md:text-lg font-serif">
                     Hey! Ask me anything about Berto&apos;s work
                   </p>
                 </div>
@@ -166,7 +171,7 @@ export default function InteractiveAI() {
                           animate={{ opacity: 1, y: 0 }}
                         >
                           {msg.role === 'assistant' && (
-                            <div className="relative w-12 h-12 shrink-0">
+                            <div className="relative w-12 h-12 md:w-16 md:h-16 shrink-0">
                               <Image
                                 src="/bmavatar.png"
                                 alt="AI Assistant"
@@ -174,6 +179,11 @@ export default function InteractiveAI() {
                                 className="object-contain rounded-full"
                                 priority
                               />
+                              <div className="absolute -bottom-1 -right-1 w-6 h-6 md:w-7 md:h-7 bg-[#7aa2f7] rounded-full flex items-center justify-center ring-2 ring-[#1a1b26]">
+                                <span className="text-[10px] md:text-xs font-bold text-[#1a1b26]">
+                                  AI
+                                </span>
+                              </div>
                             </div>
                           )}
                           <div className={`max-w-[80%] ${
@@ -222,7 +232,7 @@ export default function InteractiveAI() {
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                         >
-                          <div className="relative w-12 h-12 shrink-0">
+                          <div className="relative w-12 h-12 md:w-16 md:h-16 shrink-0">
                             <Image
                               src="/bmavatar.png"
                               alt="AI Assistant"
