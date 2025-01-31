@@ -34,8 +34,12 @@ export default function Layout({ children }: LayoutProps) {
     <>
       <Head>
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link 
+          href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" 
+          rel="stylesheet"
+        />
       </Head>
-      <div className="min-h-screen bg-[#1a1b26] text-[#c0caf5]">
+      <div className="min-h-screen bg-[#1a1b26] text-[#c0caf5] font-serif">
         {/* Mobile Menu Button */}
         <button 
           onClick={toggleMenu}
