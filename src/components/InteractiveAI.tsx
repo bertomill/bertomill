@@ -6,6 +6,7 @@ import Image from 'next/image'
 interface Message {
   role: 'user' | 'assistant'
   content: string
+  sources?: string[]
 }
 
 export default function InteractiveAI() {
@@ -16,6 +17,7 @@ export default function InteractiveAI() {
   const [isLoading, setIsLoading] = useState(false)
   const [isTyping, setIsTyping] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const latestMessageRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -29,12 +31,14 @@ export default function InteractiveAI() {
     setIsVisible(true)
   }, [router.pathname])
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  const scrollToLatestMessage = () => {
+    if (latestMessageRef.current) {
+      latestMessageRef.current.scrollIntoView({ behavior: "smooth", block: "start" })
+    }
   }
 
   useEffect(() => {
-    scrollToBottom()
+    scrollToLatestMessage()
   }, [messages])
 
   const handleSendMessage = async () => {
@@ -63,8 +67,12 @@ export default function InteractiveAI() {
 
       const data = await response.json()
       
-      // Add AI response to chat
-      setMessages(prev => [...prev, { role: 'assistant', content: data.message }])
+      // Add AI response to chat with sources
+      setMessages(prev => [...prev, { 
+        role: 'assistant', 
+        content: data.message,
+        sources: data.sources
+      }])
     } catch (error) {
       console.error('Error:', error)
       setMessages(prev => [...prev, { 
@@ -130,6 +138,7 @@ export default function InteractiveAI() {
                       {messages.map((msg, index) => (
                         <motion.div 
                           key={index}
+                          ref={index === messages.length - 1 ? latestMessageRef : null}
                           className={`flex items-start gap-3 ${
                             msg.role === 'user' ? 'justify-end' : ''
                           }`}
@@ -152,6 +161,11 @@ export default function InteractiveAI() {
                               ? 'bg-[#303030] rounded-2xl rounded-tl-sm' 
                               : 'bg-[#0084ff] rounded-2xl rounded-tr-sm'
                           } px-4 py-2`}>
+                            {msg.role === 'assistant' && msg.sources && msg.sources.length > 0 && (
+                              <div className="mb-2 text-xs text-[#7aa2f7] italic">
+                                Sources: {msg.sources.map(source => source.replace(/\.[^/.]+$/, '')).join(', ')}
+                              </div>
+                            )}
                             <p className="text-white/90 text-base font-serif">
                               {msg.content}
                             </p>
@@ -196,7 +210,6 @@ export default function InteractiveAI() {
                           </div>
                         </motion.div>
                       )}
-                      <div ref={messagesEndRef} className="h-1" />
                     </div>
 
                     {/* Input Field - Positioned outside scroll container */}

@@ -9,6 +9,7 @@ import AthleticsSection from '@/components/AthleticsSection'
 import ConsultingSection from '@/components/ConsultingSection'
 import StartupSection from '@/components/StartupSection'
 import InteractiveAI from '@/components/InteractiveAI'
+import { useState } from 'react'
 
 interface Project {
   title: string
@@ -23,6 +24,8 @@ interface HomeProps {
 }
 
 export default function Home({ featuredProjects }: HomeProps) {
+  const [videoPlaying, setVideoPlaying] = useState(false)
+
   return (
     <Layout>
       <Head>
@@ -140,23 +143,63 @@ export default function Home({ featuredProjects }: HomeProps) {
           </div>
         </section>
 
-        <section className="space-y-6">
-          <h2 className="text-2xl font-light text-stone-200">About Me</h2>
-          <div className="aspect-video w-full max-w-2xl rounded-2xl overflow-hidden bg-stone-900">
-            <iframe
-              width="100%"
-              height="100%"
-              src="https://www.youtube.com/embed/VPN4P6zAquo?start=41&end=52&rel=0"
-              title="Berto Mill - Ivey MSc Experience"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="border-0"
-            />
+        <section className="relative bg-[#16161e] py-32">
+          <div className="max-w-[90%] mx-auto">
+            <motion.h2 
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1 }}
+              className="text-2xl md:text-4xl tracking-[0.2em] uppercase mb-24 text-[#bb9af7]"
+            >
+              Education
+            </motion.h2>
+
+            <div className="space-y-8">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1 }}
+                className="max-w-2xl"
+              >
+                <div className="aspect-video w-full rounded-2xl overflow-hidden bg-[#1a1b26] border border-[#414868]/30 relative">
+                  {!videoPlaying ? (
+                    <div 
+                      className="relative w-full h-full cursor-pointer"
+                      onClick={() => setVideoPlaying(true)}
+                    >
+                      <Image
+                        src="/ivey-msc-thumbnail.jpg"
+                        alt="Berto Mill speaking about Ivey MSc experience"
+                        fill
+                        className="object-cover"
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-sm">
+                          <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M8 5v14l11-7z" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <iframe
+                      width="100%"
+                      height="100%"
+                      src="https://www.youtube.com/embed/VPN4P6zAquo?start=41&autoplay=1&modestbranding=1&cc_load_policy=1&cc_lang_pref=en"
+                      title="Berto Mill - Ivey MSc Experience"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      className="border-0"
+                    />
+                  )}
+                </div>
+                <p className="mt-6 text-[#a9b1d6] leading-relaxed text-lg">
+                  I completed my MSc at Ivey Business School, where I focused on the intersection of technology and business.
+                  My research explores how AI can enhance human capabilities while maintaining the essential human element in our interactions.
+                </p>
+              </motion.div>
+            </div>
           </div>
-          <p className="text-stone-400 leading-relaxed max-w-2xl">
-            I completed my MSc at Ivey Business School, where I focused on the intersection of technology and business.
-            My research explores how AI can enhance human capabilities while maintaining the essential human element in our interactions.
-          </p>
         </section>
 
         <ConsultingSection />
