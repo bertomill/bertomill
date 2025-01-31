@@ -18,23 +18,23 @@ export default function DocsPage() {
                 <br /><br />
                 With a background in digital management, I specialize in leveraging design thinking and user journey mapping to craft impactful strategies and products. I stay at the forefront of emerging technologies, ensuring my solutions are innovative, intuitive, and customer-focused.
                 <br /><br />
-                Beyond work, I enjoy building businesses and creating enduring brands that resonate with people. Movement has always been a key part of my life, whether it's running, lifting weights, or playing sports with friends.
+                Beyond work, I enjoy building businesses and creating enduring brands that resonate with people. Movement has always been a key part of my life, whether it&apos;s running, lifting weights, or playing sports with friends.
                 <br /><br />
-                I'm passionate about designing products people love, and I'm driven by opportunities to create meaningful, lasting impact through my work.
+                I&apos;m passionate about designing products people love, and I&apos;m driven by opportunities to create meaningful, lasting impact through my work.
               </p>
             </div>
             <div className="bg-[#1a1b26] p-6 rounded-lg border border-[#414868]/30">
               <h3 className="text-xl text-[#7aa2f7] mb-4">Education</h3>
               <p className="text-[#a9b1d6] leading-relaxed">
-                <strong>Master's Degree in Digital Management</strong> from Ivey Business School at Western University (Jul 2022 - Dec 2023)
+                <strong>Master&apos;s Degree in Digital Management</strong> from Ivey Business School at Western University (Jul 2022 - Dec 2023)
                 <ul>
                   <li>Vice President of Ivey Finance & Technology Club</li>
-                  <li>Dean's Honours List</li>
+                  <li>Dean&apos;s Honours List</li>
                   <li>Graduate Diploma in Business & Sustainability</li>
                   <li>Projects: Silicon Valley Venture Capital project, Ivey Digital Innovation Studio (IDIS) winner, and more.</li>
                 </ul>
                 <br />
-                <strong>Bachelor's Degree in Legal Studies</strong> from Western University (2017 - 2022)
+                <strong>Bachelor&apos;s Degree in Legal Studies</strong> from Western University (2017 - 2022)
                 <ul>
                   <li>Student Athletic Council Member</li>
                   <li>Academic All-Canadian</li>
@@ -93,7 +93,7 @@ export default function DocsPage() {
           <div className="space-y-4">
             <ul className="text-[#a9b1d6] leading-relaxed">
               <li>Varsity Football National Champion (2017 & 2021)</li>
-              <li>Ontario University Athletics (OUA) Men's Squash Gold Medalist (2019)</li>
+              <li>Ontario University Athletics (OUA) Men&apos;s Squash Gold Medalist (2019)</li>
               <li>Windsor-Essex Young Entrepreneur of the Year Award (2017)</li>
               <li>Proteus Science Innovation Competition</li>
             </ul>
@@ -107,7 +107,7 @@ export default function DocsPage() {
             <p className="text-[#a9b1d6] leading-relaxed">
               Sports: Squash, American Football, Soccer, Tennis, Golf
               <br />
-              Books: "Antifragile" by Nicholas Taleb, "The Score Takes Care of Itself," "The Alchemist," "The Talent Code," "The Innovation Stack"
+              Books: &quot;Antifragile&quot; by Nicholas Taleb, &quot;The Score Takes Care of Itself,&quot; &quot;The Alchemist,&quot; &quot;The Talent Code,&quot; &quot;The Innovation Stack&quot;
               <br />
               Cooking and Eating: Italian pasta fagioli, Mexican tacos, Shawarma, Sushi, Turkey dinners
               <br />

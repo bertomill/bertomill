@@ -1,27 +1,22 @@
-import { ReactNode, useEffect, useState, useMemo } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Menu, X, Github, Linkedin, Instagram, Youtube } from 'lucide-react'
-import { useTheme } from 'next-themes'
-import NavbarAuth from './NavbarAuth'
-import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { motion, AnimatePresence } from 'framer-motion'
 import InteractiveAI from './InteractiveAI'
 import Image from 'next/image'
+import Head from 'next/head'
 
 interface LayoutProps {
   children: ReactNode
 }
 
 export default function Layout({ children }: LayoutProps) {
-  const { theme, setTheme } = useTheme()
-  const [mounted, setMounted] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(true)
   const router = useRouter()
 
   useEffect(() => {
-    setMounted(true)
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768)
     }
@@ -108,7 +103,6 @@ export default function Layout({ children }: LayoutProps) {
                   >
                     ABOUT
                   </Link>
-                  <NavbarAuth />
                 </div>
 
                 <div className="mt-auto px-6 pb-8">
@@ -203,7 +197,7 @@ export default function Layout({ children }: LayoutProps) {
         )}
 
         {/* Add InteractiveAI here */}
-        {useMemo(() => <InteractiveAI />, [])}
+        <InteractiveAI />
       </div>
     </>
   )

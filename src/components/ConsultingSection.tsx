@@ -27,7 +27,7 @@ export default function ConsultingSection() {
 
         <p className="text-[#a9b1d6] leading-relaxed text-sm md:text-base max-w-3xl mb-8">
           Working as a consultant has been an incredible journey! I love helping organizations embrace 
-          new technologies and find innovative solutions. It's amazing to see how combining technical 
+          new technologies and find innovative solutions. It&apos;s amazing to see how combining technical 
           expertise with strategic thinking can create real impact.
         </p>
 
