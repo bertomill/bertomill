@@ -33,6 +33,13 @@ export const config = {
   },
 }
 
+// First, let's define the response type
+type ChatResponse = {
+  message?: string;
+  sources?: string[];
+  error?: string;
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -48,33 +55,37 @@ export default async function handler(
   }
 
   try {
-    const timeoutPromise = new Promise((_, reject) => {
+    const timeoutPromise = new Promise<never>((_, reject) => {
       setTimeout(() => reject(new Error('Request timeout')), 30000)
     })
 
-    const chatPromise = async () => {
-      const { messages } = req.body
-
-      const retryOperation = async <T>(
-        operation: () => Promise<T>,
-        maxRetries = 3
-      ): Promise<T> => {
-        for (let i = 0; i < maxRetries; i++) {
-          try {
-            return await operation()
-          } catch (error) {
-            if (i === maxRetries - 1) throw error
-            await new Promise(resolve => setTimeout(resolve, 1000 * Math.pow(2, i)))
-          }
-        }
-        throw new Error('Operation failed after retries')
-      }
-
-      if (!messages || !Array.isArray(messages)) {
-        return { error: 'Messages array is required' }
-      }
-
+    const chatPromise = async (): Promise<ChatResponse> => {
       try {
+        console.log('Starting chat process...')
+        const { messages } = req.body
+        console.log('Latest message:', messages[messages.length - 1].content)
+
+        const retryOperation = async <T>(
+          operation: () => Promise<T>,
+          maxRetries = 3
+        ): Promise<T> => {
+          for (let i = 0; i < maxRetries; i++) {
+            try {
+              return await operation()
+            } catch (error) {
+              if (i === maxRetries - 1) throw error
+              await new Promise(resolve => setTimeout(resolve, 1000 * Math.pow(2, i)))
+            }
+          }
+          throw new Error('Operation failed after retries')
+        }
+
+        if (!messages || !Array.isArray(messages)) {
+          return { error: 'Messages array is required' }
+        }
+
+        // Create embedding
+        console.log('Creating embedding...')
         const embeddings = new OpenAIEmbeddings({
           openAIApiKey: process.env.OPENAI_API_KEY,
         })
@@ -82,50 +93,86 @@ export default async function handler(
         const queryEmbedding = await retryOperation(() => 
           embeddings.embedQuery(messages[messages.length - 1].content)
         )
+        console.log('Embedding created successfully')
 
         const pc = new Pinecone({
-          apiKey: process.env.PINECONE_API_KEY!
+          apiKey: process.env.PINECONE_API_KEY!,
+          environment: process.env.PINECONE_ENVIRONMENT!
         })
 
         const index = pc.index(process.env.PINECONE_INDEX!)
         
-        const results = await retryOperation(() => 
-          index.query({
-            vector: queryEmbedding,
-            topK: 3,
-            includeValues: false,
-            includeMetadata: true
-          })
-        )
+        const results = await retryOperation(async () => {
+          try {
+            const queryResponse = await index.query({
+              vector: queryEmbedding,
+              topK: 3,
+              includeValues: false,
+              includeMetadata: true
+            })
+            
+            if (!queryResponse.matches || queryResponse.matches.length === 0) {
+              console.log('No matches found in Pinecone')
+              return {
+                matches: [],
+                namespace: ''
+              }
+            }
+            
+            return queryResponse
+          } catch (error) {
+            console.error('Pinecone query error:', error)
+            throw error
+          }
+        })
+        console.log('Pinecone query successful, matches:', results.matches?.length || 0)
 
         const relevantContent = results.matches?.map(match => match.metadata?.text).join('\n\n')
         
-        const completion = await retryOperation(() => 
-          openai.chat.completions.create({
-            model: 'gpt-4',
-            messages: [
-              {
-                role: 'system',
-                content: `You are Berto Mill's AI assistant. You help answer questions about Berto's work, projects, and experience. 
-Use the following content to inform your answers, and if you don't know something, be honest about it:
+        // Generate OpenAI response
+        console.log('Generating OpenAI response...')
+        const completion = await retryOperation(async () => {
+          try {
+            // If no relevant content found, use a fallback prompt
+            const systemContent = relevantContent 
+              ? `You are Berto Mill's AI assistant. You help answer questions about Berto's work, projects, and experience. 
+                 Use the following content to inform your answers, and if you don't know something, be honest about it:
+                 ${relevantContent}`
+              : `You are Berto Mill's AI assistant. You help answer questions about Berto's work, projects, and experience. 
+                 I don't have specific information about this topic, so please be honest about limitations.`
 
-${relevantContent}
+            const response = await openai.chat.completions.create({
+              model: 'gpt-4',
+              messages: [
+                {
+                  role: 'system',
+                  content: systemContent
+                },
+                ...messages
+              ],
+              temperature: 0.7,
+              max_tokens: 500,
+              timeout: 15000 // Add explicit timeout
+            })
 
-Keep your responses friendly and conversational, but professional.`
-              },
-              ...messages
-            ],
-            temperature: 0.7,
-            max_tokens: 500
-          })
-        )
+            if (!response.choices || response.choices.length === 0) {
+              throw new Error('No response from OpenAI')
+            }
+
+            return response
+          } catch (error) {
+            console.error('OpenAI completion error:', error)
+            throw error
+          }
+        })
+        console.log('OpenAI response generated successfully')
 
         return {
           message: completion.choices[0].message.content,
           sources: results.matches?.map(match => match.metadata?.source)
         }
       } catch (error) {
-        console.error('Specific operation error:', error)
+        console.error('Chat process error:', error)
         throw error
       }
     }
@@ -133,7 +180,7 @@ Keep your responses friendly and conversational, but professional.`
     const result = await Promise.race([
       chatPromise(),
       timeoutPromise
-    ])
+    ]) as ChatResponse
 
     if (result.error) {
       return res.status(400).json(result)
