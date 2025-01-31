@@ -3,7 +3,6 @@ import Link from 'next/link'
 import { Menu, X, Github, Linkedin, Instagram, Youtube } from 'lucide-react'
 import { useRouter } from 'next/router'
 import { motion, AnimatePresence } from 'framer-motion'
-import InteractiveAI from './InteractiveAI'
 import Image from 'next/image'
 import Head from 'next/head'
 
@@ -195,9 +194,6 @@ export default function Layout({ children }: LayoutProps) {
             className="md:hidden fixed inset-0 bg-black/50 z-30"
           />
         )}
-
-        {/* Add InteractiveAI here */}
-        <InteractiveAI />
       </div>
     </>
   )

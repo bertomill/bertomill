@@ -60,3 +60,14 @@ body {
 .radix-button-primary:hover {
   @apply bg-emerald-600;
 }
+
+@keyframes loadCircle {
+  0% {
+    stroke-dashoffset: 63;
+    stroke: #414868;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    stroke: #34d399;  /* emerald-400 color */
+  }
+}

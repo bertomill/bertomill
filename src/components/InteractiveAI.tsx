@@ -11,6 +11,11 @@ interface Message {
   suggestions?: string[]
 }
 
+const serviceStatus = {
+  openai: true,  // You can make these dynamic based on actual service status
+  pinecone: true
+}
+
 export default function InteractiveAI() {
   const mountedRef = useRef(false)
   const [isVisible, setIsVisible] = useState(false)
@@ -21,6 +26,13 @@ export default function InteractiveAI() {
   const [isTyping, setIsTyping] = useState(false)
   const latestMessageRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
+
+  const initialSuggestions = [
+    "Tell me about your projects",
+    "What's your background?",
+    "What technologies do you use?",
+    "Tell me about your education"
+  ]
 
   useEffect(() => {
     if (mountedRef.current) return
@@ -88,45 +100,142 @@ export default function InteractiveAI() {
   }
 
   return (
-    <div className="fixed bottom-6 right-6 z-[9999] w-[90vw] md:w-[400px]">
+    <div className="fixed bottom-10 right-6 z-[9999] w-[90vw] md:w-[400px]">
       <AnimatePresence>
         {isVisible && (
           <motion.div
-            initial={{ y: 100, opacity: 0 }}
+            initial={{ y: 20, opacity: 0 }}
             animate={{ 
               y: 0, 
               opacity: 1,
               transition: {
-                type: "spring",
-                duration: 1.2,
-                bounce: 0.4
+                duration: 0.3,
+                ease: "easeOut"
               }
             }}
             className="relative"
           >
             {/* Chat Toggle Button */}
             <div 
-              className="flex items-start gap-2 md:gap-3 cursor-pointer hover:opacity-90 transition-opacity relative"
+              className="flex items-start gap-2 md:gap-3 cursor-pointer relative group"
               onClick={() => setIsChatOpen(!isChatOpen)}
             >
-              <div className="relative w-10 h-10 md:w-12 md:h-12 shrink-0">
+              {/* Avatar with enhanced styling */}
+              <div className="relative w-12 h-12 md:w-14 md:h-14 shrink-0">
+                <div className="absolute inset-0 bg-gradient-to-tr from-[#7aa2f7]/20 to-[#bb9af7]/20 rounded-full blur-lg" />
                 <Image
                   src="/bmavatar.png"
                   alt="AI Assistant"
                   fill
-                  className="object-contain rounded-full"
+                  className="object-contain rounded-full relative z-10"
                   priority
                 />
-                <div className="absolute -bottom-1 -right-1 w-5 h-5 md:w-6 md:h-6 bg-[#7aa2f7] rounded-full flex items-center justify-center ring-2 ring-[#1a1b26]">
+                <div className="absolute -bottom-1 -right-1 w-5 h-5 md:w-6 md:h-6 bg-gradient-to-tr from-[#7aa2f7] to-[#bb9af7] rounded-full flex items-center justify-center ring-2 ring-[#1a1b26] z-20">
                   <span className="text-[8px] md:text-[10px] font-bold text-[#1a1b26]">
                     AI
                   </span>
                 </div>
               </div>
-              <div className="bg-[#1a1b26] px-4 py-2.5 rounded-2xl rounded-tl-sm shadow-lg">
-                <p className="text-white/90 text-sm md:text-base font-serif">
-                  Hey! Ask me anything about Berto&apos;s work
-                </p>
+
+              <div className="flex flex-col gap-2">
+                {/* Service Status Bar - Now above message */}
+                <div className="flex items-center gap-2 px-2">
+                  {/* OpenAI Status */}
+                  <div className="relative w-5 h-5">
+                    <div className="absolute inset-0">
+                      <svg className="w-full h-full" viewBox="0 0 24 24">
+                        {/* Background circle - increase strokeWidth */}
+                        <circle
+                          className="text-[#414868]/20"
+                          strokeWidth="3"
+                          stroke="currentColor"
+                          fill="none"
+                          r="10"
+                          cx="12"
+                          cy="12"
+                        />
+                        {/* Animated circle - increase strokeWidth */}
+                        <circle
+                          className="text-[#414868]"
+                          strokeWidth="3"
+                          strokeLinecap="round"
+                          stroke="currentColor"
+                          fill="none"
+                          r="10"
+                          cx="12"
+                          cy="12"
+                          style={{
+                            strokeDasharray: '63',
+                            strokeDashoffset: '63',
+                            transformOrigin: 'center',
+                            transform: 'rotate(-90deg)',
+                            animation: 'loadCircle 2s ease-out forwards'
+                          }}
+                        />
+                      </svg>
+                      <div className="absolute inset-[2px] rounded-full overflow-hidden">
+                        <Image
+                          src="/openai.png"
+                          alt="OpenAI"
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Pinecone Status */}
+                  <div className="relative w-5 h-5">
+                    <div className="absolute inset-0">
+                      <svg className="w-full h-full" viewBox="0 0 24 24">
+                        {/* Background circle - increase strokeWidth */}
+                        <circle
+                          className="text-[#414868]/20"
+                          strokeWidth="3"
+                          stroke="currentColor"
+                          fill="none"
+                          r="10"
+                          cx="12"
+                          cy="12"
+                        />
+                        {/* Animated circle - increase strokeWidth */}
+                        <circle
+                          className="text-[#414868]"
+                          strokeWidth="3"
+                          strokeLinecap="round"
+                          stroke="currentColor"
+                          fill="none"
+                          r="10"
+                          cx="12"
+                          cy="12"
+                          style={{
+                            strokeDasharray: '63',
+                            strokeDashoffset: '63',
+                            transformOrigin: 'center',
+                            transform: 'rotate(-90deg)',
+                            animation: 'loadCircle 2s ease-out forwards',
+                            animationDelay: '0.8s'
+                          }}
+                        />
+                      </svg>
+                      <div className="absolute inset-[2px] rounded-full overflow-hidden">
+                        <Image
+                          src="/pinecone.png"
+                          alt="Pinecone"
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Message bubble with enhanced styling */}
+                <div className="bg-gradient-to-r from-[#1a1b26]/95 to-[#24283b]/95 backdrop-blur-md px-4 py-2.5 rounded-2xl rounded-tl-sm shadow-lg border border-white/5 group-hover:border-[#7aa2f7]/20 transition-all duration-300">
+                  <p className="text-white/90 text-sm md:text-base font-serif">
+                    Hey! Ask me anything about Berto&apos;s work
+                  </p>
+                </div>
               </div>
             </div>
 
@@ -145,6 +254,28 @@ export default function InteractiveAI() {
                 </button>
 
                 <div className="space-y-3 max-h-[60vh] md:max-h-[50vh] overflow-y-auto p-3 rounded-2xl bg-[#1a1b26]/95 backdrop-blur-sm shadow-lg">
+                  {/* Show initial suggestions if no messages yet */}
+                  {messages.length === 0 && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="flex flex-wrap gap-2 p-2"
+                    >
+                      {initialSuggestions.map((suggestion, i) => (
+                        <button
+                          key={i}
+                          onClick={() => {
+                            setMessage(suggestion)
+                            handleSendMessage()
+                          }}
+                          className="text-xs px-3 py-1.5 rounded-full bg-[#414868] text-[#7aa2f7] hover:bg-[#414868]/80 transition-colors shadow-sm whitespace-nowrap"
+                        >
+                          {suggestion}
+                        </button>
+                      ))}
+                    </motion.div>
+                  )}
+
                   {messages.map((msg, index) => (
                     <motion.div 
                       key={index}
@@ -185,16 +316,21 @@ export default function InteractiveAI() {
                           {msg.content}
                         </p>
                         
-                        {msg.role === 'assistant' && msg.suggestions && (
-                          <div className="mt-2 flex flex-wrap gap-1.5">
-                            {msg.suggestions.map((suggestion, i) => (
+                        {msg.role === 'assistant' && (
+                          <div className="mt-3 flex flex-wrap gap-2">
+                            {(msg.suggestions || [
+                              "Tell me more about that",
+                              "What else can you share?",
+                              "How does that work?",
+                              "Any examples?"
+                            ]).map((suggestion, i) => (
                               <button
                                 key={i}
                                 onClick={() => {
                                   setMessage(suggestion)
                                   handleSendMessage()
                                 }}
-                                className="text-[10px] px-2.5 py-1 rounded-full bg-[#414868] text-[#7aa2f7] hover:bg-[#414868]/80 transition-colors shadow-sm"
+                                className="text-xs px-3 py-1.5 rounded-full bg-[#414868] text-[#7aa2f7] hover:bg-[#414868]/80 transition-colors shadow-sm whitespace-nowrap"
                               >
                                 {suggestion}
                               </button>
