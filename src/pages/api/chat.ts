@@ -96,8 +96,7 @@ export default async function handler(
         console.log('Embedding created successfully')
 
         const pc = new Pinecone({
-          apiKey: process.env.PINECONE_API_KEY!,
-          environment: process.env.PINECONE_ENVIRONMENT!
+          apiKey: process.env.PINECONE_API_KEY!
         })
 
         const index = pc.index(process.env.PINECONE_INDEX!)
