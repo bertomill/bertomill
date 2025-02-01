@@ -16,6 +16,21 @@ interface Project {
 export default function Projects() {
   const projects: Project[] = [
     {
+      title: "Levery",
+      description: "AI that works with your data. Connect apps, documents and databases instantly with no training or uploads required. Levery provides instant, live connectors to help businesses leverage their data more effectively.",
+      image: "/levery_project.png",
+      technologies: ["Next.js", "TypeScript", "OpenAI", "Tailwind CSS", "Vercel", "PostgreSQL", "Supabase", "LangChain"],
+      features: [
+        "Instant, live data connectors",
+        "No-training AI integration",
+        "Real-time data processing",
+        "Secure database connections",
+        "Interactive dashboard interface",
+        "Custom AI model deployment"
+      ],
+      demoUrl: "https://levery.vercel.app/"
+    },
+    {
       title: "Blog Buddies",
       description: "An app to help you read and write blogs with AI. The platform leverages artificial intelligence to enhance the blogging experience, making content creation and consumption more efficient and engaging.",
       image: "/blog-buddies.png",

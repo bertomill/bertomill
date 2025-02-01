@@ -211,13 +211,19 @@ export default function Home({ featuredProjects }: HomeProps) {
 export const getStaticProps: GetStaticProps<HomeProps> = async () => {
   const featuredProjects: Project[] = [
     {
+      title: "Levery",
+      description: "AI that works with your data. Connect apps, documents and databases instantly with no training or uploads required.",
+      image: "/levery_project.png",
+      link: "https://levery.vercel.app/",
+      technologies: ["AI", "Next.js", "TypeScript", "Tailwind CSS", "Vercel"]
+    },
+    {
       title: "Canadian Financial News Tracker",
       description: "AI-powered application that tracks and analyzes financial news",
       image: "/cdn-bank-tracker.png",
       link: "/projects/canadian-financial-news-tracker",
       technologies: ["TypeScript", "Python", "Next.js", "OpenAI"]
     }
-    // Add more projects as needed
   ]
 
   return {
