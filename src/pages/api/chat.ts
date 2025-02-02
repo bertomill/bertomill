@@ -56,11 +56,6 @@ interface ChatResponse {
   sources?: string[];
 }
 
-type RetryError = Error & {
-  status?: number;
-  code?: string;
-}
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ChatResponse>
