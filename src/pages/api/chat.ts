@@ -19,6 +19,21 @@ if (!process.env.PINECONE_INDEX) {
   throw new Error('Missing PINECONE_INDEX environment variable')
 }
 
+const requiredEnvVars = {
+  'OPENAI_API_KEY': process.env.OPENAI_API_KEY,
+  'PINECONE_API_KEY': process.env.PINECONE_API_KEY,
+  'PINECONE_ENVIRONMENT': process.env.PINECONE_ENVIRONMENT,
+  'PINECONE_INDEX': process.env.PINECONE_INDEX
+}
+
+const missingEnvVars = Object.entries(requiredEnvVars)
+  .filter(([_, value]) => !value)
+  .map(([key]) => key)
+
+if (missingEnvVars.length > 0) {
+  throw new Error(`Missing required environment variables: ${missingEnvVars.join(', ')}`)
+}
+
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
   timeout: 30000, // 30 second timeout
@@ -124,21 +139,36 @@ export default async function handler(
     })
 
   } catch (error) {
-    console.error('Chat API Error:', error)
+    console.error('Chat API Error:', {
+      error,
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      envVarsSet: {
+        openai: !!process.env.OPENAI_API_KEY,
+        pineconeKey: !!process.env.PINECONE_API_KEY,
+        pineconeEnv: !!process.env.PINECONE_ENVIRONMENT,
+        pineconeIndex: !!process.env.PINECONE_INDEX
+      }
+    })
     
-    // Specific error handling
+    // More specific error messages
     if (error instanceof Error) {
-      if (error.message.includes('timeout')) {
-        return res.status(504).json({
-          error: 'Request timed out',
-          message: 'The request took too long. Please try again.'
+      if (error.message.includes('Pinecone')) {
+        return res.status(500).json({
+          error: 'Database connection error',
+          message: 'Unable to access the knowledge base. Please try again.'
         })
       }
-      
-      if (error.message.includes('rate limit')) {
-        return res.status(429).json({
-          error: 'Rate limit exceeded',
-          message: 'Too many requests. Please wait a moment and try again.'
+      if (error.message.includes('OpenAI')) {
+        return res.status(500).json({
+          error: 'AI service error',
+          message: 'The AI service is currently unavailable. Please try again.'
+        })
+      }
+      if (error.message.includes('environment')) {
+        return res.status(500).json({
+          error: 'Configuration error',
+          message: 'The service is not properly configured. Please contact support.'
         })
       }
     }

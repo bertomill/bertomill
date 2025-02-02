@@ -12,6 +12,7 @@ import InteractiveAI from '@/components/InteractiveAI'
 import { useState, useEffect, useRef } from 'react'
 import type { AnimationItem } from 'lottie-web'
 import HeroAnimation from '@/components/HeroAnimation'
+import LogoAnimation from '@/components/LogoAnimation'
 
 interface Project {
   title: string
@@ -100,17 +101,8 @@ export default function Home({ featuredProjects }: HomeProps) {
                   Community
                 </motion.h1>
               </div>
-              
-              <div className="w-[95vw] md:w-full relative aspect-video rounded-2xl overflow-hidden bg-[#1a1b26] border border-[#414868]/30">
-                <iframe
-                  width="100%"
-                  height="100%"
-                  src="https://www.youtube.com/embed/ZkLOBKFFJ2Y?autoplay=1&mute=1&loop=1&playlist=ZkLOBKFFJ2Y&modestbranding=1&cc_load_policy=1&cc_lang_pref=en"
-                  title="AI Innovation Video"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  className="border-0"
-                />
+              <div className="relative w-full flex justify-center items-center">
+                <LogoAnimation />
               </div>
             </div>
           </div>

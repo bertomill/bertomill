@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import Head from 'next/head'
+import LogoAnimation from './LogoAnimation'
 
 interface LayoutProps {
   children: ReactNode
