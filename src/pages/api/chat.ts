@@ -21,9 +21,11 @@ if (!process.env.PINECONE_INDEX) {
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
+  timeout: 30000, // 30 second timeout
 })
 
 export const config = {
+  maxDuration: 60, // Set max duration to 60 seconds
   api: {
     responseLimit: false,
     bodyParser: {
@@ -58,177 +60,92 @@ export default async function handler(
     return
   }
 
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' })
+  }
+
   try {
+    // Validate environment variables
     if (!process.env.OPENAI_API_KEY || !process.env.PINECONE_API_KEY || !process.env.PINECONE_INDEX) {
-      console.error('Missing environment variables')
-      return res.status(500).json({ 
-        error: 'Server configuration error',
-        message: "I'm having trouble connecting to my knowledge base. Please try again."
-      })
+      throw new Error('Missing required environment variables')
     }
 
-    const chatPromise = async (): Promise<ChatResponse> => {
-      try {
-        console.log('Starting chat process...')
-        const { messages } = req.body
+    const { messages } = req.body
+    if (!messages?.length) {
+      return res.status(400).json({ error: 'No messages provided' })
+    }
 
-        if (!messages || !Array.isArray(messages)) {
-          return { error: 'Invalid message format' }
-        }
+    // Initialize Pinecone with error handling
+    const pc = new Pinecone({
+      apiKey: process.env.PINECONE_API_KEY!,
+      environment: process.env.PINECONE_ENVIRONMENT!
+    })
 
-        // Improved retry logic with proper typing
-        const retryOperation = async <T>(
-          operation: () => Promise<T>,
-          maxRetries = 3,
-          delay = 1000
-        ): Promise<T> => {
-          let lastError: RetryError | null = null
-          
-          for (let i = 0; i < maxRetries; i++) {
-            try {
-              return await operation()
-            } catch (error) {
-              console.error(`Attempt ${i + 1} failed:`, error)
-              lastError = error as RetryError
-              if (i < maxRetries - 1) {
-                await new Promise(resolve => setTimeout(resolve, delay * Math.pow(2, i)))
-              }
-            }
-          }
-          throw lastError
-        }
+    const index = pc.index(process.env.PINECONE_INDEX!)
 
-        // Create embedding with better error handling
-        console.log('Creating embedding...')
-        const embeddings = new OpenAIEmbeddings({
-          openAIApiKey: process.env.OPENAI_API_KEY,
-          configuration: {
-            timeout: 10000 // 10 second timeout
-          }
+    // Create embeddings
+    const embeddings = new OpenAIEmbeddings({
+      openAIApiKey: process.env.OPENAI_API_KEY,
+    })
+
+    const queryEmbedding = await embeddings.embedQuery(messages[messages.length - 1].content)
+
+    // Query Pinecone
+    const queryResponse = await index.query({
+      vector: queryEmbedding,
+      topK: 3,
+      includeMetadata: true
+    })
+
+    const relevantContent = queryResponse.matches
+      ?.map(match => match.metadata?.text)
+      .filter(Boolean)
+      .join('\n\n')
+
+    // Generate response with context
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4',
+      messages: [
+        {
+          role: 'system',
+          content: `You are Berto Mill's AI assistant. Use this context to answer questions about Berto's projects:\n${relevantContent}`
+        },
+        ...messages
+      ],
+      temperature: 0.7,
+      max_tokens: 500
+    })
+
+    return res.status(200).json({
+      message: completion.choices[0].message.content,
+      sources: queryResponse.matches
+        ?.map(match => match.metadata?.source)
+        .filter(Boolean)
+    })
+
+  } catch (error) {
+    console.error('Chat API Error:', error)
+    
+    // Specific error handling
+    if (error instanceof Error) {
+      if (error.message.includes('timeout')) {
+        return res.status(504).json({
+          error: 'Request timed out',
+          message: 'The request took too long. Please try again.'
         })
-        
-        let queryEmbedding
-        try {
-          queryEmbedding = await retryOperation(() => 
-            embeddings.embedQuery(messages[messages.length - 1].content)
-          )
-          console.log('Embedding created successfully')
-        } catch (error) {
-          console.error('Embedding creation failed:', error)
-          throw new Error('Failed to process your message')
-        }
-
-        // Initialize Pinecone with better error handling
-        const pc = new Pinecone({
-          apiKey: process.env.PINECONE_API_KEY!,
-          timeout: 10000 // 10 second timeout
+      }
+      
+      if (error.message.includes('rate limit')) {
+        return res.status(429).json({
+          error: 'Rate limit exceeded',
+          message: 'Too many requests. Please wait a moment and try again.'
         })
-
-        const index = pc.index(process.env.PINECONE_INDEX!)
-        
-        // Query Pinecone with better error handling
-        let results
-        try {
-          results = await retryOperation(async () => {
-            const queryResponse = await index.query({
-              vector: queryEmbedding,
-              topK: 3,
-              includeValues: false,
-              includeMetadata: true
-            })
-            
-            if (!queryResponse.matches || queryResponse.matches.length === 0) {
-              console.log('No matches found in Pinecone')
-              return {
-                matches: [],
-                namespace: ''
-              }
-            }
-            
-            return queryResponse
-          })
-          console.log('Pinecone query successful, matches:', results.matches?.length || 0)
-        } catch (error) {
-          console.error('Pinecone query failed:', error)
-          throw new Error('Unable to access knowledge base')
-        }
-
-        const relevantContent = results.matches?.map(match => match.metadata?.text).join('\n\n')
-        
-        // Generate OpenAI response with better error handling
-        console.log('Generating OpenAI response...')
-        let completion
-        try {
-          completion = await retryOperation(async () => {
-            const systemContent = relevantContent 
-              ? `You are Berto Mill's AI assistant. You help answer questions about Berto's work, projects, and experience. 
-                 Use the following content to inform your answers, and if you don't know something, be honest about it:
-                 ${relevantContent}`
-              : `You are Berto Mill's AI assistant. You help answer questions about Berto's work, projects, and experience. 
-                 I don't have specific information about this topic, so please be honest about limitations.`
-
-            return await openai.chat.completions.create({
-              model: 'gpt-4',
-              messages: [
-                {
-                  role: 'system',
-                  content: systemContent
-                },
-                ...messages
-              ],
-              temperature: 0.7,
-              max_tokens: 500
-            })
-          })
-          console.log('OpenAI response generated successfully')
-        } catch (error) {
-          console.error('OpenAI completion failed:', error)
-          throw new Error('Failed to generate response')
-        }
-
-        if (!completion.choices[0]?.message?.content) {
-          return {
-            error: 'No valid response content from OpenAI',
-            message: "I apologize, but I couldn't generate a response. Please try again."
-          }
-        }
-
-        return {
-          message: completion.choices[0].message.content,
-          sources: results.matches
-            ?.map(match => match.metadata?.source)
-            .filter((source): source is string => typeof source === 'string') || []
-        }
-      } catch (error) {
-        console.error('Chat process error:', error)
-        throw error
       }
     }
 
-    const timeoutPromise = new Promise((_, reject) => {
-      setTimeout(() => reject(new Error('Request timeout')), 15000)
-    })
-
-    const result = await Promise.race([
-      chatPromise(),
-      timeoutPromise
-    ])
-
-    if ('error' in result) {
-      return res.status(400).json(result)
-    }
-
-    return res.status(200).json(result)
-  } catch (err) {
-    console.error('Chat API Error:', err)
-    const isTimeout = err instanceof Error && err.message === 'Request timeout'
-    const status = isTimeout ? 504 : 500
-    
-    return res.status(status).json({ 
-      error: err instanceof Error ? err.message : 'Internal server error',
-      message: isTimeout 
-        ? "The request took too long to process. Please try a shorter message or try again later."
-        : "I'm having trouble connecting right now. Please try again in a moment."
+    return res.status(500).json({
+      error: 'Internal server error',
+      message: 'Something went wrong. Please try again.'
     })
   }
 }

@@ -82,13 +82,9 @@ export default function InteractiveAI() {
   const handleSendMessage = async () => {
     if (!message.trim() || isLoading) return
     
-    const userMessage = message.trim()
-    setMessage('')
-    
-    setMessages(prev => [...prev, { role: 'user', content: userMessage }])
     setIsLoading(true)
     setIsTyping(true)
-
+    
     try {
       const response = await fetch('/api/chat', {
         method: 'POST',
@@ -96,46 +92,35 @@ export default function InteractiveAI() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          messages: [...messages, { role: 'user', content: userMessage }]
-        }),
-        credentials: 'include',
-        signal: AbortSignal.timeout(15000)
+          messages: [...messages, { role: 'user', content: message.trim() }]
+        })
       })
 
       if (!response.ok) {
-        throw new Error(`API error: ${response.status}`)
+        const errorData = await response.json()
+        throw new Error(errorData.message || 'Failed to get response')
       }
 
       const data = await response.json()
-      
-      if (data.error) {
-        throw new Error(data.error)
-      }
-
-      setMessages(prev => [...prev, { 
-        role: 'assistant', 
-        content: data.message,
-        sources: data.sources,
-        suggestions: data.suggestions
-      }])
-
-      // Update service status on successful response
-      serviceStatus.openai = true
-      serviceStatus.pinecone = true
-
-    } catch (err) {
-      console.error('Chat API Error:', err)
-      
-      // Update service status on error
-      serviceStatus.openai = false
-      serviceStatus.pinecone = false
-
-      setMessages(prev => [...prev, { 
-        role: 'assistant', 
-        content: "I apologize, but I'm having trouble connecting right now. Please try again in a moment.",
-        suggestions: ["Try again", "What else can you tell me?"]
-      }])
+      setMessages(prev => [
+        ...prev,
+        { role: 'user', content: message.trim() },
+        { role: 'assistant', content: data.message, sources: data.sources }
+      ])
+    } catch (error) {
+      console.error('Chat error:', error)
+      setMessages(prev => [
+        ...prev,
+        { role: 'user', content: message.trim() },
+        { 
+          role: 'assistant', 
+          content: error instanceof Error 
+            ? error.message 
+            : "I'm having trouble connecting. Please try again in a moment."
+        }
+      ])
     } finally {
+      setMessage('')
       setIsLoading(false)
       setIsTyping(false)
     }

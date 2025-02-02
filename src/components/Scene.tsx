@@ -1,10 +1,15 @@
-import { useFrame } from '@react-three/fiber'
-import { useRef } from 'react'
+import { useFrame, useThree } from '@react-three/fiber'
+import { useRef, useEffect } from 'react'
 import { Float, MeshDistortMaterial, Sphere } from '@react-three/drei'
 import * as THREE from 'three'
 
 export default function Scene() {
   const meshRef = useRef<THREE.Mesh>(null!)
+  const { scene } = useThree()
+
+  useEffect(() => {
+    scene.background = new THREE.Color('#0a0b11')
+  }, [scene])
 
   useFrame((state) => {
     const time = state.clock.getElapsedTime()
@@ -14,8 +19,6 @@ export default function Scene() {
 
   return (
     <>
-      <color attach="background" args={['#0a0b11']} />
-      
       <ambientLight intensity={0.15} />
       <directionalLight 
         position={[5, 5, 5]} 
