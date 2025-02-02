@@ -80,9 +80,24 @@ export default async function handler(
   }
 
   try {
-    // Validate environment variables
-    if (!process.env.OPENAI_API_KEY || !process.env.PINECONE_API_KEY || !process.env.PINECONE_INDEX) {
-      throw new Error('Missing required environment variables')
+    // Validate environment variables first
+    const requiredVars = {
+      OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+      PINECONE_API_KEY: process.env.PINECONE_API_KEY,
+      PINECONE_ENVIRONMENT: process.env.PINECONE_ENVIRONMENT,
+      PINECONE_INDEX: process.env.PINECONE_INDEX
+    }
+
+    const missingVars = Object.entries(requiredVars)
+      .filter(([, value]) => !value)
+      .map(([key]) => key)
+
+    if (missingVars.length > 0) {
+      console.error('Missing environment variables:', missingVars)
+      return res.status(500).json({
+        error: 'Configuration error',
+        message: 'The service is not properly configured. Missing required environment variables.'
+      })
     }
 
     const { messages } = req.body
@@ -90,13 +105,12 @@ export default async function handler(
       return res.status(400).json({ error: 'No messages provided' })
     }
 
-    // Initialize Pinecone with error handling
+    // Initialize Pinecone
     const pc = new Pinecone({
-      apiKey: process.env.PINECONE_API_KEY!,
-      // @ts-expect-error Pinecone types are outdated but this property is required
-      environment: process.env.PINECONE_ENVIRONMENT!
+      apiKey: process.env.PINECONE_API_KEY!
     })
 
+    // Get the index
     const index = pc.index(process.env.PINECONE_INDEX!)
 
     // Create embeddings
@@ -140,46 +154,19 @@ export default async function handler(
     })
 
   } catch (error) {
-    const typedError = error as RetryError
     console.error('Chat API Error:', {
-      error: typedError,
-      message: typedError.message || 'Unknown error',
-      status: typedError.status,
-      code: typedError.code,
-      stack: typedError.stack,
-      envVarsSet: {
+      error,
+      envVars: {
         openai: !!process.env.OPENAI_API_KEY,
-        pineconeKey: !!process.env.PINECONE_API_KEY,
-        pineconeEnv: !!process.env.PINECONE_ENVIRONMENT,
-        pineconeIndex: !!process.env.PINECONE_INDEX
+        pinecone: !!process.env.PINECONE_API_KEY,
+        environment: !!process.env.PINECONE_ENVIRONMENT,
+        index: !!process.env.PINECONE_INDEX
       }
     })
-    
-    // More specific error messages
-    if (typedError instanceof Error) {
-      if (typedError.message.includes('Pinecone')) {
-        return res.status(500).json({
-          error: 'Database connection error',
-          message: 'Unable to access the knowledge base. Please try again.'
-        })
-      }
-      if (typedError.message.includes('OpenAI')) {
-        return res.status(500).json({
-          error: 'AI service error',
-          message: 'The AI service is currently unavailable. Please try again.'
-        })
-      }
-      if (typedError.message.includes('environment')) {
-        return res.status(500).json({
-          error: 'Configuration error',
-          message: 'The service is not properly configured. Please contact support.'
-        })
-      }
-    }
 
     return res.status(500).json({
       error: 'Internal server error',
-      message: 'Something went wrong. Please try again.'
+      message: error instanceof Error ? error.message : 'Something went wrong'
     })
   }
 }
