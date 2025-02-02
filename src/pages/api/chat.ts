@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { OpenAI } from 'openai'
 import { Pinecone } from '@pinecone-database/pinecone'
-import { OpenAIEmbeddings } from 'langchain/embeddings/openai'
+import { OpenAIEmbeddings } from '@langchain/openai'
 
 if (!process.env.OPENAI_API_KEY) {
   throw new Error('Missing OPENAI_API_KEY environment variable')
@@ -27,7 +27,7 @@ const requiredEnvVars = {
 }
 
 const missingEnvVars = Object.entries(requiredEnvVars)
-  .filter(([_, value]) => !value)
+  .filter(([, value]) => !value)
   .map(([key]) => key)
 
 if (missingEnvVars.length > 0) {
@@ -93,6 +93,7 @@ export default async function handler(
     // Initialize Pinecone with error handling
     const pc = new Pinecone({
       apiKey: process.env.PINECONE_API_KEY!,
+      // @ts-expect-error Pinecone types are outdated but this property is required
       environment: process.env.PINECONE_ENVIRONMENT!
     })
 
@@ -132,17 +133,20 @@ export default async function handler(
     })
 
     return res.status(200).json({
-      message: completion.choices[0].message.content,
+      message: completion.choices[0].message?.content || '',
       sources: queryResponse.matches
         ?.map(match => match.metadata?.source)
-        .filter(Boolean)
+        .filter((source): source is string => typeof source === 'string') || []
     })
 
   } catch (error) {
+    const typedError = error as RetryError
     console.error('Chat API Error:', {
-      error,
-      message: error instanceof Error ? error.message : 'Unknown error',
-      stack: error instanceof Error ? error.stack : undefined,
+      error: typedError,
+      message: typedError.message || 'Unknown error',
+      status: typedError.status,
+      code: typedError.code,
+      stack: typedError.stack,
       envVarsSet: {
         openai: !!process.env.OPENAI_API_KEY,
         pineconeKey: !!process.env.PINECONE_API_KEY,
@@ -152,20 +156,20 @@ export default async function handler(
     })
     
     // More specific error messages
-    if (error instanceof Error) {
-      if (error.message.includes('Pinecone')) {
+    if (typedError instanceof Error) {
+      if (typedError.message.includes('Pinecone')) {
         return res.status(500).json({
           error: 'Database connection error',
           message: 'Unable to access the knowledge base. Please try again.'
         })
       }
-      if (error.message.includes('OpenAI')) {
+      if (typedError.message.includes('OpenAI')) {
         return res.status(500).json({
           error: 'AI service error',
           message: 'The AI service is currently unavailable. Please try again.'
         })
       }
-      if (error.message.includes('environment')) {
+      if (typedError.message.includes('environment')) {
         return res.status(500).json({
           error: 'Configuration error',
           message: 'The service is not properly configured. Please contact support.'
