@@ -11,6 +11,7 @@ import StartupSection from '@/components/StartupSection'
 import InteractiveAI from '@/components/InteractiveAI'
 import { useState, useEffect, useRef } from 'react'
 import type { AnimationItem } from 'lottie-web'
+import HeroAnimation from '@/components/HeroAnimation'
 
 interface Project {
   title: string
@@ -71,6 +72,7 @@ export default function Home({ featuredProjects }: HomeProps) {
         {/* Hero Section */}
         <section className="relative min-h-[80vh] flex items-center overflow-hidden px-4">
           <GradientBackground />
+          <HeroAnimation />
           
           <div className="relative z-10 w-full">
             <div className="max-w-[90%] mx-auto w-full flex flex-col md:grid md:grid-cols-2 gap-12 md:gap-12 items-center">

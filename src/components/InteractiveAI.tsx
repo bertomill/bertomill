@@ -146,7 +146,7 @@ export default function InteractiveAI() {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-50">
+    <div className="fixed bottom-4 right-4 z-[9999]">
       <AnimatePresence>
         {isVisible && (
           <motion.div
@@ -166,17 +166,20 @@ export default function InteractiveAI() {
               className="flex items-start gap-2 md:gap-3 cursor-pointer relative group"
               onClick={() => setIsChatOpen(!isChatOpen)}
             >
-              {/* Avatar with enhanced styling */}
-              <div className="relative w-12 h-12 md:w-14 md:h-14 shrink-0">
+              {/* Avatar with improved mobile styling */}
+              <div className="relative w-10 h-10 md:w-12 md:h-12 shrink-0 z-50">
                 <div className="absolute inset-0 bg-gradient-to-tr from-[#7aa2f7]/20 to-[#bb9af7]/20 rounded-full blur-lg" />
-                <Image
-                  src="/bmavatar.png"
-                  alt="AI Assistant"
-                  fill
-                  className="object-contain rounded-full relative z-10"
-                  priority
-                />
-                <div className="absolute -bottom-1 -right-1 w-5 h-5 md:w-6 md:h-6 bg-gradient-to-tr from-[#7aa2f7] to-[#bb9af7] rounded-full flex items-center justify-center ring-2 ring-[#1a1b26] z-20">
+                <div className="relative w-full h-full rounded-full overflow-hidden">
+                  <Image
+                    src="/bmavatar.png"
+                    alt="AI Assistant"
+                    fill
+                    className="object-contain rounded-full relative z-10"
+                    priority
+                    sizes="(max-width: 768px) 40px, 48px"
+                  />
+                </div>
+                <div className="absolute -bottom-1 -right-1 w-4 h-4 md:w-5 md:h-5 bg-gradient-to-tr from-[#7aa2f7] to-[#bb9af7] rounded-full flex items-center justify-center ring-2 ring-[#1a1b26] z-20">
                   <span className="text-[8px] md:text-[10px] font-bold text-[#1a1b26]">
                     AI
                   </span>
