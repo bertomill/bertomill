@@ -150,8 +150,7 @@ export default async function handler(
                 ...messages
               ],
               temperature: 0.7,
-              max_tokens: 500,
-              timeout: 15000 // Add explicit timeout
+              max_tokens: 500
             })
 
             if (!response.choices || response.choices.length === 0) {
@@ -166,9 +165,19 @@ export default async function handler(
         })
         console.log('OpenAI response generated successfully')
 
+        // First, let's check if we have a valid response
+        if (!completion.choices[0]?.message?.content) {
+          return {
+            error: 'No valid response content from OpenAI',
+            message: "I apologize, but I couldn't generate a response. Please try again."
+          }
+        }
+
         return {
           message: completion.choices[0].message.content,
-          sources: results.matches?.map(match => match.metadata?.source)
+          sources: results.matches
+            ?.map(match => match.metadata?.source)
+            .filter((source): source is string => typeof source === 'string') || []
         }
       } catch (error) {
         console.error('Chat process error:', error)
@@ -188,11 +197,11 @@ export default async function handler(
     return res.status(200).json(result)
   } catch (err) {
     console.error('Chat API Error:', err)
-    const isTimeout = err.message === 'Request timeout'
+    const isTimeout = err instanceof Error && err.message === 'Request timeout'
     const status = isTimeout ? 504 : 500
     
     return res.status(status).json({ 
-      error: err.message || 'Internal server error',
+      error: err instanceof Error ? err.message : 'Internal server error',
       message: isTimeout 
         ? "The request took too long to process. Please try a shorter message or try again later."
         : "I'm having trouble connecting right now. Please try again in a moment."

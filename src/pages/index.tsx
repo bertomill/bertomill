@@ -8,7 +8,8 @@ import Image from 'next/image'
 import AthleticsSection from '@/components/AthleticsSection'
 import ConsultingSection from '@/components/ConsultingSection'
 import StartupSection from '@/components/StartupSection'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import type { AnimationItem } from 'lottie-web'
 
 interface Project {
   title: string
@@ -24,6 +25,32 @@ interface HomeProps {
 
 export default function Home({ featuredProjects }: HomeProps) {
   const [videoPlaying, setVideoPlaying] = useState(false)
+  const lottieContainer = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    let anim: AnimationItem | null = null;
+    const loadLottie = async () => {
+      if (lottieContainer.current) {
+        const lottie = (await import('lottie-web')).default;
+        anim = lottie.loadAnimation({
+          container: lottieContainer.current,
+          renderer: 'svg',
+          loop: true,
+          autoplay: true,
+          path: "https://lottie.host/559060b7-879b-40e2-9c2c-c0c2c5c7c7c7/your-animation-id.json"
+        });
+      }
+    };
+
+    loadLottie();
+
+    // Cleanup function
+    return () => {
+      if (anim) {
+        anim.destroy();
+      }
+    };
+  }, []);
 
   return (
     <Layout>
@@ -82,16 +109,20 @@ export default function Home({ featuredProjects }: HomeProps) {
         {/* Projects Section */}
         <section className="relative bg-[#16161e] py-16">
           <div className="max-w-[90%] mx-auto">
-            <motion.h2 
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1 }}
-              className="text-xl md:text-3xl tracking-[0.2em] uppercase mb-8 text-[#bb9af7]"
-            >
-              Featured
-              <br />
-              Projects
-            </motion.h2>
+            <div className="flex items-center gap-6 mb-8">
+              <motion.h2 
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 1 }}
+                className="text-xl md:text-3xl tracking-[0.2em] uppercase text-[#bb9af7]"
+              >
+                Featured
+                <br />
+                Projects
+              </motion.h2>
+              
+              <div ref={lottieContainer} className="w-24 h-24" />
+            </div>
             
             <div className="grid md:grid-cols-2 gap-6">
               {featuredProjects.map((project, index) => (
