@@ -13,6 +13,7 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(true)
+  const [mounted, setMounted] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -24,25 +25,38 @@ export default function Layout({ children }: LayoutProps) {
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    return null // Return null on first render to avoid hydration mismatch
+  }
+
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
 
   return (
-    <>
+    <div className="relative min-h-screen bg-[#1a1b26] text-[#c0caf5]">
       <Head>
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
       </Head>
-      <div className="min-h-screen bg-[#1a1b26] text-[#c0caf5] font-serif">
+
+      <div className="relative">
         {/* Mobile Menu Button */}
-        <button 
+        <button
           onClick={toggleMenu}
-          className="md:hidden fixed top-4 left-4 z-50 p-2 text-[#c0caf5]"
+          className="md:hidden fixed top-4 right-4 z-50 p-2 bg-[#1a1b26] rounded-lg border border-[#414868]/30"
         >
-          {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          {isMenuOpen ? (
+            <X className="w-6 h-6 text-[#c0caf5]" />
+          ) : (
+            <Menu className="w-6 h-6 text-[#c0caf5]" />
+          )}
         </button>
 
         {/* Navigation Sidebar */}
         <AnimatePresence>
-          {(isMenuOpen || !isMobile) && (
+          {(!isMobile || isMenuOpen) && (
             <motion.nav 
               initial={{ x: -192 }}
               animate={{ x: 0 }}
@@ -191,6 +205,6 @@ export default function Layout({ children }: LayoutProps) {
           />
         )}
       </div>
-    </>
+    </div>
   )
 }

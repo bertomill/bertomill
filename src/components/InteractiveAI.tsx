@@ -17,7 +17,7 @@ const serviceStatus = {
 }
 
 export default function InteractiveAI() {
-  const mountedRef = useRef(false)
+  const [mounted, setMounted] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
   const [isChatOpen, setIsChatOpen] = useState(false)
   const [message, setMessage] = useState('')
@@ -34,25 +34,50 @@ export default function InteractiveAI() {
     "Tell me about your education"
   ]
 
+  // Group all useEffects together
   useEffect(() => {
-    if (mountedRef.current) return
-    mountedRef.current = true
+    setMounted(true)
+  }, [])
 
+  useEffect(() => {
+    if (!mounted) return;
     const timer = setTimeout(() => {
       setIsVisible(true)
     }, 1000)
     return () => clearTimeout(timer)
-  }, [router.pathname])
+  }, [mounted, router.pathname])
+
+  useEffect(() => {
+    scrollToLatestMessage()
+  }, [messages])
+
+  useEffect(() => {
+    const checkApiHealth = async () => {
+      try {
+        const response = await fetch('/api/health')
+        if (!response.ok) {
+          throw new Error('API health check failed')
+        }
+        const data = await response.json()
+        serviceStatus.openai = data.openai
+        serviceStatus.pinecone = data.pinecone
+      } catch (error) {
+        console.error('API Health Check Error:', error)
+        serviceStatus.openai = false
+        serviceStatus.pinecone = false
+      }
+    }
+
+    if (mounted) {
+      checkApiHealth()
+    }
+  }, [mounted])
 
   const scrollToLatestMessage = () => {
     if (latestMessageRef.current) {
       latestMessageRef.current.scrollIntoView({ behavior: "smooth", block: "start" })
     }
   }
-
-  useEffect(() => {
-    scrollToLatestMessage()
-  }, [messages])
 
   const handleSendMessage = async () => {
     if (!message.trim() || isLoading) return
@@ -116,29 +141,12 @@ export default function InteractiveAI() {
     }
   }
 
-  // Also add a useEffect to check API health on mount
-  useEffect(() => {
-    const checkApiHealth = async () => {
-      try {
-        const response = await fetch('/api/health')
-        if (!response.ok) {
-          throw new Error('API health check failed')
-        }
-        const data = await response.json()
-        serviceStatus.openai = data.openai
-        serviceStatus.pinecone = data.pinecone
-      } catch (error) {
-        console.error('API Health Check Error:', error)
-        serviceStatus.openai = false
-        serviceStatus.pinecone = false
-      }
-    }
-
-    checkApiHealth()
-  }, [])
+  if (!mounted) {
+    return null
+  }
 
   return (
-    <div className="fixed bottom-10 right-6 z-[9999] w-[90vw] md:w-[400px]">
+    <div className="fixed bottom-4 right-4 z-50">
       <AnimatePresence>
         {isVisible && (
           <motion.div

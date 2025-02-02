@@ -8,6 +8,7 @@ import Image from 'next/image'
 import AthleticsSection from '@/components/AthleticsSection'
 import ConsultingSection from '@/components/ConsultingSection'
 import StartupSection from '@/components/StartupSection'
+import InteractiveAI from '@/components/InteractiveAI'
 import { useState, useEffect, useRef } from 'react'
 import type { AnimationItem } from 'lottie-web'
 
@@ -26,6 +27,7 @@ interface HomeProps {
 export default function Home({ featuredProjects }: HomeProps) {
   const [videoPlaying, setVideoPlaying] = useState(false)
   const lottieContainer = useRef<HTMLDivElement>(null)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
     let anim: AnimationItem | null = null;
@@ -52,12 +54,18 @@ export default function Home({ featuredProjects }: HomeProps) {
     };
   }, []);
 
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   return (
     <Layout>
       <Head>
         <title>Berto Mill</title>
         <meta name="description" content="Personal website of Berto Mill" />
       </Head>
+
+      {mounted && <InteractiveAI />}
 
       <main className="min-h-screen font-serif bg-[#1a1b26]">
         {/* Hero Section */}
