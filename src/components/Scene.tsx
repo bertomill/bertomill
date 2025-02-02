@@ -14,22 +14,23 @@ export default function Scene() {
 
   return (
     <>
-      <color attach="background" args={['#080910']} />
-      <ambientLight intensity={0.2} />
+      <color attach="background" args={['#0a0b11']} />
+      
+      <ambientLight intensity={0.15} />
       <directionalLight 
         position={[5, 5, 5]} 
-        intensity={0.4}
-        color="#5a6494"
+        intensity={0.3}
+        color="#414868" 
       />
       <directionalLight 
         position={[-5, -5, -5]} 
-        intensity={0.15}
-        color="#7aa2f7"
+        intensity={0.1}
+        color="#565f89" 
       />
       <pointLight 
         position={[0, 3, 0]} 
-        intensity={0.15}
-        color="#bb9af7"
+        intensity={0.1}
+        color="#7aa2f7" 
       />
       
       <Float
@@ -40,31 +41,30 @@ export default function Scene() {
       >
         <Sphere 
           ref={meshRef} 
-          args={[1.4, 256, 256]}
+          args={[1.4, 512, 512]}
           scale={1.2}
         >
           <MeshDistortMaterial
-            color="#24283b"
+            color="#1a1b26"
             attach="material"
             distort={0.2}
             speed={1}
-            roughness={0.75}
-            metalness={0.25}
-            emissive="#7aa2f7"
-            emissiveIntensity={0.15}
-            envMapIntensity={0.6}
-            clearcoat={0.15}
+            roughness={0.65}
+            metalness={0.35}
+            emissive="#394b70"
+            emissiveIntensity={0.12}
+            envMapIntensity={0.5}
+            clearcoat={0.2}
             clearcoatRoughness={0.8}
-            opacity={0.92}
+            opacity={0.95}
             transparent
-            wireframe={true}
-            wireframeLinewidth={0.15}
-            wireframeLineJoin="round"
+            wireframe={false}
+            flatShading={false}
           />
         </Sphere>
       </Float>
 
-      <fog attach="fog" args={['#080910', 6, 25]} />
+      <fog attach="fog" args={['#0a0b11', 7, 30]} />
     </>
   )
 } 
