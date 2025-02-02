@@ -1,7 +1,7 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
+import { NextApiRequest, NextApiResponse } from 'next'
 import { OpenAI } from 'openai'
-import { OpenAIEmbeddings } from '@langchain/openai'
 import { Pinecone } from '@pinecone-database/pinecone'
+import { OpenAIEmbeddings } from 'langchain/embeddings/openai'
 
 if (!process.env.OPENAI_API_KEY) {
   throw new Error('Missing OPENAI_API_KEY environment variable')
@@ -33,16 +33,20 @@ export const config = {
   },
 }
 
-// First, let's define the response type
-type ChatResponse = {
+interface ChatResponse {
   message?: string;
-  sources?: string[];
   error?: string;
+  sources?: string[];
+}
+
+type RetryError = Error & {
+  status?: number;
+  code?: string;
 }
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse<ChatResponse>
 ) {
   res.setHeader('Access-Control-Allow-Credentials', 'true')
   res.setHeader('Access-Control-Allow-Origin', '*')
@@ -55,16 +59,15 @@ export default async function handler(
   }
 
   try {
-    // Add request validation
     if (!process.env.OPENAI_API_KEY || !process.env.PINECONE_API_KEY || !process.env.PINECONE_INDEX) {
       console.error('Missing environment variables')
       return res.status(500).json({ 
         error: 'Server configuration error',
-        message: "I'm having trouble connecting to my knowledge base. Please try again later."
+        message: "I'm having trouble connecting to my knowledge base. Please try again."
       })
     }
 
-    const chatPromise = async () => {
+    const chatPromise = async (): Promise<ChatResponse> => {
       try {
         console.log('Starting chat process...')
         const { messages } = req.body
@@ -73,20 +76,20 @@ export default async function handler(
           return { error: 'Invalid message format' }
         }
 
-        // Improved retry logic
+        // Improved retry logic with proper typing
         const retryOperation = async <T>(
           operation: () => Promise<T>,
           maxRetries = 3,
           delay = 1000
         ): Promise<T> => {
-          let lastError: any
+          let lastError: RetryError | null = null
           
           for (let i = 0; i < maxRetries; i++) {
             try {
               return await operation()
             } catch (error) {
               console.error(`Attempt ${i + 1} failed:`, error)
-              lastError = error
+              lastError = error as RetryError
               if (i < maxRetries - 1) {
                 await new Promise(resolve => setTimeout(resolve, delay * Math.pow(2, i)))
               }
