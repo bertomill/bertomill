@@ -1,9 +1,24 @@
-import { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiRequest, NextApiResponse } from 'next'
 import { Pinecone } from '@pinecone-database/pinecone'
+
+interface Doc {
+  text: string
+  source: string
+  category: string
+  id: string
+}
+
+interface GroupedDocs {
+  [key: string]: Doc[]
+}
+
+interface ErrorResponse {
+  error: string
+}
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse<GroupedDocs | ErrorResponse>
 ) {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' })
@@ -24,21 +39,24 @@ export default async function handler(
     })
 
     // Extract and organize the documents
-    const docs = queryResponse.matches?.map(match => ({
-      text: match.metadata?.text,
-      source: match.metadata?.source,
-      category: match.metadata?.category || 'General'
-    })).filter(doc => doc.text && doc.source) || []
+    const docs: Doc[] = (queryResponse.matches || [])
+      .filter(match => match.metadata && typeof match.metadata.text === 'string' && typeof match.metadata.source === 'string')
+      .map(match => ({
+        text: match.metadata!.text as string,
+        source: match.metadata!.source as string,
+        category: (typeof match.metadata!.category === 'string' ? match.metadata!.category : 'General'),
+        id: match.id
+      }))
 
     // Group by category/source
-    const groupedDocs = docs.reduce((acc, doc) => {
+    const groupedDocs = docs.reduce<GroupedDocs>((acc, doc) => {
       const key = doc.category
       if (!acc[key]) {
         acc[key] = []
       }
       acc[key].push(doc)
       return acc
-    }, {} as Record<string, typeof docs>)
+    }, {})
 
     return res.status(200).json(groupedDocs)
   } catch (error) {

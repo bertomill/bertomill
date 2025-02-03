@@ -1,5 +1,27 @@
 declare module '*.json' {
-  // Define a more specific type for Lottie animations
+  interface LottieAsset {
+    id: string
+    w?: number
+    h?: number
+    u?: string
+    p?: string
+    e?: number
+  }
+
+  interface LottieLayer {
+    ddd: number
+    ind: number
+    ty: number
+    nm: string
+    sr: number
+    ks: Record<string, unknown>
+    ao: number
+    ip: number
+    op: number
+    st: number
+    bm: number
+  }
+
   interface LottieAnimation {
     v: string
     fr: number
@@ -9,9 +31,10 @@ declare module '*.json' {
     h: number
     nm: string
     ddd: number
-    assets: any[]
-    layers: any[]
+    assets: LottieAsset[]
+    layers: LottieLayer[]
   }
+
   const value: LottieAnimation
   export default value
 } 

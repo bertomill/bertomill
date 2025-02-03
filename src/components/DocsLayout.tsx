@@ -1,7 +1,24 @@
-import { ReactNode, useRef } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import Layout from './Layout'
-import Lottie, { LottieRefCurrentProps } from 'lottie-react'
-import ragAnimation from '@/public/animations/rag-animation.json'
+import dynamic from 'next/dynamic'
+import type { LottieRefCurrentProps } from 'lottie-react'
+import { useRef } from 'react'
+
+// Dynamically import Lottie component with SSR disabled
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false })
+
+interface LottieAnimation {
+  v: string
+  fr: number
+  ip: number
+  op: number
+  w: number
+  h: number
+  nm: string
+  ddd: number
+  assets: unknown[]
+  layers: unknown[]
+}
 
 interface DocsLayoutProps {
   children: ReactNode
@@ -9,6 +26,14 @@ interface DocsLayoutProps {
 
 export default function DocsLayout({ children }: DocsLayoutProps) {
   const lottieRef = useRef<LottieRefCurrentProps>(null)
+  const [animation, setAnimation] = useState<LottieAnimation | null>(null)
+
+  useEffect(() => {
+    // Import animation only on client side
+    import('../../public/animations/rag-animation.json').then(module => {
+      setAnimation(module.default)
+    })
+  }, [])
 
   return (
     <Layout>
@@ -22,23 +47,25 @@ export default function DocsLayout({ children }: DocsLayoutProps) {
             </p>
           </div>
           <div className="w-full md:w-1/2 max-w-[300px]">
-            <Lottie 
-              lottieRef={lottieRef}
-              animationData={ragAnimation}
-              loop={true}
-              autoplay={true}
-              className="w-full h-full"
-              onMouseEnter={() => {
-                if (lottieRef.current) {
-                  lottieRef.current.setSpeed(2)
-                }
-              }}
-              onMouseLeave={() => {
-                if (lottieRef.current) {
-                  lottieRef.current.setSpeed(1)
-                }
-              }}
-            />
+            {animation && (
+              <Lottie 
+                lottieRef={lottieRef}
+                animationData={animation}
+                loop={true}
+                autoplay={true}
+                className="w-full h-full"
+                onMouseEnter={() => {
+                  if (lottieRef.current) {
+                    lottieRef.current.setSpeed(2)
+                  }
+                }}
+                onMouseLeave={() => {
+                  if (lottieRef.current) {
+                    lottieRef.current.setSpeed(1)
+                  }
+                }}
+              />
+            )}
           </div>
         </div>
 
