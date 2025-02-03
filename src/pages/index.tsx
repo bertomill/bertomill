@@ -13,6 +13,7 @@ import { useState, useEffect, useRef } from 'react'
 import type { AnimationItem } from 'lottie-web'
 import HeroAnimation from '@/components/HeroAnimation'
 import LogoAnimation from '@/components/LogoAnimation'
+import Subscribe from '@/components/Subscribe'
 
 interface Project {
   title: string
@@ -69,7 +70,7 @@ export default function Home({ featuredProjects }: HomeProps) {
 
       {mounted && <InteractiveAI />}
 
-      <main className="min-h-screen font-serif bg-[#1a1b26]">
+      <main className="min-h-screen font-serif bg-[#1a1b26] pb-[200px]">
         {/* Hero Section */}
         <section className="relative min-h-[80vh] flex items-center overflow-hidden px-4">
           <GradientBackground />
@@ -236,6 +237,10 @@ export default function Home({ featuredProjects }: HomeProps) {
         <ConsultingSection />
         <StartupSection />
         <AthleticsSection />
+
+        <section className="py-20">
+          <Subscribe />
+        </section>
       </main>
     </Layout>
   )

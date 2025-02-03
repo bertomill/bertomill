@@ -1,16 +1,38 @@
-import { OpenAIEmbeddings } from '@langchain/openai'
-import { Document } from '@langchain/core/documents'
-import { Pinecone } from '@pinecone-database/pinecone'
-import { config } from 'dotenv'
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import fs from 'fs'
 import path from 'path'
+import { OpenAI } from 'openai'
+import { Pinecone } from '@pinecone-database/pinecone'
+import dotenv from 'dotenv'
 import crypto from 'crypto'
+/* eslint-enable @typescript-eslint/no-unused-vars */
+
+// Define our own Document interface to avoid conflicts
+interface EmbedDocument {
+  pageContent: string
+  metadata: {
+    source: string
+    category?: string
+    type?: string
+  }
+}
+
+// Helper function to create document
+function createDocument(pageContent: string, source: string, type: string): EmbedDocument {
+  return {
+    pageContent,
+    metadata: {
+      source,
+      type
+    }
+  }
+}
 
 // Load environment variables from .env.local
-config({ path: '.env.local' })
+dotenv.config()
 
 if (!process.env.OPENAI_API_KEY) {
-  throw new Error('Missing OPENAI_API_KEY environment variable')
+  throw new Error('Missing OpenAI API Key')
 }
 
 if (!process.env.PINECONE_API_KEY) {
@@ -25,32 +47,20 @@ if (!process.env.PINECONE_INDEX) {
   throw new Error('Missing PINECONE_INDEX environment variable')
 }
 
-// Function to generate a deterministic ID based on source and content
-function generateId(source: string, content: string): string {
-  const hash = crypto.createHash('md5').update(`${source}:${content}`).digest('hex')
-  return hash.substring(0, 8) // Use first 8 characters of hash
-}
-
 async function collectContent() {
-  const content: Document[] = []
+  const content: EmbedDocument[] = []
 
   // Background
   const backgroundContent = `
     I am a creative problem solver passionate about building impactful products in fast-paced, innovative environments. I've worked with startups across Ontario as well as some of the largest Canadian corporations like CIBC. I find that the need for clarity, energy and delivery is key in any environment. I'm passionate about emerging technologies like Artificial intelligence and how they can be used to enhance peoples collaboration, creativity and flow. I'm a big fan of the book "Antifragile" by Nicholas Taleb and the book "The Score Takes Care of Itself" by Bill Walsh. I feel these books really shaped my thinking.
   `.trim()
-  content.push(new Document({
-    pageContent: backgroundContent,
-    metadata: { source: 'background', type: 'profile' }
-  }))
+  content.push(createDocument(backgroundContent, 'background', 'profile'))
 
   // Education
   const educationContent = `
     I went to Ivey Business School to learn about Digital Management and Sustainability. It is there where they taught me the inportance of design thinking an d crafting the user experience from their perspective. I also took a business legal studies degree, where I learned about business ethics and how to navigate the legal landscape of business. Outside of the classroom I played squash for the Western Squash team and football team. I also was a member of the Western Mustang Student Council and the Ivey Finance and Technology club.
   `.trim()
-  content.push(new Document({
-    pageContent: educationContent,
-    metadata: { source: 'education', type: 'profile' }
-  }))
+  content.push(createDocument(educationContent, 'education', 'profile'))
 
   // Projects
   const projectsContent = `
@@ -58,10 +68,7 @@ async function collectContent() {
     Signal7 is an AI powered web application I built to track the activity of the magnificient 7 technology companies. 
     WinDay is an application that helps people set their trajectory for the day and track their progress.
   `.trim()
-  content.push(new Document({
-    pageContent: projectsContent,
-    metadata: { source: 'projects', type: 'profile' }
-  }))
+  content.push(createDocument(projectsContent, 'projects', 'profile'))
 
   // Skills
   const skillsContent = `
@@ -324,10 +331,7 @@ Python Essential TrainingPython Essential Training
 Python vs. R for Data SciencePython vs. R for Data Science
 Windsor-Essex Young Entrepreneur of the Year Award
   `.trim()
-  content.push(new Document({
-    pageContent: skillsContent,
-    metadata: { source: 'skills', type: 'profile' }
-  }))
+  content.push(createDocument(skillsContent, 'skills', 'profile'))
 
   // Achievements
   const achievementsContent = `
@@ -363,10 +367,7 @@ The Proteus Innovation Competition is an intense four-month competition that wil
 
 Proteus 2019 - Proteus Innovation Competition
   `.trim()
-  content.push(new Document({
-    pageContent: achievementsContent,
-    metadata: { source: 'achievements', type: 'profile' }
-  }))
+  content.push(createDocument(achievementsContent, 'achievements', 'profile'))
 
   // Interests
   const interestsContent = `
@@ -377,12 +378,23 @@ Proteus 2019 - Proteus Innovation Competition
 
 - My favourite places travelled are Autralia - amazing for sports and activity, Amsterdam - Biking, Mexico - beaches, and 
   `.trim()
-  content.push(new Document({
-    pageContent: interestsContent,
-    metadata: { source: 'interests', type: 'profile' }
-  }))
+  content.push(createDocument(interestsContent, 'interests', 'profile'))
 
   return content
+}
+
+// Initialize OpenAI
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+})
+
+// Create embeddings function
+async function createEmbeddings(document: EmbedDocument) {
+  const response = await openai.embeddings.create({
+    model: "text-embedding-ada-002",
+    input: document.pageContent,
+  })
+  return response.data[0].embedding
 }
 
 async function embedContent() {
@@ -390,27 +402,20 @@ async function embedContent() {
   const docs = await collectContent()
   
   console.log('Creating embeddings...')
-  const embeddings = new OpenAIEmbeddings({
-    openAIApiKey: process.env.OPENAI_API_KEY,
-  })
-
-  console.log('Initializing Pinecone...')
   const pc = new Pinecone()
-
   const index = pc.index(process.env.PINECONE_INDEX!)
 
   console.log('Storing vectors in Pinecone...')
   for (const doc of docs) {
-    const embedding = await embeddings.embedQuery(doc.pageContent)
-    const id = generateId(doc.metadata.source, doc.pageContent)
+    const embedding = await createEmbeddings(doc)
     
     await index.upsert([{
-      id,
+      id: crypto.randomUUID(),
       values: embedding,
       metadata: {
         text: doc.pageContent,
         source: doc.metadata.source,
-        type: doc.metadata.type
+        category: doc.metadata.category || 'General'
       }
     }])
   }

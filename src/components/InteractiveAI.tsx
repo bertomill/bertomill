@@ -3,12 +3,18 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
 import { X } from 'lucide-react'
+import Link from 'next/link'
 
 interface Message {
   role: 'user' | 'assistant'
   content: string
   sources?: string[]
   suggestions?: string[]
+}
+
+interface LoadingState {
+  message: string
+  progress: number
 }
 
 const serviceStatus = {
@@ -26,6 +32,10 @@ export default function InteractiveAI() {
   const [isTyping, setIsTyping] = useState(false)
   const latestMessageRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
+  const [loadingState, setLoadingState] = useState<LoadingState>({
+    message: '',
+    progress: 0
+  })
 
   const initialSuggestions = [
     "Tell me about your projects",
@@ -79,6 +89,10 @@ export default function InteractiveAI() {
     }
   }
 
+  const updateLoadingState = (message: string, progress: number) => {
+    setLoadingState({ message, progress })
+  }
+
   const handleSendMessage = async () => {
     if (!message.trim() || isLoading) return
     
@@ -86,22 +100,58 @@ export default function InteractiveAI() {
     setIsTyping(true)
     
     try {
+      // Initial state - slower start
+      updateLoadingState('Initializing...', 5)
+      await new Promise(r => setTimeout(r, 300))
+      
+      updateLoadingState('Checking documents...', 15)
+      await new Promise(r => setTimeout(r, 700))
+      
+      // Start the API call and update progress based on actual stages
+      updateLoadingState('Searching through relevant files...', 30)
+      const controller = new AbortController()
+      const startTime = Date.now()
+      
       const response = await fetch('/api/chat', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           messages: [...messages, { role: 'user', content: message.trim() }]
-        })
+        }),
+        signal: controller.signal
       })
 
+      // Calculate actual time taken
+      const timeElapsed = Date.now() - startTime
+      const progressIncrement = (60 - 30) / (timeElapsed / 1000) // Spread remaining progress over actual time
+
+      // Update progress more frequently during API call
+      const progressInterval = setInterval(() => {
+        setLoadingState(prev => {
+          const newProgress = Math.min(prev.progress + progressIncrement, 60)
+          return {
+            message: 'Processing information...',
+            progress: newProgress
+          }
+        })
+      }, 1000)
+
       if (!response.ok) {
+        clearInterval(progressInterval)
         const errorData = await response.json()
         throw new Error(errorData.message || 'Failed to get response')
       }
 
+      clearInterval(progressInterval)
+      updateLoadingState('Analyzing response...', 75)
       const data = await response.json()
+      
+      updateLoadingState('Formatting response...', 90)
+      await new Promise(r => setTimeout(r, 500))
+      
+      updateLoadingState('Complete!', 100)
+      await new Promise(r => setTimeout(r, 300))
+
       setMessages(prev => [
         ...prev,
         { role: 'user', content: message.trim() },
@@ -109,6 +159,7 @@ export default function InteractiveAI() {
       ])
     } catch (error) {
       console.error('Chat error:', error)
+      updateLoadingState('Error occurred', 100)
       setMessages(prev => [
         ...prev,
         { role: 'user', content: message.trim() },
@@ -123,8 +174,70 @@ export default function InteractiveAI() {
       setMessage('')
       setIsLoading(false)
       setIsTyping(false)
+      // Add a small delay before resetting loading state
+      setTimeout(() => {
+        setLoadingState({ message: '', progress: 0 })
+      }, 500)
     }
   }
+
+  const renderSourceLinks = (sources: string[]) => {
+    return sources.map((source, index) => (
+      <span key={index}>
+        {index > 0 && ", "}
+        <Link
+          href={`/docs#${source}`}
+          className="text-[#7aa2f7] hover:text-[#bb9af7] transition-colors cursor-pointer"
+          onClick={(e) => {
+            e.preventDefault()
+            const element = document.getElementById(source)
+            if (element) {
+              element.scrollIntoView({ behavior: 'smooth' })
+            } else {
+              window.location.href = `/docs#${source}`
+            }
+          }}
+        >
+          {source}
+        </Link>
+      </span>
+    ))
+  }
+
+  const LoadingIndicator = () => (
+    <div className="flex items-start gap-3 mb-4">
+      <div className="relative w-8 h-8 md:w-10 md:h-10 shrink-0">
+        <Image
+          src="/bmavatar.png"
+          alt="AI Assistant"
+          fill
+          className="object-contain rounded-full"
+          priority
+        />
+        <div className="absolute -bottom-1 -right-1 w-4 h-4 md:w-5 md:h-5 bg-[#7aa2f7] rounded-full flex items-center justify-center ring-2 ring-[#1a1b26]">
+          <span className="text-[6px] md:text-[8px] font-bold text-[#1a1b26]">AI</span>
+        </div>
+      </div>
+      <div className="bg-[#24283b] rounded-2xl rounded-tl-sm px-4 py-3 shadow-md space-y-2 max-w-[85%]">
+        <div className="text-[#a9b1d6] text-sm flex items-center gap-2">
+          {loadingState.message}
+          <motion.div
+            animate={{ opacity: [1, 0.5, 1] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+            className="w-1.5 h-1.5 bg-[#7aa2f7] rounded-full"
+          />
+        </div>
+        <div className="w-full h-1.5 bg-[#1a1b26] rounded-full overflow-hidden">
+          <motion.div
+            className="h-full bg-[#7aa2f7]"
+            initial={{ width: 0 }}
+            animate={{ width: `${loadingState.progress}%` }}
+            transition={{ duration: 0.5 }}
+          />
+        </div>
+      </div>
+    </div>
+  )
 
   if (!mounted) {
     return null
@@ -342,8 +455,8 @@ export default function InteractiveAI() {
                           : 'bg-[#7aa2f7] rounded-2xl rounded-tr-sm'
                       } px-4 py-2.5 shadow-md`}>
                         {msg.role === 'assistant' && msg.sources && msg.sources.length > 0 && (
-                          <div className="mb-1.5 text-[10px] text-[#7aa2f7] italic">
-                            Sources: {msg.sources.map(source => source.replace(/\.[^/.]+$/, '')).join(', ')}
+                          <div className="mt-2 text-sm text-[#7aa2f7]">
+                            Sources: {renderSourceLinks(msg.sources)}
                           </div>
                         )}
                         <p className="text-white/90 text-sm font-serif">
@@ -377,39 +490,11 @@ export default function InteractiveAI() {
 
                   {/* Typing Indicator */}
                   {isTyping && (
-                    <motion.div 
-                      className="flex items-start gap-2"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
                     >
-                      <div className="relative w-8 h-8 md:w-10 md:h-10 shrink-0">
-                        <Image
-                          src="/bmavatar.png"
-                          alt="AI Assistant"
-                          fill
-                          className="object-contain rounded-full"
-                          priority
-                        />
-                      </div>
-                      <div className="bg-[#24283b] px-4 py-2.5 rounded-2xl rounded-tl-sm shadow-md">
-                        <div className="flex gap-1">
-                          <motion.div
-                            className="w-1.5 h-1.5 bg-white/50 rounded-full"
-                            animate={{ scale: [1, 1.2, 1] }}
-                            transition={{ duration: 1, repeat: Infinity }}
-                          />
-                          <motion.div
-                            className="w-1.5 h-1.5 bg-white/50 rounded-full"
-                            animate={{ scale: [1, 1.2, 1] }}
-                            transition={{ duration: 1, repeat: Infinity, delay: 0.2 }}
-                          />
-                          <motion.div
-                            className="w-1.5 h-1.5 bg-white/50 rounded-full"
-                            animate={{ scale: [1, 1.2, 1] }}
-                            transition={{ duration: 1, repeat: Infinity, delay: 0.4 }}
-                          />
-                        </div>
-                      </div>
+                      <LoadingIndicator />
                     </motion.div>
                   )}
                 </div>

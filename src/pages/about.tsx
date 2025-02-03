@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { BookOpen, User, GraduationCap, Newspaper, Heart, Trophy, ScrollText, Briefcase, ChevronDown } from 'lucide-react'
 import * as Collapsible from '@radix-ui/react-collapsible'
 import { useState } from 'react'
+import Subscribe from '@/components/Subscribe'
 
 // Add interfaces for different sections
 interface Book {
@@ -161,7 +162,7 @@ export default function About() {
       period: "Mar 2020 - Sep 2022 · 2 yrs 7 mos",
       category: "Health",
       description: "Organized practices and training camps for youth football players in London, Ontario.",
-      imageSrc: "/junior-mustangs-logo.png" // Optional: Add this if you have the logo
+      imageSrc: "/junior-mustangs-logo.png" // Re-enable now that we have the logo
     }
   ]
 
@@ -288,7 +289,7 @@ export default function About() {
         <meta name="description" content="Learn more about my professional background and personal interests" />
       </Head>
 
-      <main className="min-h-screen py-20">
+      <main className="min-h-screen bg-[#1a1b26] pb-[200px]">
         <div className="max-w-4xl mx-auto px-4 space-y-20">
           {/* About Me Section */}
           <section className="space-y-8">
@@ -532,6 +533,10 @@ export default function About() {
                           alt={volunteer.organization}
                           fill
                           className="object-contain"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = 'none';
+                          }}
                         />
                       </div>
                     )}
@@ -607,6 +612,11 @@ export default function About() {
             </div>
           </section>
         </div>
+
+        {/* Add Subscribe at bottom */}
+        <section className="py-20">
+          <Subscribe />
+        </section>
       </main>
     </Layout>
   )

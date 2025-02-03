@@ -2,6 +2,7 @@ import Head from 'next/head'
 import Layout from '@/components/Layout'
 import Image from 'next/image'
 import { Sparkles, ExternalLink, Github } from 'lucide-react'
+import Subscribe from '@/components/Subscribe'
 
 interface Project {
   title: string
@@ -87,7 +88,7 @@ export default function Projects() {
         <meta name="description" content="Explore my AI applications and development projects" />
       </Head>
 
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="max-w-6xl mx-auto px-4 py-8 pb-[200px]">
         <div className="space-y-12">
           <div>
             <h1 className="text-3xl font-medium flex items-center gap-2">
@@ -179,6 +180,11 @@ export default function Projects() {
             ))}
           </div>
         </div>
+
+        {/* Add Subscribe at bottom */}
+        <section className="py-20">
+          <Subscribe />
+        </section>
       </div>
     </Layout>
   )

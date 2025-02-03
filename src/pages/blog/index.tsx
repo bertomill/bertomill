@@ -4,6 +4,7 @@ import Layout from '../../components/Layout'
 import Parser from 'rss-parser'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
+import Subscribe from '../../components/Subscribe'
 
 interface MediumPost {
   title: string
@@ -97,7 +98,7 @@ export default function Blog({ posts }: BlogProps) {
         <meta name="description" content="Read my latest blog posts from Medium" />
       </Head>
 
-      <main className="min-h-screen py-20 relative">
+      <main className="min-h-screen py-20 relative pb-[200px]">
         {/* Organic background shapes */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-5">
           <svg className="absolute top-0 left-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -250,6 +251,11 @@ export default function Blog({ posts }: BlogProps) {
               </motion.div>
             ))}
           </motion.div>
+
+          {/* Add Subscribe section */}
+          <section className="py-20">
+            <Subscribe />
+          </section>
         </div>
       </main>
     </Layout>
