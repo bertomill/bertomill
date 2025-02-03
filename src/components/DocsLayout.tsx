@@ -1,7 +1,7 @@
 import { ReactNode, useRef } from 'react'
 import Layout from './Layout'
 import Lottie, { LottieRefCurrentProps } from 'lottie-react'
-const ragAnimation = require('../../public/animations/rag-animation.json')
+import ragAnimation from '@/public/animations/rag-animation.json'
 
 interface DocsLayoutProps {
   children: ReactNode
