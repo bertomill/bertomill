@@ -31,81 +31,81 @@ export default function Navbar() {
       {/* Mobile Menu Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="md:hidden fixed top-4 left-4 z-50 text-[#a9b1d6] hover:text-[#7aa2f7] transition-colors duration-300"
+        className="md:hidden fixed top-4 left-4 z-50 text-[#a9b1d6] hover:text-[#7aa2f7] transition-colors duration-300 bg-[#030303]/80 p-2 rounded-lg backdrop-blur-sm"
         aria-label="Toggle menu"
       >
         {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
       </button>
 
-      {/* Desktop Sidebar */}
+      {/* Desktop Sidebar / Mobile Menu */}
       <nav className={`
-        fixed top-0 left-0 h-screen w-[200px] bg-[#1a1b26] border-r border-[#414868]/20 p-8 flex flex-col
-        transform transition-transform duration-300 ease-in-out
-        md:translate-x-0
-        ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+        fixed top-0 left-0 h-screen w-[200px] bg-[#030303] border-r border-[#414868]/10 p-8 flex flex-col
+        transform transition-transform duration-300 ease-in-out backdrop-blur-sm
+        md:translate-x-0 relative
+        ${isOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'}
+        z-40
       `}>
+        <div className="film-scratches absolute inset-0 opacity-20" />
+        <div className="film-grain absolute inset-0 opacity-10" />
+        
         {/* Logo */}
-        <Link href="/" className="text-xl font-light tracking-[0.2em] text-[#c0caf5] mb-12">
+        <Link 
+          href="/" 
+          className="retro-text text-xl tracking-[0.2em] text-[#c0caf5] mb-12 relative z-10"
+          onClick={() => setIsOpen(false)}
+        >
           BERTO<br />MILL
         </Link>
 
-        {/* Main Navigation */}
-        <div className="flex flex-col space-y-6">
-          {navLinks.map(({ href, label }) => (
+        {/* Navigation Links */}
+        <div className="space-y-6 mb-12 relative z-10">
+          {navLinks.map((link) => (
             <Link
-              key={href}
-              href={href}
+              key={link.href}
+              href={link.href}
               onClick={() => setIsOpen(false)}
-              className={`${
-                isActive(href)
-                  ? 'text-[#7aa2f7]'
+              className={`
+                retro-text block text-sm tracking-[0.15em]
+                ${isActive(link.href) 
+                  ? 'text-[#7aa2f7]' 
                   : 'text-[#a9b1d6] hover:text-[#7aa2f7]'
-              } transition-colors duration-300 tracking-wider`}
+                } transition-colors duration-300
+              `}
             >
-              {label}
+              {link.label}
             </Link>
           ))}
-
-          {/* Subscribe Button - Now part of the navigation list */}
-          <motion.button
-            onClick={() => setShowSubscribe(true)}
-            className="group flex items-center gap-2 text-[#a9b1d6] hover:text-[#7aa2f7] transition-all duration-300 tracking-wider"
-            whileHover={{ x: 2 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <div className="relative">
-              <Bell className="w-4 h-4" />
-              <motion.div
-                className="absolute -top-1 -right-1 w-2 h-2 bg-[#7aa2f7] rounded-full"
-                animate={{
-                  scale: [1, 1.2, 1],
-                  opacity: [1, 0.8, 1]
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              />
-            </div>
-            <span>SUBSCRIBE</span>
-          </motion.button>
         </div>
 
+        {/* Subscribe Button */}
+        <button
+          onClick={() => {
+            setShowSubscribe(true)
+            setIsOpen(false)
+          }}
+          className="retro-text group flex items-center gap-2 text-sm text-[#a9b1d6] hover:text-[#7aa2f7] transition-colors duration-300 mb-12 relative z-10"
+        >
+          <Bell className="w-4 h-4" />
+          SUBSCRIBE
+        </button>
+
         {/* Social Links */}
-        <div className="mt-auto flex flex-col space-y-4">
-          {socialLinks.map(({ href, icon: Icon, label }) => (
-            <a
-              key={href}
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#a9b1d6] hover:text-[#7aa2f7] transition-colors duration-300"
-              aria-label={label}
-            >
-              <Icon className="w-5 h-5" />
-            </a>
-          ))}
+        <div className="mt-auto space-y-4 relative z-10">
+          {socialLinks.map((link) => {
+            const Icon = link.icon
+            return (
+              <a
+                key={link.href}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block text-[#a9b1d6] hover:text-[#7aa2f7] transition-colors duration-300"
+                aria-label={link.label}
+              >
+                <Icon className="w-5 h-5" />
+              </a>
+            )
+          })}
         </div>
       </nav>
 

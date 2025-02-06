@@ -70,7 +70,7 @@ export default function Home({ featuredProjects }: HomeProps) {
 
       {mounted && <InteractiveAI />}
 
-      <main className="min-h-screen font-serif bg-[#1a1b26] pb-[200px]">
+      <main className="min-h-screen font-serif bg-[#080808] pb-[200px]">
         {/* Hero Section */}
         <section className="relative min-h-[80vh] flex items-center overflow-hidden px-4">
           <GradientBackground />
@@ -83,7 +83,7 @@ export default function Home({ featuredProjects }: HomeProps) {
                   initial={{ opacity: 0, x: -50 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 1.2 }}
-                  className="text-sm sm:text-base md:text-lg tracking-[0.15em] uppercase text-[#7aa2f7] max-w-2xl mx-auto md:mx-0"
+                  className="retro-text grainy text-sm sm:text-base md:text-lg tracking-[0.15em] uppercase text-[#7aa2f7] max-w-2xl mx-auto md:mx-0"
                 >
                   I&apos;m <span className="italic">passionate</span> about supporting <span className="italic">holistic wellbeing</span> through
                 </motion.p>
@@ -91,7 +91,7 @@ export default function Home({ featuredProjects }: HomeProps) {
                   initial={{ opacity: 0, x: -50 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 1.2, delay: 0.3 }}
-                  className="text-2xl sm:text-3xl md:text-4xl tracking-[0.1em] leading-relaxed uppercase text-[#c0caf5]"
+                  className="retro-text grainy text-2xl sm:text-3xl md:text-4xl tracking-[0.1em] leading-relaxed uppercase text-[#c0caf5]"
                 >
                   Health,
                   <br />
@@ -110,14 +110,14 @@ export default function Home({ featuredProjects }: HomeProps) {
         </section>
 
         {/* Projects Section */}
-        <section className="relative bg-[#16161e] py-16">
+        <section className="relative bg-[#0c0c0c] py-16">
           <div className="max-w-[90%] mx-auto">
             <div className="flex items-center gap-6 mb-8">
               <motion.h2 
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 1 }}
-                className="text-xl md:text-3xl tracking-[0.2em] uppercase text-[#bb9af7]"
+                className="retro-text grainy text-xl md:text-3xl tracking-[0.2em] uppercase text-[#bb9af7]"
               >
                 Featured
                 <br />
@@ -181,7 +181,7 @@ export default function Home({ featuredProjects }: HomeProps) {
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 1 }}
-              className="text-xl md:text-3xl tracking-[0.2em] uppercase mb-8 text-[#bb9af7]"
+              className="retro-text grainy text-xl md:text-3xl tracking-[0.2em] uppercase mb-8 text-[#bb9af7]"
             >
               Education
             </motion.h2>

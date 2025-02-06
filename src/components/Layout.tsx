@@ -17,7 +17,10 @@ export default function Layout({
   description = 'Personal website of Berto Mill, an AI developer and consultant based in Toronto.'
 }: LayoutProps) {
   return (
-    <div className="min-h-screen bg-[#1a1b26] text-white flex">
+    <div className="min-h-screen bg-[#030303] text-white flex">
+      <div className="film-grain" />
+      <div className="film-scratches" />
+      <div className="vignette" />
       <Navbar />
       
       <div className="flex-1 md:ml-[200px]">
@@ -28,7 +31,7 @@ export default function Layout({
           <link rel="icon" href="/favicon.ico" />
         </Head>
 
-        <main className="min-h-screen p-4 md:p-8">
+        <main className="container mx-auto px-6 md:px-8 py-8 md:py-12">
           {children}
         </main>
 
