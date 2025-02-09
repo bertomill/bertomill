@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Layout from '@/components/Layout'
 import Image from 'next/image'
-import { BookOpen, User, GraduationCap, Newspaper, Heart, Trophy, ScrollText, Briefcase, ChevronDown } from 'lucide-react'
+import { BookOpen, User, Newspaper, Heart, Trophy, ScrollText, Briefcase, ChevronDown } from 'lucide-react'
 import * as Collapsible from '@radix-ui/react-collapsible'
 import { useState } from 'react'
 import Subscribe from '@/components/Subscribe'
@@ -411,7 +411,7 @@ export default function About() {
               </h2>
 
               <div className="space-y-12">
-                {education.map((edu, index) => (
+                {education.map((edu) => (
                   <div
                     key={edu.school}
                     className="bg-[#0a0a0a]/50 rounded-lg p-6 grainy"
