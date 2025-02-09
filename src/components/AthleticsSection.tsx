@@ -13,13 +13,13 @@ export default function AthleticsSection() {
   ]
 
   return (
-    <section className="relative bg-[#1C1917] py-12">
-      <div className="max-w-[80%] mx-auto">
+    <section className="relative bg-[#0c0c0c] py-12">
+      <div className="max-w-7xl mx-auto px-4">
         <motion.h2 
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1 }}
-          className="text-xl md:text-3xl tracking-[0.2em] uppercase mb-8 text-[#bb9af7]"
+          className="retro-text grainy text-xl md:text-3xl tracking-[0.2em] uppercase mb-8 text-[#94a3b8]"
         >
           Athletics
         </motion.h2>
@@ -29,7 +29,7 @@ export default function AthleticsSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
-            className="text-[#a9b1d6] leading-relaxed text-sm md:text-base"
+            className="text-[#e4e4e7] grainy leading-relaxed text-sm md:text-base"
           >
             Beyond technology, I&apos;m passionate about athletics and team sports. 
             During my time at Western University, I had the privilege of being 

@@ -14,13 +14,13 @@ export default function StartupSection() {
   ]
 
   return (
-    <section className="relative bg-[#16161e] py-12">
-      <div className="max-w-[90%] mx-auto">
+    <section className="relative bg-[#0c0c0c] py-12">
+      <div className="max-w-7xl mx-auto px-4">
         <motion.h2 
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1 }}
-          className="text-xl md:text-3xl tracking-[0.2em] uppercase mb-8 text-[#bb9af7]"
+          className="retro-text grainy text-xl md:text-3xl tracking-[0.2em] uppercase mb-8 text-[#94a3b8]"
         >
           Startups
         </motion.h2>
@@ -29,8 +29,8 @@ export default function StartupSection() {
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.2 }}
-            className="text-[#a9b1d6] leading-relaxed text-sm md:text-base max-w-3xl"
+            transition={{ duration: 1 }}
+            className="text-[#e4e4e7] max-w-2xl grainy"
           >
             Nothing energizes me more than building something new with my friends! The startup journey is 
             where innovation meets passion, and every day brings the thrill of creating solutions that could 

@@ -404,48 +404,53 @@ export default function About() {
           </section>
 
           {/* Education Section */}
-          <section className="space-y-6">
-            <h2 className="text-2xl font-medium flex items-center gap-2">
-              <GraduationCap className="w-6 h-6 text-editor-accent" />
-              Education
-            </h2>
-            <div className="space-y-8">
-              {education.map((edu) => (
-                <div key={edu.school} className="radix-card p-6 space-y-4">
-                  <div className="flex flex-col md:flex-row gap-4 items-start">
-                    <div className="relative w-16 h-16 flex-shrink-0">
-                      <Image
-                        src={edu.imageSrc}
-                        alt={edu.school}
-                        fill
-                        className="object-contain"
-                      />
-                    </div>
-                    <div className="flex-1 space-y-2">
-                      <h3 className="text-xl font-medium text-editor-text">{edu.school}</h3>
-                      <p className="text-editor-text">{edu.degree}</p>
-                      <p className="text-editor-comment text-sm">{edu.period}</p>
-                      
-                      {edu.activities.length > 0 && (
-                        <div className="pt-2">
-                          <p className="text-editor-text font-medium">Activities and Societies:</p>
-                          <p className="text-editor-comment">{edu.activities.join(", ")}</p>
-                        </div>
-                      )}
-                      
-                      {edu.achievements.length > 0 && (
-                        <ul className="list-disc list-inside pt-2 space-y-1">
-                          {edu.achievements.map((achievement) => (
-                            <li key={achievement} className="text-editor-comment">
-                              {achievement}
-                            </li>
-                          ))}
-                        </ul>
-                      )}
+          <section className="relative bg-[#0c0c0c] py-12">
+            <div className="max-w-7xl mx-auto px-4">
+              <h2 className="retro-text grainy text-xl md:text-3xl tracking-[0.2em] uppercase mb-8 text-[#94a3b8]">
+                Education
+              </h2>
+
+              <div className="space-y-12">
+                {education.map((edu, index) => (
+                  <div
+                    key={edu.school}
+                    className="bg-[#0a0a0a]/50 rounded-lg p-6 grainy"
+                  >
+                    <div className="flex flex-col md:flex-row gap-4 items-start">
+                      <div className="relative w-16 h-16 flex-shrink-0">
+                        <Image
+                          src={edu.imageSrc}
+                          alt={edu.school}
+                          fill
+                          className="object-contain"
+                        />
+                      </div>
+                      <div className="flex-1 space-y-2">
+                        <h3 className="text-xl font-medium text-editor-text">{edu.school}</h3>
+                        <p className="text-editor-text">{edu.degree}</p>
+                        <p className="text-editor-comment text-sm">{edu.period}</p>
+                        
+                        {edu.activities.length > 0 && (
+                          <div className="pt-2">
+                            <p className="text-editor-text font-medium">Activities and Societies:</p>
+                            <p className="text-editor-comment">{edu.activities.join(", ")}</p>
+                          </div>
+                        )}
+                        
+                        {edu.achievements.length > 0 && (
+                          <ul className="list-disc list-inside pt-2 space-y-1">
+                            {edu.achievements.map((achievement) => (
+                              <li key={achievement} className="text-editor-comment">
+                                {achievement}
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </section>
 

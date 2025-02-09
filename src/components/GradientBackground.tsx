@@ -52,7 +52,7 @@ export default function GradientBackground() {
         // Draw point
         ctx.beginPath()
         ctx.arc(point.x, point.y, 1, 0, Math.PI * 2)
-        ctx.fillStyle = '#10b981' // Emerald color
+        ctx.fillStyle = '#64748b' // Subtle slate color
         ctx.fill()
 
         // Draw connections
@@ -62,7 +62,7 @@ export default function GradientBackground() {
             ctx.beginPath()
             ctx.moveTo(point.x, point.y)
             ctx.lineTo(otherPoint.x, otherPoint.y)
-            ctx.strokeStyle = `rgba(16, 185, 129, ${(100 - distance) / 500})` // Emerald with opacity
+            ctx.strokeStyle = `rgba(100, 116, 139, ${(100 - distance) / 800})` // More subtle connections
             ctx.stroke()
           }
         })
@@ -81,7 +81,7 @@ export default function GradientBackground() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed top-0 left-0 w-full h-full -z-10 opacity-30"
+      className="fixed top-0 left-0 w-full h-full -z-10 opacity-20"
     />
   )
 } 
