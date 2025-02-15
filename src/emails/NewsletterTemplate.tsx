@@ -64,7 +64,7 @@ export const NewsletterTemplate = ({
               color: '#777',
               fontSize: '14px',
             }}>
-              You're receiving this email because you subscribed to updates.
+              You&apos;re receiving this email because you subscribed to updates.
               You can{' '}
               <Link
                 href="{{unsubscribe_url}}"

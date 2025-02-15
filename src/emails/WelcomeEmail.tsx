@@ -1,12 +1,10 @@
 import * as React from 'react';
 
 interface EmailTemplateProps {
-  firstName: string;
   content?: string;
 }
 
 export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
-  firstName,
   content = `This is a test email to verify that our newsletter system is working correctly.
 Here's what you can expect from future newsletters:
 

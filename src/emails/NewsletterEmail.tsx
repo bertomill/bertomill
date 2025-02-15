@@ -60,7 +60,7 @@ export const NewsletterEmail: React.FC<Readonly<NewsletterEmailProps>> = ({
       lineHeight: '1.5',
       textAlign: 'center',
     }}>
-      You're receiving this email because you subscribed to updates from Berto's blog.
+      You&apos;re receiving this email because you subscribed to updates from Berto&apos;s blog.
       {' '}
       <a 
         href="{{unsubscribe_url}}" 

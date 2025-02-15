@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Book } from '@/lib/books';
+import Image from 'next/image';
 
 interface BookDetailsProps {
   book: Book | null;
@@ -23,10 +24,13 @@ export default function BookDetails({ book }: BookDetailsProps) {
                 className="relative w-20 h-30 md:w-24 md:h-36 shrink-0 cursor-pointer"
                 onClick={() => setShowFullImage(true)}
               >
-                <img 
+                <Image
                   src={book.cover_image} 
                   alt={`Cover of ${book.title}`}
                   className="w-full h-full object-cover rounded-lg hover:opacity-90 transition-opacity"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  priority
                 />
               </div>
             )}
@@ -80,10 +84,13 @@ export default function BookDetails({ book }: BookDetailsProps) {
           onClick={() => setShowFullImage(false)}
         >
           <div className="relative w-full max-w-lg md:max-w-2xl">
-            <img
+            <Image
               src={book.cover_image}
               alt={`Cover of ${book.title}`}
               className="w-full h-auto max-h-[80vh] md:max-h-[90vh] object-contain rounded-lg"
+              fill
+              sizes="100vw"
+              priority
             />
             <button
               onClick={() => setShowFullImage(false)}

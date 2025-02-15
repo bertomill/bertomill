@@ -1,10 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 
 export default function NewsletterForm() {
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [testMode, setTestMode] = useState(true);
   const [subscriberCount, setSubscriberCount] = useState<number | null>(null);
@@ -43,7 +41,7 @@ export default function NewsletterForm() {
         throw new Error('Failed to send newsletter');
       }
 
-      const result = await response.json();
+      await response.json();
       
       alert(testMode 
         ? `Test email sent to ${formData.testEmail}!` 
