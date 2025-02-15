@@ -14,6 +14,7 @@ export default function Navbar() {
   const navLinks = [
     { href: '/blog', label: 'BLOG' },
     { href: '/projects', label: 'PROJECTS' },
+    { href: '/reading-list', label: 'READING LIST' },
     { href: '/docs', label: 'DOCS' },
     { href: '/about', label: 'ABOUT' },
   ]

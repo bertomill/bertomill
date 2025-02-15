@@ -79,3 +79,10 @@ model BrotherGuess {
   createdAt DateTime @default(now())
   isCorrect Boolean
 }
+
+model Subscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+  active    Boolean  @default(true)
+}

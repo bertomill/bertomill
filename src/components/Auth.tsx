@@ -30,7 +30,7 @@ const Auth = () => {
       if (error) throw error
 
       if (data.session) {
-        router.push('/admin')
+        router.push('/admin/newsletter')
       }
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Invalid email or password')
@@ -43,50 +43,55 @@ const Auth = () => {
   if (!mounted) return null
 
   return (
-    <Layout>
-      <div className="flex flex-col items-center justify-center min-h-[calc(100vh-64px)] py-2">
-        <div className="p-8 bg-stone-900 rounded-lg shadow-md">
-          <h2 className="mb-6 text-2xl font-bold text-center text-white">Admin Login</h2>
+    <Layout title="Admin Login | Berto Mill">
+      <div className="flex items-center justify-center min-h-[calc(100vh-200px)]">
+        <div className="w-full max-w-md p-8 mx-4 bg-[#141414] rounded-xl shadow-2xl border border-[#1f1f1f]">
+          <h2 className="mb-6 text-2xl font-bold text-center text-[#e4e4e7]">
+            Admin Login
+          </h2>
           
-          {error && (
-            <div className="p-3 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800">
-              {error}
+          <form onSubmit={handleLogin} className="space-y-6">
+            <div className="space-y-4">
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-[#a1a1aa]">
+                  Email
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="w-full px-3 py-2 mt-1 text-sm bg-[#1f1f1f] border border-[#2f2f2f] rounded-md text-[#e4e4e7] focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Enter your email"
+                />
+              </div>
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium text-[#a1a1aa]">
+                  Password
+                </label>
+                <input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="w-full px-3 py-2 mt-1 text-sm bg-[#1f1f1f] border border-[#2f2f2f] rounded-md text-[#e4e4e7] focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Enter your password"
+                />
+              </div>
             </div>
-          )}
 
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-stone-300">
-                Email
-              </label>
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3 py-2 mt-1 text-sm bg-stone-800 border border-stone-700 rounded-md text-white focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                required
-              />
-            </div>
-
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-stone-300">
-                Password
-              </label>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-3 py-2 mt-1 text-sm bg-stone-800 border border-stone-700 rounded-md text-white focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                required
-              />
-            </div>
+            {error && (
+              <div className="p-3 text-sm text-red-400 rounded-lg bg-red-400/10">
+                {error}
+              </div>
+            )}
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full px-4 py-2 text-sm font-medium text-white bg-emerald-600 rounded-md hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50"
+              className="w-full px-4 py-2 text-sm font-medium text-white transition-colors bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
             >
               {loading ? 'Signing in...' : 'Sign In'}
             </button>
@@ -100,4 +105,4 @@ const Auth = () => {
 // Export as a client-side only component
 export default dynamic(() => Promise.resolve(Auth), {
   ssr: false
-}) 
+})
