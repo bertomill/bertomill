@@ -5,11 +5,12 @@ import { X } from 'lucide-react'
 
 export default function AthleticsSection() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
+  const [isHovering, setIsHovering] = useState(false)
 
   const athleticsImages = [
     { src: "/B&D_Stadium.png", alt: "Western University Football Stadium" },
     { src: "/Berto_Runout.png", alt: "Game Day Runout" },
-    { src: "/BMWalk.png", alt: "Walking onto the Field" }
+    { src: "/BMWalk.png", alt: "Walking onto the Field", drawing: "/bmball.png" }
   ]
 
   return (
@@ -46,18 +47,44 @@ export default function AthleticsSection() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1, delay: index * 0.2 }}
-              className="relative cursor-pointer"
+              className="relative cursor-pointer group"
               onClick={() => setSelectedImage(image.src)}
+              onMouseEnter={() => index === 2 && setIsHovering(true)}
+              onMouseLeave={() => index === 2 && setIsHovering(false)}
             >
-              <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-lg">
                 <Image
                   src={image.src}
                   alt={image.alt}
                   fill
-                  className="object-cover transition-transform duration-300 hover:scale-105 object-top"
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  sizes="(max-width: 768px) 100vw, 33vw"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#4A5D41]/30 to-transparent" />
               </div>
+              {index === 2 && image.drawing && (
+                <div 
+                  className={`absolute transition-opacity duration-300 overflow-visible ${
+                    isHovering ? 'opacity-100' : 'opacity-0'
+                  }`}
+                  style={{
+                    left: '-10%',
+                    top: '-10%',
+                    width: '120%',
+                    height: '120%',
+                    zIndex: 10
+                  }}
+                >
+                  <Image
+                    src={image.drawing}
+                    alt="Drawing version"
+                    fill
+                    className="object-cover scale-110"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    style={{ objectPosition: '45% center' }}
+                  />
+                </div>
+              )}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#4A5D41]/30 to-transparent rounded-lg" />
               <div className="absolute -bottom-2 -right-2 bg-[#8B9D7D]/10 w-full h-full rounded-lg -z-10" />
             </motion.div>
           ))}
