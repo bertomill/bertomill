@@ -5,14 +5,15 @@ interface EmailTemplateProps {
 }
 
 export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
-  content = `This is a test email to verify that our newsletter system is working correctly.
-Here's what you can expect from future newsletters:
+  content = `I&apos;m thrilled to have you join my newsletter!
+Here&apos;s what you can expect from future newsletters:
 
 ✨ Updates about new blog posts
 💡 Interesting tech insights
 🚀 Project announcements
 📚 And much more!
 
+I&apos;ll be sharing updates about what I&apos;m building and learning
 Thanks for subscribing to the newsletter.`
 }) => (
   <div style={{
@@ -30,7 +31,7 @@ Thanks for subscribing to the newsletter.`
       fontWeight: 'bold',
       lineHeight: '1.3',
     }}>
-      Welcome to Berto's Newsletter! 👋
+      Welcome to Berto&apos;s Newsletter! 👋
     </h1>
     
     <div style={{ 
@@ -56,7 +57,7 @@ Thanks for subscribing to the newsletter.`
       lineHeight: '1.5',
       textAlign: 'center',
     }}>
-      You're receiving this email because you subscribed to updates from Berto's blog.
+      You&apos;re receiving this email because you subscribed to updates from Berto&apos;s blog.
       {' '}
       <a 
         href="{{unsubscribe_url}}" 

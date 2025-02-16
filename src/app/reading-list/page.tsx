@@ -18,7 +18,7 @@ export default async function ReadingList() {
             LIBRARY
           </h1>
           <p className="text-[#A1A1AA] font-mono uppercase tracking-wider text-xs md:text-sm">
-            A collection of books I've read, with thoughts and ratings
+            A collection of books I&apos;ve read, with thoughts and ratings
           </p>
         </div>
 

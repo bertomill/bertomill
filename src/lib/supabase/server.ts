@@ -1,10 +1,11 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
+import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { Database } from './database.types'
 
-export const createClient = async (cookieStore: ReturnType<typeof cookies>) => {
+export const createClient = () => {
+  const cookieStore = cookies();
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
   if (!supabaseUrl || !supabaseKey) {
     throw new Error('Missing Supabase environment variables. Check .env.local')
@@ -15,22 +16,14 @@ export const createClient = async (cookieStore: ReturnType<typeof cookies>) => {
     supabaseKey,
     {
       cookies: {
-        async get(name: string) {
-          try {
-            const cookie = await cookieStore.get(name)
-            return cookie?.value
-          } catch (error) {
-            console.error(`Error getting cookie ${name}:`, error)
-            return undefined
-          }
+        async get(key) {
+          return cookieStore.get(key)?.value;
         },
-        set(name: string, value: string, options: CookieOptions) {
-          // In server components, we can only read cookies
-          // We'll handle cookie setting in client components or API routes
+        set(key, value, options) {
+          cookieStore.set(key, value, options);
         },
-        remove(name: string, options: CookieOptions) {
-          // In server components, we can only read cookies
-          // We'll handle cookie removal in client components or API routes
+        remove(key, options) {
+          cookieStore.set(key, '', { ...options, maxAge: 0 });
         },
       },
     }

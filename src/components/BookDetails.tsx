@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Book } from '@/lib/books';
 import Image from 'next/image';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 interface BookDetailsProps {
   book: Book | null;

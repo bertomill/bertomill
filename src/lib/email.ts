@@ -1,7 +1,5 @@
-import { Resend } from 'resend';
-import { render } from '@react-email/render';
-import { NewsletterTemplate } from '@/emails/NewsletterTemplate';
-import { NewsletterEmail } from '@/emails/NewsletterEmail'; // Added import statement
+import { createTransport } from 'nodemailer';
+import { EmailTemplate } from '@/emails/WelcomeEmail';
 import { supabase } from './supabase';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -31,6 +29,14 @@ interface SendNewsletterParams {
   previewText?: string;
   testEmail?: string;
 }
+
+export type EmailData = {
+  to: string;
+  subject: string;
+  html: string;
+  text: string;
+  metadata: Record<string, string>;
+};
 
 export async function sendNewsletter({
   subject,
@@ -64,7 +70,7 @@ export async function sendNewsletter({
       reply_to: 'bertovmill@gmail.com',
       to,
       subject,
-      react: NewsletterEmail({ 
+      react: EmailTemplate({ 
         title: subject,
         content,
         date,
