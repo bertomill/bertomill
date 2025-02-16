@@ -62,27 +62,47 @@ export default function AthleticsSection() {
                 />
               </div>
               {index === 2 && image.drawing && (
-                <div 
-                  className={`absolute transition-opacity duration-300 overflow-visible ${
-                    isHovering ? 'opacity-100' : 'opacity-0'
-                  }`}
-                  style={{
-                    left: '-10%',
-                    top: '-10%',
-                    width: '120%',
-                    height: '120%',
-                    zIndex: 10
-                  }}
-                >
-                  <Image
-                    src={image.drawing}
-                    alt="Drawing version"
-                    fill
-                    className="object-cover scale-110"
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    style={{ objectPosition: '45% center' }}
-                  />
-                </div>
+                <>
+                  <div 
+                    className={`absolute transition-opacity duration-300 overflow-visible ${
+                      isHovering ? 'opacity-100' : 'opacity-0'
+                    }`}
+                    style={{
+                      left: '-10%',
+                      top: '-15%',
+                      width: '120%',
+                      height: '130%',
+                      zIndex: 10
+                    }}
+                  >
+                    <div className="relative w-full h-full">
+                      <Image
+                        src={image.drawing}
+                        alt="Drawing version"
+                        fill
+                        className="object-cover scale-110"
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                        style={{ objectPosition: '35% center' }}
+                      />
+                    </div>
+                  </div>
+                  <div 
+                    className={`absolute transition-opacity duration-300 ${
+                      isHovering ? 'opacity-100' : 'opacity-0'
+                    }`}
+                    style={{
+                      right: '-3rem',
+                      bottom: '1rem',
+                      zIndex: 20,
+                      transform: 'rotate(90deg)',
+                      transformOrigin: 'bottom right'
+                    }}
+                  >
+                    <p className="text-white/80 text-xs font-mono tracking-wider">
+                      Drawing by Prachi Hambir
+                    </p>
+                  </div>
+                </>
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-[#4A5D41]/30 to-transparent rounded-lg" />
               <div className="absolute -bottom-2 -right-2 bg-[#8B9D7D]/10 w-full h-full rounded-lg -z-10" />
